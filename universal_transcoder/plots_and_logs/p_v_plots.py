@@ -1,0 +1,275 @@
+"""
+Copyright 2023 Dolby Laboratories
+
+Redistribution and use in source and binary forms, with or without modification, are permitted 
+provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this list of conditions 
+and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
+and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or 
+promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR IMPLIED 
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
+PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR 
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED 
+TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+POSSIBILITY OF SUCH DAMAGE.
+"""
+
+import ssl
+import matplotlib.pyplot as plt
+import numpy as np
+
+from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
+from universal_transcoder.calculations.pressure_velocity import (
+    pressure_calculation,
+    radial_V_calculation,
+    transversal_V_calculation,
+)
+from universal_transcoder.plots_and_logs.common_plots_functions import save_plot
+
+
+def plot_pv_2D(
+    output_layout: MyCoordinates,
+    decoder_matrix: np,
+    input_matrix: np,
+    cloud_points: MyCoordinates,
+    save_results: bool,
+    results_file_name: bool = False,
+):
+    """
+    Function to plot the pressure and velocity when
+    decoding from an input format to an output layout. 2D plots.
+
+    Args:
+        output_layout (MyCoordinates): positions of output speaker layout:
+                pyfar.Coordinates (N-speakers)
+        decoder_matrix (numpy Array): decoding matrix from input format
+                to output_layout (NxM size)
+        input_matrix(numpy Array): set of gains that encode each L directions sampling
+                the sphere in input format of M channels (LxM)
+        cloud(MyCoordinates): set of points sampling the sphere (L)
+        save_results (bool): Flag to save plots
+        results_file_name(str): Path where to save the plots
+    """
+
+    azimuth = cloud_points.sph_rad()[:, 0]
+    elevation = cloud_points.sph_rad()[:, 1]
+    mask_horizon = (elevation < 0.01) * (elevation > -0.01)
+
+    # Calculations
+    # Pressure vector
+    pressure = pressure_calculation(input_matrix, decoder_matrix)
+
+    # Velocity
+    radial_v = radial_V_calculation(
+        cloud_points, input_matrix, output_layout, decoder_matrix
+    )
+
+    transverse_v = transversal_V_calculation(
+        cloud_points, input_matrix, output_layout, decoder_matrix
+    )
+
+    v = np.sqrt(radial_v**2 + transverse_v**2)
+
+    # Maxima
+    maxima = np.max(
+        np.array(
+            [
+                np.max(pressure),
+                np.max(radial_v),
+                np.max(transverse_v),
+            ]
+        )
+    )
+    if maxima < 1.0:
+        lim = 1
+    elif maxima == 1.0:
+        lim = 1.1
+    else:
+        lim = maxima + 0.1
+
+    # mask point at the horizon
+    azimuth = azimuth[mask_horizon]
+    pressure = pressure[mask_horizon]
+    radial_v = radial_v[mask_horizon]
+    transverse_v = transverse_v[mask_horizon]
+
+    # Plot
+    # XY
+    fig1 = plt.figure(figsize=(17, 9))
+    ax = fig1.add_subplot(121)
+    ax.plot(azimuth, pressure, label="Pressure")
+    ax.plot(azimuth, radial_v, label="Radial Velocity")
+    ax.plot(azimuth, transverse_v, label="Transverse Velocity")
+
+    ax.legend(bbox_to_anchor=(1.5, 1.1))
+    plt.title("Pressure and Velocity")
+    plt.ylim(-0.01, lim)
+
+    # Polar
+    # Add last to close plot
+    azimuth = np.hstack((azimuth, azimuth[0]))
+    pressure = np.hstack((pressure, pressure[0]))
+    radial_v = np.hstack((radial_v, radial_v[0]))
+    transverse_v = np.hstack((transverse_v, transverse_v[0]))
+
+    ax = fig1.add_subplot(122, projection="polar")
+    ax.set_theta_zero_location("N")
+    ax.plot(azimuth, pressure, label="Pressure")
+    ax.plot(azimuth, radial_v, label="Radial Velocity")
+    ax.plot(azimuth, transverse_v, label="Transverse Velocity")
+
+    # plt.show()
+
+    # Save plots
+    if save_results and (type(results_file_name) == str):
+        file_name = "plot_pressure_velocity_2D.png"
+        save_plot(plt, results_file_name, file_name)
+
+
+def plot_pv_3D(
+    output_layout: MyCoordinates,
+    decoder_matrix: np,
+    input_matrix: np,
+    cloud_points: MyCoordinates,
+    save_results: bool,
+    results_file_name: bool = False,
+):
+    """
+    Function to plot the pressure and velocity when
+    decoding from an input format to an output layout.
+    3D projection on 2D plots.
+
+    Args:
+        output_layout (MyCoordinates): positions of output speaker layout:
+                pyfar.Coordinates (N-speakers)
+        decoder_matrix (numpy Array): decoding matrix from input format
+                to output_layout (NxM size)
+        input_matrix(numpy Array): set of gains that encode each L directions sampling
+                the sphere in input format of M channels (LxM)
+        cloud(MyCoordinates): set of points sampling the sphere (L)
+        save_results (bool): Flag to save plots
+        results_file_name(str): Path where to save the plots
+    """
+    from mpl_toolkits.basemap import Basemap
+
+    # Preparation
+    points = cloud_points.sph_deg()
+
+    # Calculations
+    # Pressure vector
+    pressure = pressure_calculation(input_matrix, decoder_matrix)
+    # Velocity
+    radial_v = radial_V_calculation(
+        cloud_points, input_matrix, output_layout, decoder_matrix
+    )
+    transverse_v = transversal_V_calculation(
+        cloud_points, input_matrix, output_layout, decoder_matrix
+    )
+
+    # Prepare plot
+    ssl._create_default_https_context = ssl._create_unverified_context
+    x = points[:, 0]
+    y = points[:, 1]
+
+    # Plot Pressure
+    fig = plt.figure(figsize=(17, 9))
+    ax = fig.add_subplot(311)
+    m = Basemap(projection="robin", lon_0=0, resolution="c")
+    x_map, y_map = m(x, y)
+    m.drawcoastlines(linewidth=0.5, color="None")
+    m.drawparallels(
+        np.arange(-90.0, 120.0, 45.0),
+        labels=[True, True, False, False],
+        labelstyle="+/-",
+    )
+    m.drawmeridians(
+        np.arange(0.0, 360.0, 60.0),
+        labels=[False, False, False, True],
+        labelstyle="+/-",
+    )
+    plt.scatter(
+        x_map,
+        y_map,
+        s=60 - 0.6 * (np.abs(y)),  # for every 5 angle
+        c=pressure,
+        cmap="coolwarm",
+        alpha=0.8,
+        edgecolors="none",
+    )  # s=6 - 0.05 * (np.abs(y)), for every angle
+    plt.colorbar(label="Pressure")
+    plt.title("Pressure")
+    plt.clim(0, 2)
+
+    # Plot Radial Velocity
+    ax = fig.add_subplot(312)
+    m = Basemap(projection="robin", lon_0=0, resolution="c")
+    x_map, y_map = m(x, y)
+    m.drawcoastlines(linewidth=0.5, color="None")
+    m.drawparallels(
+        np.arange(-90.0, 120.0, 45.0),
+        labels=[True, True, False, False],
+        labelstyle="+/-",
+    )
+    m.drawmeridians(
+        np.arange(0.0, 360.0, 60.0),
+        labels=[False, False, False, True],
+        labelstyle="+/-",
+    )
+    plt.scatter(
+        x_map,
+        y_map,
+        s=60 - 0.6 * (np.abs(y)),  # for every 5 angle
+        c=radial_v,
+        cmap="coolwarm",
+        alpha=0.8,
+        edgecolors="none",
+    )  # s=6 - 0.05 * (np.abs(y)), for every angle
+    plt.colorbar(label="Radial Velocity")
+    plt.title("Radial Velocity")
+    plt.clim(0, 1)
+
+    # Plot Transverse Velocity
+    ax = fig.add_subplot(313)
+    m = Basemap(projection="robin", lon_0=0, resolution="c")
+    x_map, y_map = m(x, y)
+    m.drawcoastlines(linewidth=0.5, color="None")
+    m.drawparallels(
+        np.arange(-90.0, 120.0, 45.0),
+        labels=[True, True, False, False],
+        labelstyle="+/-",
+    )
+    m.drawmeridians(
+        np.arange(0.0, 360.0, 60.0),
+        labels=[False, False, False, True],
+        labelstyle="+/-",
+    )
+    plt.scatter(
+        x_map,
+        y_map,
+        s=60 - 0.6 * (np.abs(y)),  # for every 5 angle
+        c=transverse_v,
+        cmap="coolwarm",
+        alpha=0.8,
+        edgecolors="none",
+    )  # s=6 - 0.05 * (np.abs(y)), for every angle
+    plt.colorbar(label="Transversal Velocity")
+    plt.title("Transverse Velocity")
+    plt.clim(0, 1)
+
+    # Show
+    # plt.show()
+    ssl._create_default_https_context = ssl._create_default_https_context
+
+    # Save plots
+    if save_results and (type(results_file_name) == str):
+        file_name = "plot_pressure_velocity_3D.png"
+        save_plot(plt, results_file_name, file_name)

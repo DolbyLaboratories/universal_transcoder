@@ -1,0 +1,7 @@
+jax==0.4.13
+jaxlib==0.4.13
+pyfar==0.5.3
+matplotlib==3.7.1
+basemap
+pytest
+xarray

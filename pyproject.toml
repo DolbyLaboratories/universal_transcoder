@@ -1,0 +1,14 @@
+[project]
+name = "universal_transcoder"
+description = "This code consists of a universal transcoder tool. It generates a psychoacoustically motivated transcoding matrix to transform from any input format to any other given format or speaker layout."
+version = "2023.1000"
+authors = [
+    { name = "Amaia Sagasti" },
+    { name = "Davide Scaini" },
+    { name = "Daniel Arteaga" },
+]
+dynamic = ["dependencies"]
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+[tool.setuptools]
+packages = ["universal_transcoder"]
