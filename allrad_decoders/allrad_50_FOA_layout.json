@@ -1,6 +1,6 @@
 {
   "Name": "All-Round Ambisonic decoder (AllRAD) and loudspeaker layout",
-  "Description": "This configuration file was created with the IEM AllRADecoder v0.9.4 plug-in. 11 Dec 2023 8:28:36pm",
+  "Description": "This configuration file was created with the IEM AllRADecoder v0.9.4 plug-in. 12 Dec 2023 4:30:11pm",
   "LoudspeakerLayout": {
     "Name": "A loudspeaker layout",
     "Loudspeakers": [
@@ -10,14 +10,6 @@
         "Radius": 1.0,
         "IsImaginary": false,
         "Channel": 2,
-        "Gain": 1.0
-      },
-      {
-        "Azimuth": -90.0,
-        "Elevation": 0.0,
-        "Radius": 1.0,
-        "IsImaginary": false,
-        "Channel": 3,
         "Gain": 1.0
       },
       {
@@ -42,14 +34,6 @@
         "Radius": 1.0,
         "IsImaginary": false,
         "Channel": 7,
-        "Gain": 1.0
-      },
-      {
-        "Azimuth": 90.0,
-        "Elevation": 0.0,
-        "Radius": 1.0,
-        "IsImaginary": false,
-        "Channel": 9,
         "Gain": 1.0
       },
       {
