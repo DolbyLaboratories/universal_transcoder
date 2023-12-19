@@ -38,18 +38,22 @@ def get_allrad_decoder(route_name: Union[str, PathLike], type: str, order: int, 
         dictionary = dict(json.load(file))
 
     decoding_matrix = jnp.array(dictionary["Decoder"]["Matrix"])
+    print(decoding_matrix, " is the original")
 
     # Apply inphase or maxre
     if type == "maxre":
         maxre = maxre_weights(order)
+        print("maxre matrix: ", maxre)
         decoding_matrix = np.multiply(decoding_matrix, maxre)
     elif type == "inphase":
         inphase = inphase_weights(order)
+        print("inphase matrix: ", inphase)
         decoding_matrix = np.multiply(decoding_matrix, inphase)
 
     # if SN3D, apply changes
     if convention == "sn3d":
         adapter = get_convention("n3d2sn3d", order)
+        print("convention adapter ",adapter)
         decoding_matrix = np.multiply(decoding_matrix, adapter)
 
     return decoding_matrix

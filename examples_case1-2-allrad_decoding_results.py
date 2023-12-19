@@ -23,39 +23,40 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVE
 POSSIBILITY OF SUCH DAMAGE.
 """
 
-import os
-from pathlib import Path
-
 import numpy as np
+from universal_transcoder.plots_and_logs.import_allrad_dec import get_allrad_decoder
+from universal_transcoder.plots_and_logs.all_plots import plots_general
 from universal_transcoder.auxiliars.get_cloud_points import (
-    get_all_sphere_points,
-    get_equi_t_design_points,
+    get_equi_circumference_points,
 )
 from universal_transcoder.auxiliars.get_input_channels import (
     get_input_channels_ambisonics,
 )
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
-from universal_transcoder.calculations.optimization import optimize
 
 
-order = 5
-output_layout = MyCoordinates.mult_points(
-    np.array(
-        [
-            (-90, 0, 1),
-            (0, 0, 1),
-            (90, 0, 1),
-            (180, 0, 1),
-        ]
-    )
+file_name = "allrad_50_FOA_maxre_decoder.json"
+order = 1
+
+# Import AllRad file (N3D and ACN)
+decoding_matrix = get_allrad_decoder(
+    "allrad_decoders/" + file_name, "basic", order, "sn3d"
 )
-output_layout = MyCoordinates.mult_points(
+print(" resulting decoding_matrix ", decoding_matrix)
+
+
+# Cloud
+cloud = get_equi_circumference_points(36, False)
+# cloud = get_all_sphere_points(5, False)
+# Output layout
+layout_50 = MyCoordinates.mult_points(
     np.array(
         [
-            (-135, 0, 1),
-            (-45, 0, 1),
-            (45, 0, 1),
-            (135, 0, 1),
+            (-120, 0, 1),
+            (-30, 0, 1),
+            (0, 0, 1),
+            (30, 0, 1),
+            (120, 0, 1),
         ]
     )
 )
@@ -76,55 +77,21 @@ layout_704 = MyCoordinates.mult_points(
         ]
     )
 )
+output_layout = layout_50
+# Input channels
+input_matrix = get_input_channels_ambisonics(cloud, order)
 
-layout_50 = MyCoordinates.mult_points(
-    np.array(
-        [
-            (-120, 0, 1),
-            (-30, 0, 1),
-            (0, 0, 1),
-            (30, 0, 1),
-            (120, 0, 1),
-        ]
-    )
+
+# Call plots and save results
+show_results = True
+save_results = False
+save_plot_name = "paper_case2_ambi5OAto704_allrad_maxre"
+plots_general(
+    output_layout,
+    decoding_matrix,
+    input_matrix,
+    cloud,
+    show_results,
+    save_results,
+    save_plot_name,
 )
-
-# cloud_optimization = get_equi_circumference_points(36, False)
-# cloud_plots = get_equi_circumference_points(360, False)
-
-basepath = Path(__file__).resolve().parents[1]
-t_design = (
-    basepath / "universal_transcoder" / "encoders" / "t-design" / "des.3.56.9.txt"
-)
-cloud_optimization = get_equi_t_design_points(t_design, False)
-cloud_plots = get_all_sphere_points(5, False)
-input_matrix_optimization = get_input_channels_ambisonics(cloud_optimization, order)
-input_matrix_plots = get_input_channels_ambisonics(cloud_plots, order)
-dictionary = {
-    "input_matrix_optimization": input_matrix_optimization,
-    "cloud_optimization": cloud_optimization,
-    "output_layout": layout_704,
-    "coefficients": {
-        "energy": 0,
-        "radial_intensity": 0,
-        "transverse_intensity": 0,
-        "pressure": 5,
-        "radial_velocity": 5,
-        "transverse_velocity": 5,
-        "in_phase_quad": 0,
-        "symmetry_quad": 0,
-        "in_phase_lin": 0,
-        "symmetry_lin": 1,
-        "total_gains_lin": 0,
-        "total_gains_quad": 0,
-    },
-    "directional_weights": 1,
-    "show_results": True,
-    "results_file_name": "paper_case2_ambi5OAto704_pv_new",
-    "save_results": True,
-    "input_matrix_plots": input_matrix_plots,
-    "cloud_plots": cloud_plots,
-}
-
-decoding_matrix = optimize(dictionary)
-print(decoding_matrix)
