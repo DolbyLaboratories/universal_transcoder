@@ -24,11 +24,11 @@ POSSIBILITY OF SUCH DAMAGE.
 """
 
 import jax.numpy as jnp
-
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
+from universal_transcoder.plots_and_logs.common_plots_functions import normalize_S
 
 
-def pressure_calculation(input_matrix: jnp, decoder_matrix: jnp):
+def pressure_calculation(input_matrix: jnp, decoder_matrix: jnp, normalize="p"):
     """Function to obtain the real and imaginary pressure of a virtual source in an output
     layout out of the coded channel gains
 
@@ -44,6 +44,7 @@ def pressure_calculation(input_matrix: jnp, decoder_matrix: jnp):
 
     # Calculate S - output speaker signals
     S = jnp.dot(input_matrix, decoder_matrix.T)
+    S = normalize_S(S, normalize)
 
     # Calculate pressure
     pressure = jnp.array(jnp.sum(S, axis=1), dtype=jnp.float32)
@@ -52,7 +53,10 @@ def pressure_calculation(input_matrix: jnp, decoder_matrix: jnp):
 
 
 def velocity_calculation(
-    input_matrix: jnp, output_layout: MyCoordinates, decoder_matrix: jnp
+    input_matrix: jnp,
+    output_layout: MyCoordinates,
+    decoder_matrix: jnp,
+    normalize="p",
 ):
     """Function to obtain the real and imaginary velocity of a virtual source in an
     output layout out of the coded channel gains
@@ -78,6 +82,7 @@ def velocity_calculation(
 
     # Calculate speaker signals S
     S = jnp.dot(input_matrix, decoder_matrix.T)
+    S = normalize_S(S, normalize)
 
     # Velocity
     aux = jnp.dot(S, U)

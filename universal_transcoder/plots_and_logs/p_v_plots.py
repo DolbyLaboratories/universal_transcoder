@@ -116,22 +116,54 @@ def plot_pv_2D(
 
     # Polar
     # Add last to close plot
-    azimuth = np.hstack((azimuth, azimuth[0]))
-    pressure = np.hstack((pressure, pressure[0]))
-    radial_v = np.hstack((radial_v, radial_v[0]))
-    transverse_v = np.hstack((transverse_v, transverse_v[0]))
+    azimuth_polar = np.hstack((azimuth, azimuth[0]))
+    pressure_polar = np.hstack((pressure, pressure[0]))
+    radial_v_polar = np.hstack((radial_v, radial_v[0]))
+    transverse_v_polar = np.hstack((transverse_v, transverse_v[0]))
 
     ax = fig1.add_subplot(122, projection="polar")
     ax.set_theta_zero_location("N")
-    ax.plot(azimuth, pressure, label="Pressure")
-    ax.plot(azimuth, radial_v, label="Radial Velocity")
-    ax.plot(azimuth, transverse_v, label="Transverse Velocity")
+    ax.plot(azimuth_polar, pressure_polar, label="Pressure")
+    ax.plot(azimuth_polar, radial_v_polar, label="Radial Velocity")
+    ax.plot(azimuth_polar, transverse_v_polar, label="Transverse Velocity")
 
     # plt.show()
 
     # Save plots
     if save_results and (type(results_file_name) == str):
         file_name = "plot_pressure_velocity_2D.png"
+        save_plot(plt, results_file_name, file_name)
+
+    # plot in dB scale
+    # Plot
+    # XY
+    fig1 = plt.figure(figsize=(17, 9))
+    ax = fig1.add_subplot(121)
+    ax.plot(azimuth, 20 * np.log10(pressure), label="Pressure")
+    # ax.plot(azimuth, radial_v, label="Radial Velocity")
+    # ax.plot(azimuth, transverse_v, label="Transverse Velocity")
+
+    ax.legend(bbox_to_anchor=(1.5, 1.1))
+    plt.title("Pressure and Velocity")
+    plt.ylim(-24, +6)
+
+    # Polar
+    # Add last to close plot
+    azimuth_polar = np.hstack((azimuth, azimuth[0]))
+    pressure_polar = np.hstack((pressure, pressure[0]))
+    radial_v_polar = np.hstack((radial_v, radial_v[0]))
+    transverse_v_polar = np.hstack((transverse_v, transverse_v[0]))
+
+    ax = fig1.add_subplot(122, projection="polar")
+    ax.set_theta_zero_location("N")
+    ax.plot(azimuth_polar, 20 * np.log10(pressure_polar), label="Pressure")
+    # ax.plot(azimuth_polar, radial_v_polar, label="Radial Velocity")
+    # ax.plot(azimuth_polar, transverse_v_polar, label="Transverse Velocity")
+    plt.ylim(-24, +6)
+
+    # Save plots
+    if save_results and (type(results_file_name) == str):
+        file_name = "plot_pressure_velocity_2D_dB.png"
         save_plot(plt, results_file_name, file_name)
 
 

@@ -40,7 +40,6 @@ def get_convention(conventions: str, n: int):
     """
 
     adapter = []
-
     if conventions == "n3d2sn3d":
         # 0 - order
         if n >= 0:

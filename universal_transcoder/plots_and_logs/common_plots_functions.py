@@ -24,7 +24,16 @@ POSSIBILITY OF SUCH DAMAGE.
 """
 
 import os
+import numpy as np
 import matplotlib.pyplot as plt
+
+
+def normalize_S(S, normalize):
+    if normalize == "p":
+        S = np.apply_along_axis(lambda x: x / np.sum(x), 0, S.T).T
+    if normalize == "e":
+        S = np.apply_along_axis(lambda x: x / np.sqrt(np.sum(x**2)), 0, S.T).T
+    return S
 
 
 def save_plot(plot: plt, specific_path: str, file_name: str):

@@ -26,12 +26,8 @@ POSSIBILITY OF SUCH DAMAGE.
 import matplotlib.pyplot as plt
 import numpy as np
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
-from universal_transcoder.plots_and_logs.e_i_plots import (
-    plot_ei_2D, plot_ei_3D
-)
-from universal_transcoder.plots_and_logs.p_v_plots import (
-    plot_pv_2D, plot_pv_3D
-)
+from universal_transcoder.plots_and_logs.e_i_plots import plot_ei_2D, plot_ei_3D
+from universal_transcoder.plots_and_logs.p_v_plots import plot_pv_2D, plot_pv_3D
 from universal_transcoder.plots_and_logs.speakers_plots import (
     plot_speaker_2D,
 )
@@ -85,18 +81,22 @@ def plots_general(
         save_results,
         save_plot_name,
     )
-    plot_ei_3D(output_layout,
+    plot_ei_3D(
+        output_layout,
         decoder_matrix,
         input_matrix,
         cloud,
         save_results,
-        save_plot_name,)
-    plot_pv_3D(output_layout,
+        save_plot_name,
+    )
+    plot_pv_3D(
+        output_layout,
         decoder_matrix,
         input_matrix,
         cloud,
         save_results,
-        save_plot_name,)
+        save_plot_name,
+    )
 
     if show_results:
         plt.show()

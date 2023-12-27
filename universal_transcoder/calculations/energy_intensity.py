@@ -25,9 +25,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 import jax.numpy as jnp
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
+from universal_transcoder.plots_and_logs.common_plots_functions import normalize_S
 
 
-def energy_calculation(input_matrix: jnp, decoder_matrix: jnp):
+def energy_calculation(input_matrix: jnp, decoder_matrix: jnp, normalize="p"):
     """Function to obtain the energy of each virtual source of a cloud of points in an output
     layout out from the coded channel gains
 
@@ -42,6 +43,8 @@ def energy_calculation(input_matrix: jnp, decoder_matrix: jnp):
     """
     # Calculate S - output speaker signals
     S = jnp.dot(input_matrix, decoder_matrix.T)
+    S = normalize_S(S, normalize)
+
     # Calculate energy
     energy = jnp.array(jnp.sum(S**2, axis=1), dtype=jnp.float32)
 
@@ -49,7 +52,10 @@ def energy_calculation(input_matrix: jnp, decoder_matrix: jnp):
 
 
 def intensity_calculation(
-    input_matrix: jnp, output_layout: MyCoordinates, decoder_matrix: jnp
+    input_matrix: jnp,
+    output_layout: MyCoordinates,
+    decoder_matrix: jnp,
+    normalize="p",
 ):
     """Function to obtain the intensity of each virtual source of a cloud of points in an output
     layout out from the coded channel gains
@@ -74,6 +80,7 @@ def intensity_calculation(
 
     # Calculate speaker signals S
     S = jnp.dot(input_matrix, decoder_matrix.T)
+    S = normalize_S(S, normalize)
 
     # Intensity
     aux = jnp.dot(S**2, U)
