@@ -28,9 +28,7 @@ from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 from universal_transcoder.plots_and_logs.common_plots_functions import normalize_S
 
 
-def pressure_calculation(
-    input_matrix: jnp, decoder_matrix: jnp, normalize: bool = None
-):
+def pressure_calculation(input_matrix: jnp, decoder_matrix: jnp, normalize: str = None):
     """Function to obtain the real and imaginary pressure of a virtual source in an output
     layout out of the coded channel gains
 
@@ -58,7 +56,7 @@ def velocity_calculation(
     input_matrix: jnp,
     output_layout: MyCoordinates,
     decoder_matrix: jnp,
-    normalize: bool = None,
+    normalize: str = None,
 ):
     """Function to obtain the real and imaginary velocity of a virtual source in an
     output layout out of the coded channel gains
@@ -98,7 +96,7 @@ def radial_V_calculation(
     input_matrix: jnp,
     output_layout: MyCoordinates,
     decoder_matrix: jnp,
-    normalize: bool = None,
+    normalize: str = None,
 ):
     """Function to obtain the real and imag radial velocity of each virtual source of a cloud of
     points in an output layout out from the coded channel gains
@@ -134,7 +132,7 @@ def transversal_V_calculation(
     input_matrix: jnp,
     output_layout: MyCoordinates,
     decoder_matrix: jnp,
-    normalize: bool = None,
+    normalize: str = None,
 ):
     """Function to obtain the real and imaginary transverse velocity of each virtual source of a cloud of
     points in an output layout out from the coded channel gains

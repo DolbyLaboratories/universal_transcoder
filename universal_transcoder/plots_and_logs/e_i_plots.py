@@ -48,7 +48,7 @@ def plot_ei_2D(
     cloud_points: MyCoordinates,
     save_results: bool,
     results_file_name=False,
-    normalize: bool = None,
+    normalize: str = None,
 ):
     """
     Function to plot the energy and intensity when
@@ -204,7 +204,7 @@ def plot_ei_3D(
     cloud_points: MyCoordinates,
     save_results: bool,
     results_file_name=False,
-    normalize: bool = None,
+    normalize: str = None,
 ):
     """
     Function to plot the energy and intensity when

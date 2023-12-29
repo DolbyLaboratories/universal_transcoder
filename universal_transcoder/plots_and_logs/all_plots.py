@@ -41,7 +41,7 @@ def plots_general(
     show_results: bool,
     save_results: bool,
     save_plot_name,
-    normalize: bool = None,
+    normalize: str = None,
 ):
     """
     Function group all plots and call them at once

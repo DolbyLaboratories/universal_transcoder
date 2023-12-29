@@ -42,7 +42,7 @@ def plot_speaker_2D(
     cloud: MyCoordinates,
     save_results: bool,
     results_file_name,
-    normalize: bool = None,
+    normalize: str = None,
 ):
     """
     Function to plot speaker gains for each speaker of an output layout. 2D plots.
@@ -131,7 +131,7 @@ def plot_speaker_3D(
     cloud_points: MyCoordinates,
     save_results: bool,
     results_file_name: bool = False,
-    normalize: bool = None,
+    normalize: str = None,
 ):
     """
     Function to plot speaker gains for each speaker of an output layout.
