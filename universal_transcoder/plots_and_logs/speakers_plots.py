@@ -32,6 +32,7 @@ warnings.filterwarnings(
 import matplotlib.pyplot as plt
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 from universal_transcoder.plots_and_logs.common_plots_functions import save_plot
+from universal_transcoder.plots_and_logs.common_plots_functions import normalize_S
 
 
 def plot_speaker_2D(
@@ -41,6 +42,7 @@ def plot_speaker_2D(
     cloud: MyCoordinates,
     save_results: bool,
     results_file_name,
+    normalize: bool = None,
 ):
     """
     Function to plot speaker gains for each speaker of an output layout. 2D plots.
@@ -63,6 +65,7 @@ def plot_speaker_2D(
     mask_horizon = (elevation < 0.01) * (elevation > -0.01)
 
     speaker_gains = np.dot(input_matrix, decoder_matrix.T)
+    speaker_gains = normalize_S(speaker_gains, normalize)
     speaker_gains_db = 20 * np.log10(speaker_gains)
 
     # mask point at the horizon
@@ -128,6 +131,7 @@ def plot_speaker_3D(
     cloud_points: MyCoordinates,
     save_results: bool,
     results_file_name: bool = False,
+    normalize: bool = None,
 ):
     """
     Function to plot speaker gains for each speaker of an output layout.
@@ -147,6 +151,7 @@ def plot_speaker_3D(
 
     # Calculate output gains
     output_gains = np.dot(input_matrix, decoder_matrix.T)
+    output_gains = normalize_S(output_gains, normalize)
 
     # Plot
     cloud_points_cart = cloud_points.cart()

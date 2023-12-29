@@ -43,6 +43,7 @@ def plot_pv_2D(
     cloud_points: MyCoordinates,
     save_results: bool,
     results_file_name: bool = False,
+    normalize: bool = None,
 ):
     """
     Function to plot the pressure and velocity when
@@ -66,15 +67,15 @@ def plot_pv_2D(
 
     # Calculations
     # Pressure vector
-    pressure = pressure_calculation(input_matrix, decoder_matrix)
+    pressure = pressure_calculation(input_matrix, decoder_matrix, normalize=normalize)
 
     # Velocity
     radial_v = radial_V_calculation(
-        cloud_points, input_matrix, output_layout, decoder_matrix
+        cloud_points, input_matrix, output_layout, decoder_matrix, normalize=normalize
     )
 
     transverse_v = transversal_V_calculation(
-        cloud_points, input_matrix, output_layout, decoder_matrix
+        cloud_points, input_matrix, output_layout, decoder_matrix, normalize=normalize
     )
 
     v = np.sqrt(radial_v**2 + transverse_v**2)
@@ -174,6 +175,7 @@ def plot_pv_3D(
     cloud_points: MyCoordinates,
     save_results: bool,
     results_file_name: bool = False,
+    normalize: bool = None,
 ):
     """
     Function to plot the pressure and velocity when
@@ -198,13 +200,13 @@ def plot_pv_3D(
 
     # Calculations
     # Pressure vector
-    pressure = pressure_calculation(input_matrix, decoder_matrix)
+    pressure = pressure_calculation(input_matrix, decoder_matrix, normalize=normalize)
     # Velocity
     radial_v = radial_V_calculation(
-        cloud_points, input_matrix, output_layout, decoder_matrix
+        cloud_points, input_matrix, output_layout, decoder_matrix, normalize=normalize
     )
     transverse_v = transversal_V_calculation(
-        cloud_points, input_matrix, output_layout, decoder_matrix
+        cloud_points, input_matrix, output_layout, decoder_matrix, normalize=normalize
     )
 
     # Prepare plot

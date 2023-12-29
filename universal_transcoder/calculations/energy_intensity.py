@@ -28,7 +28,7 @@ from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 from universal_transcoder.plots_and_logs.common_plots_functions import normalize_S
 
 
-def energy_calculation(input_matrix: jnp, decoder_matrix: jnp, normalize="p"):
+def energy_calculation(input_matrix: jnp, decoder_matrix: jnp, normalize: bool = None):
     """Function to obtain the energy of each virtual source of a cloud of points in an output
     layout out from the coded channel gains
 
@@ -55,7 +55,7 @@ def intensity_calculation(
     input_matrix: jnp,
     output_layout: MyCoordinates,
     decoder_matrix: jnp,
-    normalize="p",
+    normalize: bool = None,
 ):
     """Function to obtain the intensity of each virtual source of a cloud of points in an output
     layout out from the coded channel gains
@@ -94,6 +94,7 @@ def radial_I_calculation(
     input_matrix: jnp,
     output_layout: MyCoordinates,
     decoder_matrix: jnp,
+    normalize: bool = None,
 ):
     """Function to obtain the radial intensity of each virtual source of a cloud of points in an output
     layout out from the coded channel gains
@@ -111,7 +112,9 @@ def radial_I_calculation(
                 source (1xL)
     """
     # Intensity calculation
-    intensity = intensity_calculation(input_matrix, output_layout, decoder_matrix)
+    intensity = intensity_calculation(
+        input_matrix, output_layout, decoder_matrix, normalize=normalize
+    )
 
     # Cardinal coordinates direction virtual source - Vj
     V = cloud_points.cart()
@@ -127,6 +130,7 @@ def transverse_I_calculation(
     input_matrix: jnp,
     output_layout: MyCoordinates,
     decoder_matrix: jnp,
+    normalize: bool = None,
 ):
     """Function to obtain the transverse intensity of each virtual source of a cloud of points in an output
     layout out from the coded channel gains
@@ -144,7 +148,9 @@ def transverse_I_calculation(
                 source (1xL)
     """
     # Intensity calculation
-    intensity = intensity_calculation(input_matrix, output_layout, decoder_matrix)
+    intensity = intensity_calculation(
+        input_matrix, output_layout, decoder_matrix, normalize=normalize
+    )
 
     # Cardinal coordinates direction virtual source - Vj
     V = cloud_points.cart()

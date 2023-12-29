@@ -28,7 +28,9 @@ from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 from universal_transcoder.plots_and_logs.common_plots_functions import normalize_S
 
 
-def pressure_calculation(input_matrix: jnp, decoder_matrix: jnp, normalize="p"):
+def pressure_calculation(
+    input_matrix: jnp, decoder_matrix: jnp, normalize: bool = None
+):
     """Function to obtain the real and imaginary pressure of a virtual source in an output
     layout out of the coded channel gains
 
@@ -56,7 +58,7 @@ def velocity_calculation(
     input_matrix: jnp,
     output_layout: MyCoordinates,
     decoder_matrix: jnp,
-    normalize="p",
+    normalize: bool = None,
 ):
     """Function to obtain the real and imaginary velocity of a virtual source in an
     output layout out of the coded channel gains
@@ -75,7 +77,7 @@ def velocity_calculation(
     """
 
     # Pressure calculation
-    pressure = pressure_calculation(input_matrix, decoder_matrix)
+    pressure = pressure_calculation(input_matrix, decoder_matrix, normalize=normalize)
 
     # Cardinal coordinates - unitary vectors of output speakers - Ui
     U = output_layout.cart()
@@ -96,6 +98,7 @@ def radial_V_calculation(
     input_matrix: jnp,
     output_layout: MyCoordinates,
     decoder_matrix: jnp,
+    normalize: bool = None,
 ):
     """Function to obtain the real and imag radial velocity of each virtual source of a cloud of
     points in an output layout out from the coded channel gains
@@ -113,7 +116,9 @@ def radial_V_calculation(
                 source (1xL)
     """
     # Velocity calculation
-    velocity = velocity_calculation(input_matrix, output_layout, decoder_matrix)
+    velocity = velocity_calculation(
+        input_matrix, output_layout, decoder_matrix, normalize=normalize
+    )
 
     # Cardinal coordinates direction virtual source - Vj
     V = cloud_points.cart()
@@ -129,6 +134,7 @@ def transversal_V_calculation(
     input_matrix: jnp,
     output_layout: MyCoordinates,
     decoder_matrix: jnp,
+    normalize: bool = None,
 ):
     """Function to obtain the real and imaginary transverse velocity of each virtual source of a cloud of
     points in an output layout out from the coded channel gains
@@ -146,7 +152,9 @@ def transversal_V_calculation(
                 source (1xL)
     """
     # Velocity calculation
-    velocity = velocity_calculation(input_matrix, output_layout, decoder_matrix)
+    velocity = velocity_calculation(
+        input_matrix, output_layout, decoder_matrix, normalize=normalize
+    )
 
     # Cardinal coordinates direction virtual source - Vj
     V = cloud_points.cart()

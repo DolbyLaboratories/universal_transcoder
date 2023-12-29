@@ -48,6 +48,7 @@ def plot_ei_2D(
     cloud_points: MyCoordinates,
     save_results: bool,
     results_file_name=False,
+    normalize: bool = None,
 ):
     """
     Function to plot the energy and intensity when
@@ -71,14 +72,14 @@ def plot_ei_2D(
 
     # Calculations
     # Energy
-    energy = energy_calculation(input_matrix, decoder_matrix)
+    energy = energy_calculation(input_matrix, decoder_matrix, normalize=normalize)
     energy_db = 10 * np.log10(energy)
     # Intensity
     radial_i = radial_I_calculation(
-        cloud_points, input_matrix, output_layout, decoder_matrix
+        cloud_points, input_matrix, output_layout, decoder_matrix, normalize=normalize
     )
     transverse_i = transverse_I_calculation(
-        cloud_points, input_matrix, output_layout, decoder_matrix
+        cloud_points, input_matrix, output_layout, decoder_matrix, normalize=normalize
     )
     # Angular Error
     ang_err = angular_error(radial_i, transverse_i)
@@ -203,6 +204,7 @@ def plot_ei_3D(
     cloud_points: MyCoordinates,
     save_results: bool,
     results_file_name=False,
+    normalize: bool = None,
 ):
     """
     Function to plot the energy and intensity when
@@ -227,13 +229,13 @@ def plot_ei_3D(
 
     # Calculations
     # Energy vector
-    energy = energy_calculation(input_matrix, decoder_matrix)
+    energy = energy_calculation(input_matrix, decoder_matrix, normalize=normalize)
     # Intensity
     radial_i = radial_I_calculation(
-        cloud_points, input_matrix, output_layout, decoder_matrix
+        cloud_points, input_matrix, output_layout, decoder_matrix, normalize=normalize
     )
     transverse_i = transverse_I_calculation(
-        cloud_points, input_matrix, output_layout, decoder_matrix
+        cloud_points, input_matrix, output_layout, decoder_matrix, normalize=normalize
     )
     # Angular Error
     ang_err = angular_error(radial_i, transverse_i)
