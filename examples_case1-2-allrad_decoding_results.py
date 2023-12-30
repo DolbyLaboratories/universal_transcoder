@@ -27,27 +27,27 @@ import numpy as np
 from universal_transcoder.plots_and_logs.import_allrad_dec import get_allrad_decoder
 from universal_transcoder.plots_and_logs.all_plots import plots_general
 from universal_transcoder.auxiliars.get_cloud_points import (
-    get_equi_circumference_points,
+    get_equi_circumference_points, get_all_sphere_points,
 )
 from universal_transcoder.auxiliars.get_input_channels import (
     get_input_channels_ambisonics,
 )
+from universal_transcoder.plots_and_logs.common_plots_functions import normalize_S
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 
 
-file_name = "allrad_50_FOA_maxre_decoder.json"
-order = 1
+file_name = "allrad_704_5OA_basic_decoder.json"
+order = 5
 
 # Import AllRad file (N3D and ACN)
 decoding_matrix = get_allrad_decoder(
-    "allrad_decoders/" + file_name, "basic", order, "sn3d"
+    "allrad_decoders/" + file_name, "inphase", order, "sn3d"
 )
-print(" resulting decoding_matrix ", decoding_matrix)
 
 
 # Cloud
-cloud = get_equi_circumference_points(36, False)
-# cloud = get_all_sphere_points(5, False)
+#cloud = get_equi_circumference_points(36, False)
+cloud = get_all_sphere_points(5, False)
 # Output layout
 layout_50 = MyCoordinates.mult_points(
     np.array(
@@ -77,10 +77,12 @@ layout_704 = MyCoordinates.mult_points(
         ]
     )
 )
-output_layout = layout_50
+output_layout = layout_704
 # Input channels
 input_matrix = get_input_channels_ambisonics(cloud, order)
 
+#Normalization
+resulting_signal=normalize_S(np.dot(input_matrix, decoding_matrix.T), "p")
 
 # Call plots and save results
 show_results = True
@@ -88,8 +90,7 @@ save_results = False
 save_plot_name = "paper_case2_ambi5OAto704_allrad_maxre"
 plots_general(
     output_layout,
-    decoding_matrix,
-    input_matrix,
+    resulting_signal,
     cloud,
     show_results,
     save_results,
