@@ -38,8 +38,7 @@ from universal_transcoder.plots_and_logs.common_plots_functions import save_plot
 
 def plot_pv_2D(
     output_layout: MyCoordinates,
-    decoder_matrix: np,
-    input_matrix: np,
+    speaker_signals: np,
     cloud_points: MyCoordinates,
     save_results: bool,
     results_file_name: bool = False,
@@ -51,10 +50,8 @@ def plot_pv_2D(
     Args:
         output_layout (MyCoordinates): positions of output speaker layout:
                 pyfar.Coordinates (N-speakers)
-        decoder_matrix (numpy Array): decoding matrix from input format
-                to output_layout (NxM size)
-        input_matrix(numpy Array): set of gains that encode each L directions sampling
-                the sphere in input format of M channels (LxM)
+        speaker_signals (numpy Array): speaker signals resulting from decoding 
+                to input set of encoded L directions (LxN size)
         cloud(MyCoordinates): set of points sampling the sphere (L)
         save_results (bool): Flag to save plots
         results_file_name(str): Path where to save the plots
@@ -66,15 +63,15 @@ def plot_pv_2D(
 
     # Calculations
     # Pressure vector
-    pressure = pressure_calculation(input_matrix, decoder_matrix)
+    pressure = pressure_calculation(speaker_signals)
 
     # Velocity
     radial_v = radial_V_calculation(
-        cloud_points, input_matrix, output_layout, decoder_matrix
+        cloud_points, speaker_signals, output_layout
     )
 
     transverse_v = transversal_V_calculation(
-        cloud_points, input_matrix, output_layout, decoder_matrix
+        cloud_points, speaker_signals, output_layout
     )
 
     v = np.sqrt(radial_v**2 + transverse_v**2)
@@ -169,8 +166,7 @@ def plot_pv_2D(
 
 def plot_pv_3D(
     output_layout: MyCoordinates,
-    decoder_matrix: np,
-    input_matrix: np,
+    speaker_signals: np,
     cloud_points: MyCoordinates,
     save_results: bool,
     results_file_name: bool = False,
@@ -183,10 +179,8 @@ def plot_pv_3D(
     Args:
         output_layout (MyCoordinates): positions of output speaker layout:
                 pyfar.Coordinates (N-speakers)
-        decoder_matrix (numpy Array): decoding matrix from input format
-                to output_layout (NxM size)
-        input_matrix(numpy Array): set of gains that encode each L directions sampling
-                the sphere in input format of M channels (LxM)
+        speaker_signals (numpy Array): speaker signals resulting from decoding 
+                to input set of encoded L directions (LxN size)
         cloud(MyCoordinates): set of points sampling the sphere (L)
         save_results (bool): Flag to save plots
         results_file_name(str): Path where to save the plots
@@ -198,13 +192,13 @@ def plot_pv_3D(
 
     # Calculations
     # Pressure vector
-    pressure = pressure_calculation(input_matrix, decoder_matrix)
+    pressure = pressure_calculation(speaker_signals)
     # Velocity
     radial_v = radial_V_calculation(
-        cloud_points, input_matrix, output_layout, decoder_matrix
+        cloud_points, speaker_signals, output_layout
     )
     transverse_v = transversal_V_calculation(
-        cloud_points, input_matrix, output_layout, decoder_matrix
+        cloud_points, speaker_signals, output_layout
     )
 
     # Prepare plot

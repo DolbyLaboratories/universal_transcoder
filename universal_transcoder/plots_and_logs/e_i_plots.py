@@ -43,8 +43,7 @@ from universal_transcoder.plots_and_logs.common_plots_functions import save_plot
 
 def plot_ei_2D(
     output_layout: MyCoordinates,
-    decoder_matrix: np,
-    input_matrix: np,
+    speaker_signals: np,
     cloud_points: MyCoordinates,
     save_results: bool,
     results_file_name=False,
@@ -56,10 +55,8 @@ def plot_ei_2D(
     Args:
         output_layout (MyCoordinates): positions of output speaker layout:
                 pyfar.Coordinates (N-speakers)
-        decoder_matrix (numpy Array): decoding matrix from input format
-                to output_layout (NxM size)
-        input_matrix(numpy Array): set of gains that encode each L directions sampling
-                the sphere in input format of M channels (LxM)
+        speaker_signals (numpy Array): speaker signals resulting from decoding 
+                to input set of encoded L directions (LxN size)
         cloud(MyCoordinates): set of points sampling the sphere (L)
         save_results (bool): Flag to save plots
         results_file_name(str): Path where to save the plots
@@ -71,14 +68,14 @@ def plot_ei_2D(
 
     # Calculations
     # Energy
-    energy = energy_calculation(input_matrix, decoder_matrix)
+    energy = energy_calculation(speaker_signals)
     energy_db = 10 * np.log10(energy)
     # Intensity
     radial_i = radial_I_calculation(
-        cloud_points, input_matrix, output_layout, decoder_matrix
+        cloud_points, speaker_signals, output_layout
     )
     transverse_i = transverse_I_calculation(
-        cloud_points, input_matrix, output_layout, decoder_matrix
+        cloud_points, speaker_signals, output_layout
     )
     # Angular Error
     ang_err = angular_error(radial_i, transverse_i)
@@ -198,8 +195,7 @@ def plot_ei_2D(
 
 def plot_ei_3D(
     output_layout: MyCoordinates,
-    decoder_matrix: np,
-    input_matrix: np,
+    speaker_signals: np,
     cloud_points: MyCoordinates,
     save_results: bool,
     results_file_name=False,
@@ -212,10 +208,8 @@ def plot_ei_3D(
     Args:
         output_layout (MyCoordinates): positions of output speaker layout:
                 pyfar.Coordinates (N-speakers)
-        decoder_matrix (numpy Array): decoding matrix from input format
-                to output_layout (NxM size)
-        input_matrix(numpy Array): set of gains that encode each L directions sampling
-                the sphere in input format of M channels (LxM)
+        speaker_signals (numpy Array): speaker signals resulting from decoding 
+                to input set of encoded L directions (LxN size)
         cloud(MyCoordinates): set of points sampling the sphere (L)
         save_results (bool): Flag to save plots
         results_file_name(str): Path where to save the plots
@@ -227,18 +221,18 @@ def plot_ei_3D(
 
     # Calculations
     # Energy vector
-    energy = energy_calculation(input_matrix, decoder_matrix)
+    energy = energy_calculation(speaker_signals)
     # Intensity
     radial_i = radial_I_calculation(
-        cloud_points, input_matrix, output_layout, decoder_matrix
+        cloud_points, speaker_signals, output_layout
     )
     transverse_i = transverse_I_calculation(
-        cloud_points, input_matrix, output_layout, decoder_matrix
+        cloud_points, speaker_signals, output_layout
     )
     # Angular Error
     ang_err = angular_error(radial_i, transverse_i)
     # Width Angle
-    intensity = intensity_calculation(input_matrix, output_layout, decoder_matrix)
+    intensity = intensity_calculation(speaker_signals, output_layout)
     width_deg = width_angle(radial_i)
 
     # Plot

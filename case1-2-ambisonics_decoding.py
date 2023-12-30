@@ -30,6 +30,7 @@ import numpy as np
 from universal_transcoder.auxiliars.get_cloud_points import (
     get_all_sphere_points,
     get_equi_t_design_points,
+    get_equi_circumference_points,
 )
 from universal_transcoder.auxiliars.get_input_channels import (
     get_input_channels_ambisonics,
@@ -98,6 +99,8 @@ t_design = (
 )
 cloud_optimization = get_equi_t_design_points(t_design, False)
 cloud_plots = get_all_sphere_points(5, False)
+#cloud_optimization = get_equi_circumference_points(36, False)
+#cloud_plots = get_equi_circumference_points(360, False)
 input_matrix_optimization = get_input_channels_ambisonics(cloud_optimization, order)
 input_matrix_plots = get_input_channels_ambisonics(cloud_plots, order)
 dictionary = {
@@ -120,7 +123,7 @@ dictionary = {
     },
     "directional_weights": 1,
     "show_results": True,
-    "results_file_name": "paper_case2_ambi5OAto704_pv_new",
+    "results_file_name": "ex2_ambi5OAto704_pv",
     "save_results": False,
     "input_matrix_plots": input_matrix_plots,
     "cloud_plots": cloud_plots,

@@ -35,8 +35,7 @@ from universal_transcoder.plots_and_logs.speakers_plots import (
 
 def plots_general(
     output_layout: MyCoordinates,
-    decoder_matrix: np,
-    input_matrix: np,
+    speaker_signals: np,
     cloud: MyCoordinates,
     show_results: bool,
     save_results: bool,
@@ -48,10 +47,8 @@ def plots_general(
     Args:
         output_layout (MyCoordinates): positions of output speaker layout:
                 pyfar.Coordinates (N-speakers)
-        decoder_matrix (numpy Array): decoding matrix from input format
-                to output_layout (NxM size)
-        input_matrix(numpy Array): set of gains that encode each L directions sampling
-                the sphere in input format of M channels (LxM)
+        speaker_signals (numpy Array): speaker signals resulting from decoding 
+                to input set of encoded L directions (LxN size)
         cloud(MyCoordinates): set of points sampling the sphere (L)
         show_results (bool): Flag to show plots
         save_results (bool): Flag to save plots
@@ -59,40 +56,35 @@ def plots_general(
     """
     plot_ei_2D(
         output_layout,
-        decoder_matrix,
-        input_matrix,
+        speaker_signals,
         cloud,
         save_results,
         save_plot_name,
     )
     plot_pv_2D(
         output_layout,
-        decoder_matrix,
-        input_matrix,
+        speaker_signals,
         cloud,
         save_results,
         save_plot_name,
     )
     plot_speaker_2D(
         output_layout,
-        decoder_matrix,
-        input_matrix,
+        speaker_signals,
         cloud,
         save_results,
         save_plot_name,
     )
     plot_ei_3D(
         output_layout,
-        decoder_matrix,
-        input_matrix,
+        speaker_signals,
         cloud,
         save_results,
         save_plot_name,
     )
     plot_pv_3D(
         output_layout,
-        decoder_matrix,
-        input_matrix,
+        speaker_signals,
         cloud,
         save_results,
         save_plot_name,

@@ -36,8 +36,7 @@ from universal_transcoder.plots_and_logs.common_plots_functions import save_plot
 
 def plot_speaker_2D(
     output_layout: MyCoordinates,
-    decoder_matrix: np,
-    input_matrix: np,
+    speaker_signals: np,
     cloud: MyCoordinates,
     save_results: bool,
     results_file_name,
@@ -48,8 +47,8 @@ def plot_speaker_2D(
     Args:
         output_layout (MyCoordinates): positions of output speaker layout:
                 pyfar.Coordinates (N-speakers)
-        decoder_matrix (numpy Array): decoding matrix from input format
-                to output_layout (NxM size)
+        speaker_signals (numpy Array): speaker signals resulting from decoding 
+                to input set of encoded L directions (LxN size)
         input_matrix(numpy Array): set of gains that encode each L directions sampling
                 the sphere in input format of M channels (LxM)
         cloud(MyCoordinates): set of points sampling the sphere (L)
@@ -62,7 +61,7 @@ def plot_speaker_2D(
     elevation = cloud.sph_rad()[:, 1]
     mask_horizon = (elevation < 0.01) * (elevation > -0.01)
 
-    speaker_gains = np.dot(input_matrix, decoder_matrix.T)
+    speaker_gains=speaker_signals
     speaker_gains_db = 20 * np.log10(speaker_gains)
 
     # mask point at the horizon
@@ -123,8 +122,7 @@ def plot_speaker_2D(
 
 def plot_speaker_3D(
     output_layout: MyCoordinates,
-    decoder_matrix: np,
-    input_matrix: np,
+    speaker_signals: np,
     cloud_points: MyCoordinates,
     save_results: bool,
     results_file_name: bool = False,
@@ -136,17 +134,12 @@ def plot_speaker_3D(
     Args:
         output_layout (MyCoordinates): positions of output speaker layout:
                 pyfar.Coordinates (N-speakers)
-        decoder_matrix (numpy Array): decoding matrix from input format
-                to output_layout (NxM size)
-        input_matrix(numpy Array): set of gains that encode each L directions sampling
-                the sphere in input format of M channels (LxM)
+        speaker_signals (numpy Array): speaker signals resulting from decoding 
+                to input set of encoded L directions (LxN size)
         cloud(MyCoordinates): set of points sampling the sphere (L)
         save_results (bool): Flag to save plots
         results_file_name(str): Path where to save the plots
     """
-
-    # Calculate output gains
-    output_gains = np.dot(input_matrix, decoder_matrix.T)
 
     # Plot
     cloud_points_cart = cloud_points.cart()
@@ -158,7 +151,7 @@ def plot_speaker_3D(
     fig = plt.figure(figsize=(17, 9))
     for i in range(number_spk):
         ax = fig.add_subplot(1, number_spk, i + 1, projection="3d")
-        sc = ax.scatter(X, Y, Z, c=output_gains[:, i], cmap="rainbow")
+        sc = ax.scatter(X, Y, Z, c=speaker_signals[:, i], cmap="rainbow")
         ax.axis("equal")
         ax.set_xlabel("X axis", fontsize=6)
         ax.set_ylabel("Y axis", fontsize=6)

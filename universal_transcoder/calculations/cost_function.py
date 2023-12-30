@@ -82,36 +82,39 @@ class State:
             flatten_decoding_matrix, self.decoding_matrix_shape
         )
 
+        # Calculate S - output speaker signals
+        S = jnp.dot(self.input_matrix, decoding_matrix.T)
+
         # Energy vector
-        energy = energy_calculation(self.input_matrix, decoding_matrix)
+        energy = energy_calculation(S)
         # Radial intensity vector
         radial_i = radial_I_calculation(
-            self.cloud_points, self.input_matrix, self.output_layout, decoding_matrix
+            self.cloud_points, S, self.output_layout,
         )
 
         # Transversal intensity vector
         transverse_i = transverse_I_calculation(
-            self.cloud_points, self.input_matrix, self.output_layout, decoding_matrix
+            self.cloud_points, S, self.output_layout,
         )
         # Pressure vector
-        pressure = pressure_calculation(self.input_matrix, decoding_matrix)
+        pressure = pressure_calculation(S)
         # Radial velocity vector
         radial_v = radial_V_calculation(
-            self.cloud_points, self.input_matrix, self.output_layout, decoding_matrix
+            self.cloud_points, S, self.output_layout,
         )
         # Transversal velocity vector
         transverse_v = transversal_V_calculation(
-            self.cloud_points, self.input_matrix, self.output_layout, decoding_matrix
+            self.cloud_points, S, self.output_layout,
         )
         # Output gains and in_phase vector
-        output_gains = jnp.dot(self.input_matrix, decoding_matrix.T)
-        in_phase_quad, in_phase_lin = self._in_phase_1(output_gains)
+        #output_gains = jnp.dot(self.input_matrix, decoding_matrix.T)
+        in_phase_quad, in_phase_lin = self._in_phase_1(S)
         # Symmetry vector
         symmetric_gains = self._rearrange_gains(
-            self.output_layout, self.cloud_points, output_gains
+            self.output_layout, self.cloud_points, S
         )
         asymmetry_quad, asymmetry_lin = self._symmetry_differences(
-            output_gains, symmetric_gains
+            S, symmetric_gains
         )
         asymmetry_quad = jnp.real(asymmetry_quad)
         asymmetry_lin = jnp.real(asymmetry_lin)

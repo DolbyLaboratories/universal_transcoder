@@ -28,7 +28,10 @@ from universal_transcoder.auxiliars.get_cloud_points import (
     get_equi_circumference_points,
 )
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
-from universal_transcoder.calculations.optimization import optimize
+from universal_transcoder.plots_and_logs.all_plots import plots_general
+from universal_transcoder.auxiliars.get_input_channels import (
+    get_input_channels_vbap,
+)
 
 # Encoding multichannel without vbap
 output_layout = MyCoordinates.mult_points(
@@ -40,38 +43,24 @@ output_layout = MyCoordinates.mult_points(
         ]
     )
 )
-# Data for optimization
+
 n = 72
-cloud_optimization = get_equi_circumference_points(n, False)
-input_matrix_optimization = np.identity(n)
 # Data for plots
-cloud_plots = cloud_optimization
-input_matrix_plots = input_matrix_optimization
+cloud = get_equi_circumference_points(n, False)
+input_matrix = np.identity(n)
 
+decoding_matrix = get_input_channels_vbap(cloud, output_layout).T
 
-dictionary = {
-    "input_matrix_optimization": input_matrix_optimization,
-    "cloud_optimization": cloud_optimization,
-    "output_layout": output_layout,
-    "coefficients": {
-        "energy": 0,
-        "radial_intensity": 0,
-        "transverse_intensity": 0,
-        "pressure": 10,
-        "radial_velocity": 5,
-        "transverse_velocity": 4,
-        "in_phase_quad": 0,
-        "symmetry_quad": 0,
-        "in_phase_lin": 100,
-        "symmetry_lin": 5,
-        "total_gains_lin": 0,
-        "total_gains_quad": 0,
-    },
-    "directional_weights": 1,
-    "show_results": True,
-    "save_results": True,
-    "input_matrix_plots": input_matrix_plots,
-    "cloud_plots": cloud_plots,
-    "results_file_name": "paper_case4_panning30_pv",
-}
-print(optimize(dictionary))
+# Call plots and save results
+show_results = True
+save_results = True
+save_plot_name = "ex4_VBAP30_noOptim"
+plots_general(
+    output_layout,
+    decoding_matrix,
+    input_matrix,
+    cloud,
+    show_results,
+    save_results,
+    save_plot_name,
+)
