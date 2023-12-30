@@ -32,6 +32,7 @@ warnings.filterwarnings(
 import matplotlib.pyplot as plt
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 from universal_transcoder.plots_and_logs.common_plots_functions import save_plot
+from universal_transcoder.plots_and_logs.common_plots_functions import normalize_S
 
 
 def plot_speaker_2D(
@@ -40,6 +41,7 @@ def plot_speaker_2D(
     cloud: MyCoordinates,
     save_results: bool,
     results_file_name,
+    normalize: str = None,
 ):
     """
     Function to plot speaker gains for each speaker of an output layout. 2D plots.
@@ -126,6 +128,7 @@ def plot_speaker_3D(
     cloud_points: MyCoordinates,
     save_results: bool,
     results_file_name: bool = False,
+    normalize: str = None,
 ):
     """
     Function to plot speaker gains for each speaker of an output layout.

@@ -40,6 +40,7 @@ def plots_general(
     show_results: bool,
     save_results: bool,
     save_plot_name,
+    normalize: str = None,
 ):
     """
     Function group all plots and call them at once
@@ -60,6 +61,7 @@ def plots_general(
         cloud,
         save_results,
         save_plot_name,
+        normalize=normalize,
     )
     plot_pv_2D(
         output_layout,
@@ -67,6 +69,7 @@ def plots_general(
         cloud,
         save_results,
         save_plot_name,
+        normalize=normalize,
     )
     plot_speaker_2D(
         output_layout,
@@ -74,6 +77,7 @@ def plots_general(
         cloud,
         save_results,
         save_plot_name,
+        normalize=normalize,
     )
     plot_ei_3D(
         output_layout,
@@ -81,6 +85,7 @@ def plots_general(
         cloud,
         save_results,
         save_plot_name,
+        normalize=normalize,
     )
     plot_pv_3D(
         output_layout,
@@ -88,6 +93,7 @@ def plots_general(
         cloud,
         save_results,
         save_plot_name,
+        normalize=normalize,
     )
 
     if show_results:
