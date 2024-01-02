@@ -99,12 +99,12 @@ t_design = (
 )
 cloud_optimization = get_equi_t_design_points(t_design, False)
 cloud_plots = get_all_sphere_points(1, False)
-#cloud_optimization = get_equi_circumference_points(36, False)
-#cloud_plots = get_equi_circumference_points(360, False)
+# cloud_optimization = get_equi_circumference_points(36, False)
+# cloud_plots = get_equi_circumference_points(360, False)
 input_matrix_optimization = get_input_channels_ambisonics(cloud_optimization, order)
 input_matrix_plots = get_input_channels_ambisonics(cloud_plots, order)
 
-output_layout=layout_704
+output_layout = layout_704
 dictionary = {
     "input_matrix_optimization": input_matrix_optimization,
     "cloud_optimization": cloud_optimization,
@@ -113,9 +113,9 @@ dictionary = {
         "energy": 0,
         "radial_intensity": 0,
         "transverse_intensity": 0,
-        "pressure": 5,
+        "pressure": 50,
         "radial_velocity": 5,
-        "transverse_velocity": 5,
+        "transverse_velocity": 1,
         "in_phase_quad": 0,
         "symmetry_quad": 0,
         "in_phase_lin": 0,
@@ -135,23 +135,47 @@ decoding_matrix = optimize(dictionary)
 print(decoding_matrix)
 
 
-'''
-from universal_transcoder.calculations.energy_intensity import energy_calculation, intensity_calculation, radial_I_calculation, transverse_I_calculation
-from universal_transcoder.calculations.pressure_velocity import pressure_calculation, velocity_calculation, radial_V_calculation,transversal_V_calculation
-from universal_transcoder.plots_and_logs.paper_plots_to_R import save_physics_to_file, make_txt_and_plots
+# '''
+from universal_transcoder.calculations.energy_intensity import (
+    energy_calculation,
+    intensity_calculation,
+    radial_I_calculation,
+    transverse_I_calculation,
+)
+from universal_transcoder.calculations.pressure_velocity import (
+    pressure_calculation,
+    velocity_calculation,
+    radial_V_calculation,
+    transversal_V_calculation,
+)
+from universal_transcoder.plots_and_logs.paper_plots_to_R import (
+    save_physics_to_file,
+)
 
-speaker_signals=np.dot(input_matrix_plots, decoding_matrix.T)
+input_matrix_plots = get_input_channels_ambisonics(cloud_plots, order)
 
-energy=energy_calculation(speaker_signals)
-radial_I=radial_I_calculation(cloud_plots, speaker_signals, output_layout)
-transverse_I=transverse_I_calculation(cloud_plots, speaker_signals, output_layout)
-pressure=pressure_calculation(speaker_signals)
-radial_V=radial_V_calculation(cloud_plots, speaker_signals, output_layout)
-transverse_V=transversal_V_calculation(cloud_plots, speaker_signals, output_layout)
+speaker_signals = np.dot(input_matrix_plots, decoding_matrix.T)
 
-coordinates=cloud_plots.sph_deg()
-azimut=coordinates[:,0]
-elevation=coordinates[:,1]
+energy = energy_calculation(speaker_signals)
+radial_I = radial_I_calculation(cloud_plots, speaker_signals, output_layout)
+transverse_I = transverse_I_calculation(cloud_plots, speaker_signals, output_layout)
+pressure = pressure_calculation(speaker_signals)
+radial_V = radial_V_calculation(cloud_plots, speaker_signals, output_layout)
+transverse_V = transversal_V_calculation(cloud_plots, speaker_signals, output_layout)
 
-save_physics_to_file(azimut, elevation, pressure, radial_V, transverse_V, energy, radial_I, transverse_I, "try2.txt")
-'''
+coordinates = cloud_plots.sph_deg()
+azimuth = coordinates[:, 0]
+elevation = coordinates[:, 1]
+
+save_physics_to_file(
+    azimuth,
+    elevation,
+    pressure,
+    radial_V,
+    transverse_V,
+    energy,
+    radial_I,
+    transverse_I,
+    "try2.txt",
+)
+# '''

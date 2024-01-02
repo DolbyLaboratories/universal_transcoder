@@ -79,7 +79,9 @@ def get_equi_circumference_points(num_points: int, plot_show: bool = True):
     return cloud_points
 
 
-def get_equi_t_design_points(file_name: Union[str, os.PathLike], plot_show: bool = True):
+def get_equi_t_design_points(
+    file_name: Union[str, os.PathLike], plot_show: bool = True
+):
     """Function to obtain the polar and cartesian spherical
     coordinates of equidistant points of a sphere out of a given
     txt from http://neilsloane.com/sphdesigns/
@@ -201,9 +203,9 @@ def get_all_sphere_points(space: int = 1, plot_show: bool = True):
     """
 
     points = []
-    for i in range(-180, 180, space):
-        for j in range(-90, 90, space):
-            points.append([i, j, 1])
+    for j in range(-90, 90, space):
+        for i in range(-180, 180, space):
+            points.append([i + 0.5, j + 0.5, 1])
     points = np.array(points)
 
     cloud_points = MyCoordinates.mult_points(points)

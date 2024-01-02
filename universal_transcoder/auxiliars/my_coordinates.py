@@ -63,11 +63,11 @@ class MyCoordinates(pf.Coordinates):
                 "Azimut position must be [-180,180] and elevation position must be [-90,90]"
             )
         # check correct order (ascending thetas)
-        sorted = np.all(np.diff(thetas) >= 0)
-        if sorted == False:
-            raise ValueError(
-                "Positions must be introduced in ascending order of azimut angle"
-            )
+        # sorted = np.all(np.diff(thetas) >= 0)
+        # if sorted == False:
+        #     raise ValueError(
+        #         "Positions must be introduced in ascending order of azimut angle"
+        #     )
 
         # put thetas [0,360] for pf.Coordinates
         for i in range(thetas.shape[0]):
