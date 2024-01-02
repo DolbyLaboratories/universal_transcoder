@@ -201,7 +201,7 @@ def get_all_sphere_points(space: int = 1, plot_show: bool = True):
     """
 
     points = []
-    for i in range(-178, 178, space):
+    for i in range(-180, 180, space):
         for j in range(-90, 90, space):
             points.append([i, j, 1])
     points = np.array(points)
