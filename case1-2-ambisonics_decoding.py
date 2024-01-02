@@ -98,11 +98,13 @@ t_design = (
     basepath / "universal_transcoder" / "encoders" / "t-design" / "des.3.56.9.txt"
 )
 cloud_optimization = get_equi_t_design_points(t_design, False)
-cloud_plots = get_all_sphere_points(5, False)
+cloud_plots = get_all_sphere_points(1, False)
 #cloud_optimization = get_equi_circumference_points(36, False)
 #cloud_plots = get_equi_circumference_points(360, False)
 input_matrix_optimization = get_input_channels_ambisonics(cloud_optimization, order)
 input_matrix_plots = get_input_channels_ambisonics(cloud_plots, order)
+
+output_layout=layout_704
 dictionary = {
     "input_matrix_optimization": input_matrix_optimization,
     "cloud_optimization": cloud_optimization,
@@ -122,7 +124,7 @@ dictionary = {
         "total_gains_quad": 0,
     },
     "directional_weights": 1,
-    "show_results": True,
+    "show_results": False,
     "results_file_name": "ex2_ambi5OAto704_pv",
     "save_results": False,
     "input_matrix_plots": input_matrix_plots,
@@ -131,3 +133,25 @@ dictionary = {
 
 decoding_matrix = optimize(dictionary)
 print(decoding_matrix)
+
+
+'''
+from universal_transcoder.calculations.energy_intensity import energy_calculation, intensity_calculation, radial_I_calculation, transverse_I_calculation
+from universal_transcoder.calculations.pressure_velocity import pressure_calculation, velocity_calculation, radial_V_calculation,transversal_V_calculation
+from universal_transcoder.plots_and_logs.paper_plots_to_R import save_physics_to_file, make_txt_and_plots
+
+speaker_signals=np.dot(input_matrix_plots, decoding_matrix.T)
+
+energy=energy_calculation(speaker_signals)
+radial_I=radial_I_calculation(cloud_plots, speaker_signals, output_layout)
+transverse_I=transverse_I_calculation(cloud_plots, speaker_signals, output_layout)
+pressure=pressure_calculation(speaker_signals)
+radial_V=radial_V_calculation(cloud_plots, speaker_signals, output_layout)
+transverse_V=transversal_V_calculation(cloud_plots, speaker_signals, output_layout)
+
+coordinates=cloud_plots.sph_deg()
+azimut=coordinates[:,0]
+elevation=coordinates[:,1]
+
+save_physics_to_file(azimut, elevation, pressure, radial_V, transverse_V, energy, radial_I, transverse_I, "try2.txt")
+'''
