@@ -42,7 +42,6 @@ def plot_pv_2D(
     cloud_points: MyCoordinates,
     save_results: bool,
     results_file_name: bool = False,
-    normalize: str = None,
 ):
     """
     Function to plot the pressure and velocity when
@@ -171,7 +170,6 @@ def plot_pv_3D(
     cloud_points: MyCoordinates,
     save_results: bool,
     results_file_name: bool = False,
-    normalize: str = None,
 ):
     """
     Function to plot the pressure and velocity when

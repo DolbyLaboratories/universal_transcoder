@@ -25,10 +25,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
 import jax.numpy as jnp
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
-from universal_transcoder.plots_and_logs.common_plots_functions import normalize_S
 
 
-def pressure_calculation(speaker_signals: jnp, normalize="p"):
+def pressure_calculation(speaker_signals: jnp):
     """Function to obtain the real and imaginary pressure of a virtual source in an output
     layout out of the coded channel gains
 
@@ -49,7 +48,6 @@ def pressure_calculation(speaker_signals: jnp, normalize="p"):
 def velocity_calculation(
     speaker_signals: jnp,
     output_layout: MyCoordinates,
-    normalize="p",
 ):
     """Function to obtain the real and imaginary velocity of a virtual source in an
     output layout out of the coded channel gains
