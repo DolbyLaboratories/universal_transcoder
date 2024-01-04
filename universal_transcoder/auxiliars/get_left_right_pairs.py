@@ -80,4 +80,5 @@ def get_left_right_pairs(points: MyCoordinates, tol: int = 2):
                     pairs[i] = pair_id
                     pairs[j] = -pair_id
                     pair_id = pair_id + 1
+                    break
     return pairs
