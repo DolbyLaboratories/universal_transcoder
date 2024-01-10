@@ -31,6 +31,9 @@ from universal_transcoder.plots_and_logs.p_v_plots import plot_pv_2D, plot_pv_3D
 from universal_transcoder.plots_and_logs.speakers_plots import (
     plot_speaker_2D,
 )
+from universal_transcoder.plots_and_logs.paper_plots_to_R import (
+    save_physics_to_file,
+)
 
 
 def plots_general(
@@ -54,14 +57,14 @@ def plots_general(
         save_results (bool): Flag to save plots
         results_file_name(str): Path where to save the plots
     """
-    plot_ei_2D(
+    [energy, radial_i, transverse_i]=plot_ei_2D(
         output_layout,
         speaker_signals,
         cloud,
         save_results,
         save_plot_name,
     )
-    plot_pv_2D(
+    [pressure, radial_v, transverse_v]=plot_pv_2D(
         output_layout,
         speaker_signals,
         cloud,
@@ -75,14 +78,14 @@ def plots_general(
         save_results,
         save_plot_name,
     )
-    plot_ei_3D(
+    [energy, radial_i, transverse_i]= plot_ei_3D(
         output_layout,
         speaker_signals,
         cloud,
         save_results,
         save_plot_name,
     )
-    plot_pv_3D(
+    [pressure, radial_v, transverse_v]=plot_pv_3D(
         output_layout,
         speaker_signals,
         cloud,
@@ -92,3 +95,22 @@ def plots_general(
 
     if show_results:
         plt.show()
+    
+    if save_results:
+        # Generate txt file with data
+        coordinates = cloud.sph_deg()
+        azimuth = coordinates[:, 0]
+        elevation = coordinates[:, 1]
+        save_physics_to_file(
+            azimuth,
+            elevation,
+            pressure,
+            radial_v,
+            transverse_v,
+            energy,
+            radial_i,
+            transverse_i,
+            save_plot_name,
+        )
+
+    

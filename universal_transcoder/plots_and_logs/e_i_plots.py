@@ -189,8 +189,8 @@ def plot_ei_2D(
         file_name = "plot_energy_intensity_2D.png"
         save_plot(plt, results_file_name, file_name)
 
-    # Show plots
-    # plt.show()
+    # Return
+        return energy, radial_i, transverse_i
 
 
 def plot_ei_3D(
@@ -389,3 +389,6 @@ def plot_ei_3D(
     if save_results and (type(results_file_name) == str):
         file_name = "plot_energy_intensity_3D.png"
         save_plot(plt, results_file_name, file_name)
+
+    # Return
+        return energy, radial_i, transverse_i

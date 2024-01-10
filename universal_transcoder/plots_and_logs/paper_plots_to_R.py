@@ -104,7 +104,14 @@ def ambi_decode(allrad_deco, ambi_enco, filename):
 def save_physics_to_file(
     position_az, position_el, p, V_radial, V_tang, E, J_radial, J_tang, filename
 ):
-    fh = open(filename, "w")
+    # Correct directory
+    os.makedirs("saved_results", exist_ok=True)
+    txt_name = "signal_data.txt"
+    path = os.path.join("saved_results", filename)
+    full_path = os.path.join(path, txt_name)
+    os.makedirs(path, exist_ok=True)
+    fh = open(full_path, "w")
+    # Organise data
     for idx, az in enumerate(position_az):
         str_phy = "%.4f, %.4f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f\n" % (
             position_az[idx],
