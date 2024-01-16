@@ -190,7 +190,7 @@ def plot_ei_2D(
         save_plot(plt, results_file_name, file_name)
 
     # Return
-        return energy, radial_i, transverse_i
+    return energy, radial_i, transverse_i
 
 
 def plot_ei_3D(
@@ -391,4 +391,4 @@ def plot_ei_3D(
         save_plot(plt, results_file_name, file_name)
 
     # Return
-        return energy, radial_i, transverse_i
+    return energy, radial_i, transverse_i

@@ -164,7 +164,7 @@ def plot_pv_2D(
         save_plot(plt, results_file_name, file_name)
     
     # Return
-        return pressure, radial_v, transverse_v
+    return pressure, radial_v, transverse_v
 
 
 def plot_pv_3D(
@@ -304,4 +304,4 @@ def plot_pv_3D(
         save_plot(plt, results_file_name, file_name)
 
     # Return
-        return pressure, radial_v, transverse_v
+    return pressure, radial_v, transverse_v
