@@ -61,7 +61,8 @@ def test_energy1():
     decoder_matrix = get_vbap_decoder_matrix(input_layout, output_layout)
     input_channels = get_input_channels_vbap(virtual, input_layout)
 
-    energy = energy_calculation(input_channels, decoder_matrix)
+    speaker_signals = np.dot(input_channels, decoder_matrix.T)
+    energy = energy_calculation(speaker_signals)
 
     expected = 1
     np.testing.assert_allclose(energy, expected, atol=1e-15)
@@ -77,11 +78,12 @@ def test_Irad1():
         np.array(
             [(-90, 0, 1), (0, 90, 1), (0, -90, 1), (45, 0, 1), (90, 0, 1), (180, 0, 1)]
         )
-    )  # 3D tetraedo
+    )  # 3D tetrahedron
     decoder_matrix = get_vbap_decoder_matrix(input_layout, output_layout)
     input_channels = get_input_channels_vbap(virtual, input_layout)
 
-    rad = radial_I_calculation(virtual, input_channels, output_layout, decoder_matrix)
+    speaker_signals = np.dot(input_channels, decoder_matrix.T)
+    rad = radial_I_calculation(virtual, speaker_signals, output_layout)
 
     expected = 1
     np.testing.assert_allclose(rad, expected, atol=1e-15)
@@ -101,9 +103,8 @@ def test_Itrans1():
     decoder_matrix = get_vbap_decoder_matrix(input_layout, output_layout)
     input_channels = get_input_channels_vbap(virtual, input_layout)
 
-    trans = transverse_I_calculation(
-        virtual, input_channels, output_layout, decoder_matrix
-    )
+    speaker_signals = np.dot(input_channels, decoder_matrix.T)
+    trans = transverse_I_calculation(virtual, speaker_signals, output_layout)
 
     expected = 0
     np.testing.assert_allclose(trans, expected, atol=1e-07)
@@ -123,7 +124,8 @@ def test_Pres1():
     decoder_matrix = get_vbap_decoder_matrix(input_layout, output_layout)
     input_channels = get_input_channels_vbap(virtual, input_layout)
 
-    pressure = pressure_calculation(input_channels, decoder_matrix)
+    speaker_signals = np.dot(input_channels, decoder_matrix.T)
+    pressure = pressure_calculation(speaker_signals)
 
     expected = 1
     np.testing.assert_allclose(pressure, expected, atol=1e-07)
@@ -143,9 +145,8 @@ def test_Vel1():
     decoder_matrix = get_vbap_decoder_matrix(input_layout, output_layout)
     input_channels = get_input_channels_vbap(virtual, input_layout)
 
-    radial_v = radial_V_calculation(
-        virtual, input_channels, output_layout, decoder_matrix
-    )
+    speaker_signals = np.dot(input_channels, decoder_matrix.T)
+    radial_v = radial_V_calculation(virtual, speaker_signals, output_layout)
 
     expected = 1
     np.testing.assert_allclose(radial_v, expected, atol=1e-07)
@@ -172,8 +173,8 @@ def test_energy2():
     decoder_matrix = get_ambisonics_decoder_matrix(order, output_layout, "pseudo")
     input_channels = get_input_channels_ambisonics(virtual, order)
 
-    energy = energy_calculation(input_channels, decoder_matrix)
-    print(energy)
+    speaker_signals = np.dot(input_channels, decoder_matrix.T)
+    energy = energy_calculation(speaker_signals)
 
     expected = 1
     np.testing.assert_allclose(energy, expected, atol=1e-07)
@@ -197,8 +198,8 @@ def test_Irad2():
     decoder_matrix = get_ambisonics_decoder_matrix(order, output_layout, "pseudo")
     input_channels = get_input_channels_ambisonics(virtual, order)
 
-    rad = radial_I_calculation(virtual, input_channels, output_layout, decoder_matrix)
-    print(rad)
+    speaker_signals = np.dot(input_channels, decoder_matrix.T)
+    rad = radial_I_calculation(virtual, speaker_signals, output_layout)
 
     expected = 1
     np.testing.assert_allclose(rad, expected, atol=1e-15)
@@ -222,10 +223,8 @@ def test_Itrans2():
     decoder_matrix = get_ambisonics_decoder_matrix(order, output_layout, "pseudo")
     input_channels = get_input_channels_ambisonics(virtual, order)
 
-    trans = transverse_I_calculation(
-        virtual, input_channels, output_layout, decoder_matrix
-    )
-    print(trans)
+    speaker_signals = np.dot(input_channels, decoder_matrix.T)
+    trans = transverse_I_calculation(virtual, speaker_signals, output_layout)
 
     expected = 0
     np.testing.assert_allclose(trans, expected, atol=1e-07)
@@ -250,7 +249,8 @@ def test_Pres2():
     decoder_matrix = get_ambisonics_decoder_matrix(order, output_layout, "pseudo")
     input_channels = get_input_channels_ambisonics(virtual, order)
 
-    pressure = pressure_calculation(input_channels, decoder_matrix)
+    speaker_signals = np.dot(input_channels, decoder_matrix.T)
+    pressure = pressure_calculation(speaker_signals)
 
     expected = 1
     np.testing.assert_allclose(pressure, expected, atol=1e-07)
@@ -275,9 +275,8 @@ def test_Vel2():
     decoder_matrix = get_ambisonics_decoder_matrix(order, output_layout, "pseudo")
     input_channels = get_input_channels_ambisonics(virtual, order)
 
-    radial_v = radial_V_calculation(
-        virtual, input_channels, output_layout, decoder_matrix
-    )
+    speaker_signals = np.dot(input_channels, decoder_matrix.T)
+    radial_v = radial_V_calculation(virtual, speaker_signals, output_layout)
 
     expected = 1
     np.testing.assert_allclose(radial_v, expected, atol=1e-07)
@@ -302,7 +301,8 @@ def test_Pres3():
     decoder_matrix = get_ambisonics_decoder_matrix(order, output_layout, "norm")
     input_channels = get_input_channels_ambisonics(virtual, order)
 
-    pressure = pressure_calculation(input_channels, decoder_matrix)
+    speaker_signals = np.dot(input_channels, decoder_matrix.T)
+    pressure = pressure_calculation(speaker_signals)
 
     expected = 1
     np.testing.assert_allclose(pressure, expected, atol=1e-07)
@@ -334,7 +334,8 @@ def test_energy4():
     decoder_matrix = get_vbap_decoder_matrix(input_layout, output_layout)
     input_channels = get_input_channels_vbap(cloud, input_layout)
 
-    energy = energy_calculation(input_channels, decoder_matrix)
+    speaker_signals = np.dot(input_channels, decoder_matrix.T)
+    energy = energy_calculation(speaker_signals)
 
     expected = cloud.cart().shape[0]
     np.testing.assert_allclose(energy.shape[0], expected, atol=1e-15)
@@ -365,7 +366,8 @@ def test_Irad4():
     decoder_matrix = get_vbap_decoder_matrix(input_layout, output_layout)
     input_channels = get_input_channels_vbap(cloud, input_layout)
 
-    rad = radial_I_calculation(cloud, input_channels, output_layout, decoder_matrix)
+    speaker_signals = np.dot(input_channels, decoder_matrix.T)
+    rad = radial_I_calculation(cloud, speaker_signals, output_layout)
 
     expected = cloud.cart().shape[0]
     np.testing.assert_allclose(rad.shape[0], expected, atol=1e-15)
@@ -396,9 +398,8 @@ def test_Itrans4():
     decoder_matrix = get_vbap_decoder_matrix(input_layout, output_layout)
     input_channels = get_input_channels_vbap(cloud, input_layout)
 
-    trans = transverse_I_calculation(
-        cloud, input_channels, output_layout, decoder_matrix
-    )
+    speaker_signals = np.dot(input_channels, decoder_matrix.T)
+    trans = transverse_I_calculation(cloud, speaker_signals, output_layout)
 
     expected = cloud.cart().shape[0]
     np.testing.assert_allclose(trans.shape[0], expected, atol=1e-07)
@@ -429,7 +430,8 @@ def test_Pres4():
     decoder_matrix = get_vbap_decoder_matrix(input_layout, output_layout)
     input_channels = get_input_channels_vbap(cloud, input_layout)
 
-    pressure = pressure_calculation(input_channels, decoder_matrix)
+    speaker_signals = np.dot(input_channels, decoder_matrix.T)
+    pressure = pressure_calculation(speaker_signals)
 
     expected = cloud.cart().shape[0]
     np.testing.assert_allclose(pressure.shape[0], expected, atol=1e-07)
@@ -460,17 +462,14 @@ def test_Vel4():
     decoder_matrix = get_vbap_decoder_matrix(input_layout, output_layout)
     input_channels = get_input_channels_vbap(cloud, input_layout)
 
-    radial_v = radial_V_calculation(
-        cloud, input_channels, output_layout, decoder_matrix
-    )
+    speaker_signals = np.dot(input_channels, decoder_matrix.T)
+    radial_v = radial_V_calculation(cloud, speaker_signals, output_layout)
 
     expected = cloud.cart().shape[0]
     np.testing.assert_allclose(radial_v.shape[0], expected, atol=1e-07)
 
 
 # AMBISONICS testing cloud of points - check vector sizes
-
-
 def test_energy5():
     output_layout = MyCoordinates.mult_points(
         np.array(
@@ -493,7 +492,8 @@ def test_energy5():
     decoder_matrix = get_ambisonics_decoder_matrix(order, output_layout, "pseudo")
     input_channels = get_input_channels_ambisonics(cloud, order)
 
-    energy = energy_calculation(input_channels, decoder_matrix)
+    speaker_signals = np.dot(input_channels, decoder_matrix.T)
+    energy = energy_calculation(speaker_signals)
 
     expected = cloud.cart().shape[0]
     np.testing.assert_allclose(energy.shape[0], expected, atol=1e-07)
@@ -521,7 +521,8 @@ def test_Irad5():
     decoder_matrix = get_ambisonics_decoder_matrix(order, output_layout, "pseudo")
     input_channels = get_input_channels_ambisonics(cloud, order)
 
-    rad = radial_I_calculation(cloud, input_channels, output_layout, decoder_matrix)
+    speaker_signals = np.dot(input_channels, decoder_matrix.T)
+    rad = radial_I_calculation(cloud, speaker_signals, output_layout)
 
     expected = cloud.cart().shape[0]
     np.testing.assert_allclose(rad.shape[0], expected, atol=1e-15)
@@ -549,9 +550,8 @@ def test_Itrans5():
     decoder_matrix = get_ambisonics_decoder_matrix(order, output_layout, "pseudo")
     input_channels = get_input_channels_ambisonics(cloud, order)
 
-    trans = transverse_I_calculation(
-        cloud, input_channels, output_layout, decoder_matrix
-    )
+    speaker_signals = np.dot(input_channels, decoder_matrix.T)
+    trans = transverse_I_calculation(cloud, speaker_signals, output_layout)
 
     expected = cloud.cart().shape[0]
     np.testing.assert_allclose(trans.shape[0], expected, atol=1e-07)
@@ -579,7 +579,8 @@ def test_Pres5():
     decoder_matrix = get_ambisonics_decoder_matrix(order, output_layout, "pseudo")
     input_channels = get_input_channels_ambisonics(cloud, order)
 
-    pressure = pressure_calculation(input_channels, decoder_matrix)
+    speaker_signals = np.dot(input_channels, decoder_matrix.T)
+    pressure = pressure_calculation(speaker_signals)
 
     expected = cloud.cart().shape[0]
     np.testing.assert_allclose(pressure.shape[0], expected, atol=1e-07)
@@ -607,9 +608,8 @@ def test_Vel5():
     decoder_matrix = get_ambisonics_decoder_matrix(order, output_layout, "pseudo")
     input_channels = get_input_channels_ambisonics(cloud, order)
 
-    radial_v = radial_V_calculation(
-        cloud, input_channels, output_layout, decoder_matrix
-    )
+    speaker_signals = np.dot(input_channels, decoder_matrix.T)
+    radial_v = radial_V_calculation(cloud, speaker_signals, output_layout)
 
     expected = cloud.cart().shape[0]
     np.testing.assert_allclose(radial_v.shape[0], expected, atol=1e-07)
@@ -637,7 +637,8 @@ def test_Pres6():
     decoder_matrix = get_ambisonics_decoder_matrix(order, output_layout, "norm")
     input_channels = get_input_channels_ambisonics(cloud, order)
 
-    pressure = pressure_calculation(input_channels, decoder_matrix)
+    speaker_signals = np.dot(input_channels, decoder_matrix.T)
+    pressure = pressure_calculation(speaker_signals)
 
     expected = cloud.cart().shape[0]
     np.testing.assert_allclose(pressure.shape[0], expected, atol=1e-07)
