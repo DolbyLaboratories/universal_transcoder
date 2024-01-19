@@ -50,34 +50,14 @@ cloud = get_equi_circumference_points(31, False)
 cloud_plots = get_equi_circumference_points(360, False)
 
 # frequency
-# fixme: do we want to run over a list of frequencies? I'd say no...
-# freqs = np.array([50, 100, 200, 500, 1000, 2000, 4000, 8000, 16000])
-# freqs = np.array([50, 100, 200, 500])
-# freqs = np.array([100])
-# in_chans = [
-#     get_input_channels_micro_cardioid(cloud, mic_orientation, mic_position, f)
-#     for f in freqs
-# ]
-# in_chans = np.array(
-#     np.abs(in_chans)
-# )  # fixme: get real from get_input_channels_micro_omni?
-#
-# input_matrix_plots = np.array(
-#     [
-#         get_input_channels_micro_cardioid(cloud_plots, mic_orientation, mic_position, f)
-#         for f in freqs
-#     ]
-# )
-# input_matrix_plots = np.abs(input_matrix_plots)
-
-freqs = 100
+freq = 100
 in_chans = get_input_channels_micro_cardioid(
-    cloud, mic_orientation, mic_position, freqs
+    cloud, mic_orientation, mic_position, freq
 )
 in_chans = np.array(np.abs(in_chans))
 
 input_matrix_plots = get_input_channels_micro_cardioid(
-    cloud_plots, mic_orientation, mic_position, freqs
+    cloud_plots, mic_orientation, mic_position, freq
 )
 input_matrix_plots = np.array(np.abs(input_matrix_plots))
 
@@ -86,9 +66,9 @@ dictionary = {
     "input_format": "microphone",
     "input_matrix_optimization": in_chans,
     "cloud_optimization": cloud,
-    "frequency": freqs,
-    "transcoding": True,  # fixme add decoding matrix
-    "ambisonics_encoding_order": 1,  # fixme add decoding matrix
+    "frequency": freq,
+    "transcoding": True,
+    "ambisonics_encoding_order": 1,
     "output_layout": output_layout,
     "coefficients": {
         "energy": 0,
@@ -113,3 +93,4 @@ dictionary = {
     "channels_labels": [str(idx) for idx in range(len(mic_orientation))],
 }
 transcoding_matrices = optimize(dictionary)
+
