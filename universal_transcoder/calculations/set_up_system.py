@@ -25,7 +25,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
 import jax.numpy as jnp
 import numpy as np
+
 from universal_transcoder.calculations.cost_function import State
+from ..auxiliars.get_decoder_matrices import get_ambisonics_decoder_matrix
 
 
 def set_up_general(info: dict):
@@ -62,7 +64,7 @@ def set_up_general(info: dict):
 
     Returns:
         current_state (State): contains side-information that the optimization process needs (1xL)
-        D_flatten_initial: (jax.numpy Array): vector of shape 1xNM to optimize
+        T_flatten_initial: (jax.numpy Array): vector of shape 1xNM to optimize
     """
     cloud = info["cloud_optimization"]
     layout = info["output_layout"]
@@ -71,13 +73,25 @@ def set_up_general(info: dict):
     M = input_matrix.shape[1]
     N = layout.sph_deg().shape[0]
 
+    if info["transcoding"] == False:
+        # If "transcoding" is not activated
+        Dspk = 1
+    else:
+        # If "transcoding" is activated
+        # because in case transcoding is activated, the transcoding is to Ambisonics
+        #  FIXME this should be more general
+        #  FIXME it should have the possibility to choose between 2D and 3D Ambisonics (at least)
+        order = info["ambisonics_encoding_order"]
+        N = (order + 1) ** 2
+        Dspk = get_ambisonics_decoder_matrix(order, layout, "pseudo")
+
     # Generate Decoding initial matrix
     np.random.seed(0)
     save_shape = (N, M)
-    D_flatten_initial = jnp.ones(N * M) + 0.2 * jnp.array(np.random.randn(N * M))
+    T_flatten_initial = jnp.ones(N * M) + 0.2 * jnp.array(np.random.randn(N * M))
 
     # Create 'current state' class
-    current_state = State(cloud, input_matrix, layout, save_shape, D_flatten_initial)
+    current_state = State(cloud, input_matrix, layout, save_shape, T_flatten_initial)
 
     # Set coefficients
     # Quadratic terms
@@ -95,11 +109,14 @@ def set_up_general(info: dict):
     current_state.csymlin = info["coefficients"]["symmetry_lin"]
     current_state.cminglin = info["coefficients"]["total_gains_lin"]
 
+    # Others
+    current_state.static_decoding_matrix = Dspk
+
     # Set weights
     current_state.w = info["directional_weights"]
 
     # Calculate cost with initial decoding matrix
-    initial_cost = current_state.cost_function(D_flatten_initial)
+    initial_cost = current_state.cost_function(T_flatten_initial)
     print("\nCost value for initial decoding matrix: ", initial_cost)
 
-    return current_state, D_flatten_initial
+    return current_state, T_flatten_initial

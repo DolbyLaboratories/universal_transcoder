@@ -82,7 +82,7 @@ def optimize(info: dict):
 
 
     Returns:
-        D_optimized (numpy Array complex64): optimized decoding matrix (NxM) that decodes
+        T_optimized (numpy Array complex64): optimized decoding matrix (NxM) that decodes
         from the input format to the output format
     """
     # Save optimisation data in json
@@ -90,28 +90,27 @@ def optimize(info: dict):
         save_results(info)
 
     ## Set up optimisation
-    current_state, D_flatten_initial = set_up_general(info)
+    current_state, T_flatten_initial = set_up_general(info)
 
     # Call optimization function
-    D_flatten_optimized = bfgs_optim(
+    T_flatten_optimized = bfgs_optim(
         current_state,
-        D_flatten_initial,
+        T_flatten_initial,
         info["show_results"],
         info["save_results"],
         info["results_file_name"],
     )
 
     # Adapt / reshape result of optimization --> Decoding matrix
-    D_optimized = np.array(D_flatten_optimized).reshape(
+    T_optimized = np.array(T_flatten_optimized).reshape(
         current_state.decoding_matrix_shape
     )
 
     # If show or save flags active
     if info["show_results"] or info["save_results"]:
         if "cloud_plots" in info:
-
-            #Resulting speaker signals
-            speaker_signals=jnp.dot(info["input_matrix_plots"], D_optimized.T)
+            # Resulting speaker signals
+            speaker_signals = jnp.dot(info["input_matrix_plots"], T_optimized.T)
 
             plots_general(
                 info["output_layout"],
@@ -122,8 +121,8 @@ def optimize(info: dict):
                 info["results_file_name"],
             )
         else:
-            #Resulting speaker signals
-            speaker_signals=jnp.dot(info["input_matrix_optimization"], D_optimized.T)
+            # Resulting speaker signals
+            speaker_signals = jnp.dot(info["input_matrix_optimization"], T_optimized.T)
 
             plots_general(
                 info["output_layout"],
@@ -134,7 +133,7 @@ def optimize(info: dict):
                 info["results_file_name"],
             )
 
-    return D_optimized
+    return T_optimized
 
 
 def bfgs_optim(

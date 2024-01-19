@@ -91,3 +91,81 @@ def get_input_channels_ambisonics(cloud_points: MyCoordinates, order: int):
         input_channels[i, :] = ambisonics_encoder(virtual, order)
 
     return input_channels
+
+
+def get_input_channels_micro_cardioid(
+    cloud: MyCoordinates, mic_orientation: np, mic_position: MyCoordinates, f: float
+):
+    """Function to obtain the gains for a cloud of points that encode in cardioid-microphone, where
+    each row corresponds to the coding channels for one point
+
+    Args:
+        cloud (MyCoordinates): positions of the virtual sources pyfar.Coordinates
+                (L points)
+        mic_orientation (np): array specifying orientation of the microphones
+                both in azimut and elevation
+        mic_position (MyCoordinates) position of microphones
+                pyfar.Coordinates (M microphones)
+        f (float): frequency of input sound waves in Hz
+
+    Returns:
+        input_channels (numpy Array complex64): LxM matrix of channel gains
+                for input layout
+    """
+    cloud_points_sph = cloud.sph_rad()
+    mic_orientation_sph = mic_orientation * np.pi / 180
+    mic_position_sph = mic_position.sph_rad()
+    input_channels = np.zeros(
+        [cloud_points_sph.shape[0], mic_orientation_sph.shape[0]], dtype=np.complex64
+    )
+
+    for i in range(cloud_points_sph.shape[0]):
+        for j in range(mic_orientation_sph.shape[0]):
+            gain = (1 + np.cos(mic_orientation_sph[j, 0] - cloud_points_sph[i, 0])) / 2
+            deltaR = mic_position_sph[j, 2] - mic_position_sph[j, 2] * np.cos(
+                mic_position_sph[j, 0] - cloud_points_sph[i, 0]
+            )
+            deltaT = deltaR / 340
+            exponent = 2 * np.pi * f * deltaT
+            input_channels[i, j] = gain * np.exp(-1j * exponent)
+
+    return input_channels
+
+
+def get_input_channels_micro_omni(
+    cloud: MyCoordinates, mic_orientation: np, mic_position: MyCoordinates, f: float
+):
+    """Function to obtain the gains for a cloud of points that encode in  omni-microphone , where
+    each row corresponds to the coded channels for one point
+
+    Args:
+        cloud (MyCoordinates): positions of the virtual sources pyfar.Coordinates
+                (L points)
+        mic_orientation (np): array specifying orientation of the microphones
+                both in azimut and elevation
+        mic_position (MyCoordinates) position of microphones
+                pyfar.Coordinates (M microphones)
+        f (float): frequency of input sound waves in Hz
+
+    Returns:
+        input_channels (numpy Array complex64): LxM matrix of channel gains
+                for input layout
+    """
+    cloud_points_sph = cloud.sph_rad()
+    mic_orientation_sph = mic_orientation * np.pi / 180
+    mic_position_sph = mic_position.sph_rad()
+    input_channels = np.zeros(
+        [cloud_points_sph.shape[0], mic_orientation_sph.shape[0]], dtype=np.complex64
+    )
+
+    for i in range(cloud_points_sph.shape[0]):
+        for j in range(mic_orientation_sph.shape[0]):
+            gain = 1
+            deltaR = mic_position_sph[j, 2] - mic_position_sph[j, 2] * np.cos(
+                mic_position_sph[j, 0] - cloud_points_sph[i, 0]
+            )
+            deltaT = deltaR / 340
+            exponent = 2 * np.pi * f * deltaT
+            input_channels[i, j] = gain * np.exp(-1j * exponent)
+
+    return input_channels
