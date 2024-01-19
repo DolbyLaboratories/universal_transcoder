@@ -65,12 +65,16 @@ class State:
     cmingquad: float = 0  # Total gains Coefficient (quadratic)
     w: np = 1
     n: int = 1
+    #
+    static_decoding_matrix: jnp = 1
+    frequency: int = None
+    extra: dict = None
 
-    def cost_function(self, flatten_decoding_matrix: jnp):
+    def cost_function(self, flatten_transcoding_matrix: jnp):
         """Cost function. Calculates the cost value
 
         Args:
-           flatten_decoding_matrix: input vector, in which first half corresponds
+           flatten_transcoding_matrix: input vector, in which first half corresponds
            to the real part and second half to the imaginary part of the matrix
 
         Returns:
@@ -78,9 +82,12 @@ class State:
         """
 
         # Reshape and re-construct decoding_matrix
-        decoding_matrix = jnp.reshape(
-            flatten_decoding_matrix, self.decoding_matrix_shape
+        transcoding_matrix = jnp.reshape(
+            flatten_transcoding_matrix, self.decoding_matrix_shape
         )
+
+        # D=TxDspk
+        decoding_matrix = jnp.dot(self.static_decoding_matrix, transcoding_matrix)
 
         # Calculate S - output speaker signals
         S = jnp.dot(self.input_matrix, decoding_matrix.T)
@@ -89,42 +96,48 @@ class State:
         energy = energy_calculation(S)
         # Radial intensity vector
         radial_i = radial_I_calculation(
-            self.cloud_points, S, self.output_layout,
+            self.cloud_points,
+            S,
+            self.output_layout,
         )
 
         # Transversal intensity vector
         transverse_i = transverse_I_calculation(
-            self.cloud_points, S, self.output_layout,
+            self.cloud_points,
+            S,
+            self.output_layout,
         )
         # Pressure vector
         pressure = pressure_calculation(S)
         # Radial velocity vector
         radial_v = radial_V_calculation(
-            self.cloud_points, S, self.output_layout,
+            self.cloud_points,
+            S,
+            self.output_layout,
         )
         # Transversal velocity vector
         transverse_v = transversal_V_calculation(
-            self.cloud_points, S, self.output_layout,
+            self.cloud_points,
+            S,
+            self.output_layout,
         )
         # Output gains and in_phase vector
-        #output_gains = jnp.dot(self.input_matrix, decoding_matrix.T)
+        # output_gains = jnp.dot(self.input_matrix, decoding_matrix.T)
         in_phase_quad, in_phase_lin = self._in_phase_1(S)
         # Symmetry vector
         symmetric_gains = self._rearrange_gains(
             self.output_layout, self.cloud_points, S
         )
-        asymmetry_quad, asymmetry_lin = self._symmetry_differences(
-            S, symmetric_gains
-        )
+        asymmetry_quad, asymmetry_lin = self._symmetry_differences(S, symmetric_gains)
         asymmetry_quad = jnp.real(asymmetry_quad)
         asymmetry_lin = jnp.real(asymmetry_lin)
         # Minimize gains
         total_gains_lin = jnp.sum(
-            jnp.abs(flatten_decoding_matrix)
+            jnp.abs(flatten_transcoding_matrix)
             > (10 ** (3.0 / 20))  # try to limit boost to X dBs
         )  # try to stay below +6dB of gain
         total_gains_quad = jnp.sum(
-            jnp.abs(flatten_decoding_matrix) ** 2
+            jnp.abs(flatten_transcoding_matrix) ** 2
             > (10 ** (3.0 / 10))  # try to limit boost to X dBs
         )  # try to stay below +6dB of gain
 

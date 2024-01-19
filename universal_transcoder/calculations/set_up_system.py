@@ -73,10 +73,8 @@ def set_up_general(info: dict):
     M = input_matrix.shape[1]
     N = layout.sph_deg().shape[0]
 
-    if info["transcoding"] == False:
-        # If "transcoding" is not activated
-        Dspk = 1
-    else:
+    Dspk = 1
+    if "transcoding" in info.keys() and info["transcoding"]:
         # If "transcoding" is activated
         # because in case transcoding is activated, the transcoding is to Ambisonics
         #  FIXME this should be more general

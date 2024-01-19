@@ -136,6 +136,12 @@ def write_optimization_log(
     data["initial_flatten_matrix"] = data["initial_flatten_matrix"].tolist()
     optimization_log["set_up"] = data
     optimization_log["optimised_decoding_matrix"] = optimization_result.x.tolist()
+    if "static_decoding_matrix" in optimization_log["set_up"].keys():
+        static_decoding = optimization_log["set_up"]["static_decoding_matrix"]
+        if type(static_decoding) is not int:
+            optimization_log["set_up"][
+                "static_decoding_matrix"
+            ] = static_decoding.tolist()
 
     # Plot Optimization Process
     fig = plt.figure(figsize=(17, 9))
