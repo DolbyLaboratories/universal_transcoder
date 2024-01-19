@@ -1,0 +1,8 @@
+.idea*
+*.pyc
+*.pdf
+*.png
+*.txt
+*.json
+*.r
+venv*
