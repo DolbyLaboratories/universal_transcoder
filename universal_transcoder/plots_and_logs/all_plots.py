@@ -34,7 +34,8 @@ from universal_transcoder.plots_and_logs.speakers_plots import (
 from universal_transcoder.plots_and_logs.paper_plots_to_R import (
     save_physics_to_file,
 )
-
+from universal_transcoder.calculations.energy_intensity import energy_calculation,radial_I_calculation, transverse_I_calculation
+from universal_transcoder.calculations.pressure_velocity import pressure_calculation, radial_V_calculation, transversal_V_calculation
 
 def plots_general(
     output_layout: MyCoordinates,
@@ -57,16 +58,38 @@ def plots_general(
         save_results (bool): Flag to save plots
         results_file_name(str): Path where to save the plots
     """
-    [energy, radial_i, transverse_i]=plot_ei_2D(
-        output_layout,
-        speaker_signals,
+
+    # Energy
+    energy = energy_calculation(speaker_signals)
+    # Intensity
+    radial_i = radial_I_calculation(
+        cloud, speaker_signals, output_layout
+    )
+    transverse_i = transverse_I_calculation(
+        cloud, speaker_signals, output_layout
+    )
+    # Pressure
+    pressure = pressure_calculation(speaker_signals)
+    # Velocity
+    radial_v = radial_V_calculation(
+        cloud, speaker_signals, output_layout
+    )
+    transverse_v = transversal_V_calculation(
+        cloud, speaker_signals, output_layout
+    )
+    
+    plot_ei_2D(
+        energy,
+        radial_i,
+        transverse_i,
         cloud,
         save_results,
         save_plot_name,
     )
-    [pressure, radial_v, transverse_v]=plot_pv_2D(
-        output_layout,
-        speaker_signals,
+    plot_pv_2D(
+        pressure,
+        radial_v,
+        transverse_v,
         cloud,
         save_results,
         save_plot_name,
@@ -78,16 +101,18 @@ def plots_general(
         save_results,
         save_plot_name,
     )
-    [energy, radial_i, transverse_i]= plot_ei_3D(
-        output_layout,
-        speaker_signals,
+    plot_ei_3D(
+        energy,
+        radial_i,
+        transverse_i,
         cloud,
         save_results,
         save_plot_name,
     )
-    [pressure, radial_v, transverse_v]=plot_pv_3D(
-        output_layout,
-        speaker_signals,
+    plot_pv_3D(
+        pressure,
+        radial_v,
+        transverse_v,
         cloud,
         save_results,
         save_plot_name,

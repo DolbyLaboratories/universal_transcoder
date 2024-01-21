@@ -37,8 +37,9 @@ from universal_transcoder.plots_and_logs.common_plots_functions import save_plot
 
 
 def plot_pv_2D(
-    output_layout: MyCoordinates,
-    speaker_signals: np,
+    pressure: np,
+    radial_v: np,
+    transverse_v: np,
     cloud_points: MyCoordinates,
     save_results: bool,
     results_file_name: bool = False,
@@ -62,18 +63,6 @@ def plot_pv_2D(
     mask_horizon = (elevation < 0.01) * (elevation > -0.01)
 
     # Calculations
-    # Pressure vector
-    pressure = pressure_calculation(speaker_signals)
-
-    # Velocity
-    radial_v = radial_V_calculation(
-        cloud_points, speaker_signals, output_layout
-    )
-
-    transverse_v = transversal_V_calculation(
-        cloud_points, speaker_signals, output_layout
-    )
-
     v = np.sqrt(radial_v**2 + transverse_v**2)
 
     # Maxima
@@ -168,8 +157,9 @@ def plot_pv_2D(
 
 
 def plot_pv_3D(
-    output_layout: MyCoordinates,
-    speaker_signals: np,
+    pressure: np,
+    radial_v: np,
+    transverse_v: np,
     cloud_points: MyCoordinates,
     save_results: bool,
     results_file_name: bool = False,
@@ -194,15 +184,6 @@ def plot_pv_3D(
     points = cloud_points.sph_deg()
 
     # Calculations
-    # Pressure vector
-    pressure = pressure_calculation(speaker_signals)
-    # Velocity
-    radial_v = radial_V_calculation(
-        cloud_points, speaker_signals, output_layout
-    )
-    transverse_v = transversal_V_calculation(
-        cloud_points, speaker_signals, output_layout
-    )
 
     # Prepare plot
     ssl._create_default_https_context = ssl._create_unverified_context

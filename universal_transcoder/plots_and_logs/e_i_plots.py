@@ -42,8 +42,9 @@ from universal_transcoder.plots_and_logs.common_plots_functions import save_plot
 
 
 def plot_ei_2D(
-    output_layout: MyCoordinates,
-    speaker_signals: np,
+    energy: np,
+    radial_i: np,
+    transverse_i: np,
     cloud_points: MyCoordinates,
     save_results: bool,
     results_file_name=False,
@@ -67,16 +68,8 @@ def plot_ei_2D(
     mask_horizon = (elevation < 0.01) * (elevation > -0.01)
 
     # Calculations
-    # Energy
-    energy = energy_calculation(speaker_signals)
+    # Energy dB
     energy_db = 10 * np.log10(energy)
-    # Intensity
-    radial_i = radial_I_calculation(
-        cloud_points, speaker_signals, output_layout
-    )
-    transverse_i = transverse_I_calculation(
-        cloud_points, speaker_signals, output_layout
-    )
     # Angular Error
     ang_err = angular_error(radial_i, transverse_i)
     ang_err_rad = ang_err * math.pi / 180
@@ -194,8 +187,9 @@ def plot_ei_2D(
 
 
 def plot_ei_3D(
-    output_layout: MyCoordinates,
-    speaker_signals: np,
+    energy: np,
+    radial_i: np,
+    transverse_i: np,
     cloud_points: MyCoordinates,
     save_results: bool,
     results_file_name=False,
@@ -220,19 +214,9 @@ def plot_ei_3D(
     points = cloud_points.sph_deg()
 
     # Calculations
-    # Energy vector
-    energy = energy_calculation(speaker_signals)
-    # Intensity
-    radial_i = radial_I_calculation(
-        cloud_points, speaker_signals, output_layout
-    )
-    transverse_i = transverse_I_calculation(
-        cloud_points, speaker_signals, output_layout
-    )
     # Angular Error
     ang_err = angular_error(radial_i, transverse_i)
     # Width Angle
-    intensity = intensity_calculation(speaker_signals, output_layout)
     width_deg = width_angle(radial_i)
 
     # Plot
