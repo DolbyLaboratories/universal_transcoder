@@ -28,11 +28,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
-from universal_transcoder.calculations.pressure_velocity import (
-    pressure_calculation,
-    radial_V_calculation,
-    transversal_V_calculation,
-)
 from universal_transcoder.plots_and_logs.common_plots_functions import save_plot
 
 
@@ -49,10 +44,11 @@ def plot_pv_2D(
     decoding from an input format to an output layout. 2D plots.
 
     Args:
-        output_layout (MyCoordinates): positions of output speaker layout:
-                pyfar.Coordinates (N-speakers)
-        speaker_signals (numpy Array): speaker signals resulting from decoding 
-                to input set of encoded L directions (LxN size)
+        pressure (jax.numpy Array): contains the real pressure values for each virtual source (1xL)
+        radial_v (jax.numpy array): contains the real adial velocity values for each virtual
+                source (1xL)
+        transverse_v (jax.numpy array): contains the real transversal velocity values for each virtual
+                source (1xL)
         cloud(MyCoordinates): set of points sampling the sphere (L)
         save_results (bool): Flag to save plots
         results_file_name(str): Path where to save the plots
@@ -170,10 +166,11 @@ def plot_pv_3D(
     3D projection on 2D plots.
 
     Args:
-        output_layout (MyCoordinates): positions of output speaker layout:
-                pyfar.Coordinates (N-speakers)
-        speaker_signals (numpy Array): speaker signals resulting from decoding 
-                to input set of encoded L directions (LxN size)
+        pressure (jax.numpy Array): contains the real pressure values for each virtual source (1xL)
+        radial_v (jax.numpy array): contains the real adial velocity values for each virtual
+                source (1xL)
+        transverse_v (jax.numpy array): contains the real transversal velocity values for each virtual
+                source (1xL)
         cloud(MyCoordinates): set of points sampling the sphere (L)
         save_results (bool): Flag to save plots
         results_file_name(str): Path where to save the plots

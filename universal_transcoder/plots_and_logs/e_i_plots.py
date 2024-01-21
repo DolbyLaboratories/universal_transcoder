@@ -31,10 +31,6 @@ from matplotlib.colors import Normalize
 from matplotlib.ticker import FuncFormatter
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 from universal_transcoder.calculations.energy_intensity import (
-    energy_calculation,
-    intensity_calculation,
-    radial_I_calculation,
-    transverse_I_calculation,
     angular_error,
     width_angle,
 )
@@ -54,10 +50,11 @@ def plot_ei_2D(
     decoding from an input format to an output layout. 2D plots.
 
     Args:
-        output_layout (MyCoordinates): positions of output speaker layout:
-                pyfar.Coordinates (N-speakers)
-        speaker_signals (numpy Array): speaker signals resulting from decoding 
-                to input set of encoded L directions (LxN size)
+        energy (jax.numpy Array): contains the energy values for each virtual source (1xL)
+        radial_i (jax.numpy array): contains the radial intensity values for each virtual
+                source (1xL)
+        transverse_i (jax.numpy array): contains the transversal intensity values for each virtual
+                source (1xL)
         cloud(MyCoordinates): set of points sampling the sphere (L)
         save_results (bool): Flag to save plots
         results_file_name(str): Path where to save the plots
@@ -200,10 +197,11 @@ def plot_ei_3D(
     3D projection on 2D plots.
 
     Args:
-        output_layout (MyCoordinates): positions of output speaker layout:
-                pyfar.Coordinates (N-speakers)
-        speaker_signals (numpy Array): speaker signals resulting from decoding 
-                to input set of encoded L directions (LxN size)
+        energy (jax.numpy Array): contains the energy values for each virtual source (1xL)
+        radial_i (jax.numpy array): contains the radial intensity values for each virtual
+                source (1xL)
+        transverse_i (jax.numpy array): contains the transversal intensity values for each virtual
+                source (1xL)
         cloud(MyCoordinates): set of points sampling the sphere (L)
         save_results (bool): Flag to save plots
         results_file_name(str): Path where to save the plots
