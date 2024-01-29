@@ -108,9 +108,16 @@ def optimize(info: dict):
 
     # If show or save flags active
     if info["show_results"] or info["save_results"]:
+
+        D=T_optimized
+        # unless
+        if "Dspk" in info.keys():
+            # D=TxDspk
+            D = jnp.dot(info["Dspk"], T_optimized)
+
         if "cloud_plots" in info:
             # Resulting speaker signals
-            speaker_signals = jnp.dot(info["input_matrix_plots"], T_optimized.T)
+            speaker_signals = jnp.dot(info["input_matrix_plots"], D.T)
 
             plots_general(
                 info["output_layout"],
@@ -122,7 +129,7 @@ def optimize(info: dict):
             )
         else:
             # Resulting speaker signals
-            speaker_signals = jnp.dot(info["input_matrix_optimization"], T_optimized.T)
+            speaker_signals = jnp.dot(info["input_matrix_optimization"], D.T)
 
             plots_general(
                 info["output_layout"],

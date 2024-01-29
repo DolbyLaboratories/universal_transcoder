@@ -71,17 +71,21 @@ def set_up_general(info: dict):
     input_matrix = info["input_matrix_optimization"]
 
     M = input_matrix.shape[1]
-    N = layout.sph_deg().shape[0]
+    P = layout.sph_deg().shape[0]
 
+    # assume
     Dspk = 1
-    if "transcoding" in info.keys() and info["transcoding"]:
+    N=P
+    # unless:
+    if "Dspk" in info.keys():
         # If "transcoding" is activated
-        # because in case transcoding is activated, the transcoding is to Ambisonics
-        #  FIXME this should be more general
-        #  FIXME it should have the possibility to choose between 2D and 3D Ambisonics (at least)
-        order = info["ambisonics_encoding_order"]
-        N = (order + 1) ** 2
-        Dspk = get_ambisonics_decoder_matrix(order, layout, "pseudo")
+        Dspk = info["Dspk"]
+        P_aux=Dspk.shape[0] #number of output speakers
+        N=Dspk.shape[1] #number of channels in desired transcoding format
+
+        #check if P_aux matches P, otherwise, raise error, introduced wrong data
+        if (P_aux!=P):
+            raise ValueError("Introduced Dspk signal shape does not match defined output_layout. Dspk shape is PxN being P the number of speakers in output_layout and N the number of channels of desired transcoding format.")
 
     # Generate Decoding initial matrix
     np.random.seed(0)
