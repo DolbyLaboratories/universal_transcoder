@@ -148,8 +148,6 @@ def plot_pv_2D(
         file_name = "plot_pressure_velocity_2D_dB.png"
         save_plot(plt, results_file_name, file_name)
     
-    # Return
-    return pressure, radial_v, transverse_v
 
 
 def plot_pv_3D(
@@ -281,5 +279,3 @@ def plot_pv_3D(
         file_name = "plot_pressure_velocity_3D.png"
         save_plot(plt, results_file_name, file_name)
 
-    # Return
-    return pressure, radial_v, transverse_v

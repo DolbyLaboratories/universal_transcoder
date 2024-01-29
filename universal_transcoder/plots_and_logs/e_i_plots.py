@@ -67,6 +67,7 @@ def plot_ei_2D(
     # Calculations
     # Energy dB
     energy_db = 10 * np.log10(energy)
+    print("energy dbs ", energy_db.shape)
     # Angular Error
     ang_err = angular_error(radial_i, transverse_i)
     ang_err_rad = ang_err * math.pi / 180
@@ -179,8 +180,6 @@ def plot_ei_2D(
         file_name = "plot_energy_intensity_2D.png"
         save_plot(plt, results_file_name, file_name)
 
-    # Return
-    return energy, radial_i, transverse_i
 
 
 def plot_ei_3D(
@@ -364,7 +363,7 @@ def plot_ei_3D(
     plt.clim(0, 45)
 
     # Show
-    # plt.show()
+    #plt.show()
     ssl._create_default_https_context = ssl._create_default_https_context
 
     # Save plots
@@ -372,5 +371,3 @@ def plot_ei_3D(
         file_name = "plot_energy_intensity_3D.png"
         save_plot(plt, results_file_name, file_name)
 
-    # Return
-    return energy, radial_i, transverse_i
