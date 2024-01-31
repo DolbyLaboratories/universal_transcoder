@@ -41,18 +41,15 @@ def plot_speaker_2D(
     cloud: MyCoordinates,
     save_results: bool,
     results_file_name,
-    normalize: str = None,
 ):
     """
     Function to plot speaker gains for each speaker of an output layout. 2D plots.
 
     Args:
         output_layout (MyCoordinates): positions of output speaker layout:
-                pyfar.Coordinates (N-speakers)
+                pyfar.Coordinates (P-speakers)
         speaker_signals (numpy Array): speaker signals resulting from decoding 
-                to input set of encoded L directions (LxN size)
-        input_matrix(numpy Array): set of gains that encode each L directions sampling
-                the sphere in input format of M channels (LxM)
+                to input set of encoded L directions (LxP size)
         cloud(MyCoordinates): set of points sampling the sphere (L)
         save_results (bool): Flag to save plots
         results_file_name(str): Path where to save the plots
@@ -128,7 +125,6 @@ def plot_speaker_3D(
     cloud_points: MyCoordinates,
     save_results: bool,
     results_file_name: bool = False,
-    normalize: str = None,
 ):
     """
     Function to plot speaker gains for each speaker of an output layout.
@@ -136,9 +132,9 @@ def plot_speaker_3D(
 
     Args:
         output_layout (MyCoordinates): positions of output speaker layout:
-                pyfar.Coordinates (N-speakers)
+                pyfar.Coordinates (P-speakers)
         speaker_signals (numpy Array): speaker signals resulting from decoding 
-                to input set of encoded L directions (LxN size)
+                to input set of encoded L directions (LxP size)
         cloud(MyCoordinates): set of points sampling the sphere (L)
         save_results (bool): Flag to save plots
         results_file_name(str): Path where to save the plots

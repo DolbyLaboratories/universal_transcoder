@@ -32,8 +32,8 @@ def pressure_calculation(speaker_signals: jnp):
     layout out of the coded channel gains
 
     Args:
-        speaker_signals (numpy Array): speaker signals resulting from decoding 
-                to input set of encoded L directions (LxN size)
+        speaker_signals (numpy Array): speaker signals (P speakers) resulting from decoding 
+                the input set of encoded L directions (LxP size)
 
     Returns:
         pressure (jax.numpy Array): contains the real pressure values for each virtual source (1xL)
@@ -53,10 +53,9 @@ def velocity_calculation(
     output layout out of the coded channel gains
 
     Args:
-        speaker_signals (numpy Array): speaker signals resulting from decoding 
-                to input set of encoded L directions (LxN size)
-        decoder_matrix (jax.numpy array): decoding matrix from input format to
-                output layout (NxM size)
+        speaker_signals (numpy Array): speaker signals (P speakers) resulting from decoding 
+                the input set of encoded L directions (LxP size)
+        output_layout (MyCoordinates): positions of output speaker layout: (P speakers)
 
     Returns:
         velocity (jax.numpy array): real velocity vector for each virtual source,
@@ -87,9 +86,9 @@ def radial_V_calculation(
 
     Args:
         cloud_points (MyCoordinates): position of the virtual sources pyfar.Coordinates (L sources)
-        speaker_signals (numpy Array): speaker signals resulting from decoding 
-                to input set of encoded L directions (LxN size)
-        output_layout (MyCoordinates): positions of output speaker layout: (N speakers)
+        speaker_signals (numpy Array): speaker signals (P speakers) resulting from decoding 
+                the input set of encoded L directions (LxP size)
+        output_layout (MyCoordinates): positions of output speaker layout: (P speakers)
 
     Returns:
         radial_velocity (jax.numpy array): contains the real adial velocity values for each virtual
@@ -117,9 +116,9 @@ def transversal_V_calculation(
 
     Args:
         cloud_points (MyCoordinates): position of the virtual sources pyfar.Coordinates (L sources)
-        speaker_signals (numpy Array): speaker signals resulting from decoding 
-                to input set of encoded L directions (LxN size)
-        output_layout (MyCoordinates): positions of output speaker layout: (N speakers)
+        speaker_signals (numpy Array): speaker signals (P speakers) resulting from decoding 
+                the input set of encoded L directions (LxP size)
+        output_layout (MyCoordinates): positions of output speaker layout: (P speakers)
 
     Returns:
         transversal_velocity (jax.numpy array): contains the real transversal velocity values for each virtual

@@ -48,7 +48,7 @@ os.environ["JAX_ENABLE_X64"] = "1"
 def optimize(info: dict):
     """
     Complete optimization process. Function to prepare the optimization, to call the
-    optimization obtaining the final optimised decoding matrix (NxM) for each given situation.
+    optimization obtaining the final optimised transcoding matrix (NxM) for each given situation.
     Depending on the activated flags it also generates, saves or shows interesting information
     regarding the optimization process and the results.
 
@@ -57,7 +57,7 @@ def optimize(info: dict):
             dictionary = {
                 "input_matrix_optimization": input,     # Input matrix that encodes in input format LxM
                 "cloud_optimization": cloud,            # Cloud of points sampling the sphere (L)
-                "output_layout": output_layout,         # Output layout of speakers to decode
+                "output_layout": output_layout,         # Output layout of speakers to decode (P speakers)
                 "coefficients": {                       # List of coefficients to the cost function
                     "energy": 0,
                     "radial_intensity": 0,
@@ -72,17 +72,17 @@ def optimize(info: dict):
                     "symmetry_quad": 0,
                     "total_gains_quad": 0,
                 },
-                "directional_weights": 1,               # Weights given to different directions sampling the sphere
+                "directional_weights": 1,               # Weights given to different directions sampling the sphere (L)
                 "show_results": True,                   # Flag to show results
                 "save_results": False,                  # Flag to save results
-                "cloud_plots": cloud,                   # Cloud of points sampling the sphere for the plots(P)
-                "input_matrix_plots": matrix,           # Matrix that encodes in input format PxM, for the plots
+                "cloud_plots": cloud,                   # Cloud of points sampling the sphere for the plots
+                "input_matrix_plots": matrix,           # Matrix that encodes in input format, for the plots
                 "results_file_name": "name",            # String of folder name where to save, if save_results=True
             }
 
 
     Returns:
-        T_optimized (numpy Array complex64): optimized decoding matrix (NxM) that decodes
+        T_optimized (numpy Array complex64): optimized transcoding matrix (NxM) that transcodes
         from the input format to the output format
     """
     # Save optimisation data in json
@@ -101,9 +101,9 @@ def optimize(info: dict):
         info["results_file_name"],
     )
 
-    # Adapt / reshape result of optimization --> Decoding matrix
+    # Adapt / reshape result of optimization --> transcoding matrix
     T_optimized = np.array(T_flatten_optimized).reshape(
-        current_state.decoding_matrix_shape
+        current_state.transcoding_matrix_shape
     )
 
     # If show or save flags active
@@ -112,7 +112,7 @@ def optimize(info: dict):
         D=T_optimized
         # unless
         if "Dspk" in info.keys():
-            # D=TxDspk
+            # D= Dspk x T
             D = jnp.dot(info["Dspk"], T_optimized)
 
         if "cloud_plots" in info:
@@ -151,13 +151,13 @@ def bfgs_optim(
     results_file_name,
 ):
     """
-    Optimization function to generate an optimized flatten decoder matrix using
+    Optimization function to generate an optimized flatten transcoding matrix using
     BFGS method. It can also print through terminal or save an optimisation log
 
     Args:
-        current_state (class State): saving cloud, input_matrix(LxM), output_layout
-                and decoder_matrix shape
-        flatten_initial_dec (numpy Array): not-optimized flatten decoding matrix from
+        current_state (class State): saving cloud, input_matrix(LxM), output_layout(P)
+                and transcoding_matrix shape
+        flatten_initial_dec (numpy Array): not-optimized flatten transcoding matrix from
                 input format to output_layout ((NxM)x1 size)
         show_results (bool): flag to show plots and results
         save_results (bool): flag to save plots and results
@@ -165,7 +165,7 @@ def bfgs_optim(
                 String that gives name to the folder where results are saved
 
     Returns:
-        dec_matrix_bfgs (numpy Array): optimized flatten decoding matrix ((NxM)x1 size)
+        dec_matrix_bfgs (numpy Array): optimized flatten transcoding matrix ((NxM)x1 size)
     """
 
     # Initial time

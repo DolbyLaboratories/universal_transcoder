@@ -32,8 +32,8 @@ def energy_calculation(speaker_signals: jnp):
     layout out from the coded channel gains
 
     Args:
-        speaker_signals (numpy Array): speaker signals resulting from decoding 
-                to input set of encoded L directions (LxN size)
+        speaker_signals (numpy Array): speaker signals (P speakers) resulting from decoding 
+                the input set of encoded L directions (LxP size)
 
     Returns:
         energy (jax.numpy Array): contains the energy values for each virtual source (1xL)
@@ -53,9 +53,9 @@ def intensity_calculation(
     layout out from the coded channel gains
 
     Args:
-        speaker_signals (numpy Array): speaker signals resulting from decoding 
-                to input set of encoded L directions (LxN size)
-        output_layout (MyCoordinates): positions of output speaker layout: (N speakers)
+        speaker_signals (numpy Array): speaker signals (P speakers) resulting from decoding 
+                the input set of encoded L directions (LxP size)
+        output_layout (MyCoordinates): positions of output speaker layout: (P speakers)
 
     Returns:
         intensity (jax.numpy array): intensity vector for each virtual source,
@@ -85,9 +85,9 @@ def radial_I_calculation(
 
     Args:
         cloud_points (MyCoordinates): position of the virtual sources pyfar.Coordinates (L sources)
-        speaker_signals (numpy Array): speaker signals resulting from decoding 
-                to input set of encoded L directions (LxN size)
-        output_layout (MyCoordinates): positions of output speaker layout: (N speakers)
+        speaker_signals (numpy Array): speaker signals (P speakers) resulting from decoding 
+                the input set of encoded L directions (LxP size)
+        output_layout (MyCoordinates): positions of output speaker layout: (P speakers)
 
     Returns:
         radial_intensity (jax.numpy array): contains the radial intensity values for each virtual
@@ -115,9 +115,9 @@ def transverse_I_calculation(
 
     Args:
         cloud_points (MyCoordinates): position of the virtual sources pyfar.Coordinates (L sources)
-        speaker_signals (numpy Array): speaker signals resulting from decoding 
-                to input set of encoded L directions (LxN size)
-        output_layout (MyCoordinates): positions of output speaker layout: (N speakers)
+        speaker_signals (numpy Array): speaker signals (P speakers) resulting from decoding 
+                the input set of encoded L directions (LxP size)
+        output_layout (MyCoordinates): positions of output speaker layout: (P speakers)
 
     Returns:
         transversal_intensity (jax.numpy array): contains the transversal intensity values for each virtual

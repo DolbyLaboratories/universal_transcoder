@@ -49,7 +49,7 @@ class State:
     cloud_points: MyCoordinates
     input_matrix: jnp
     output_layout: MyCoordinates
-    decoding_matrix_shape: tuple = (0, 0)
+    transcoding_matrix_shape: tuple = (0, 0)
     initial_flatten_matrix: jnp = 0
     ce: float = 0  # Energy Coefficient (quadratic)
     cir: float = 0  # Radial Intensity Coefficient (quadratic)
@@ -81,12 +81,12 @@ class State:
             cost value (float): value of the resulting cost
         """
 
-        # Reshape and re-construct decoding_matrix
+        # Reshape and re-construct transcoding_matrix
         transcoding_matrix = jnp.reshape(
-            flatten_transcoding_matrix, self.decoding_matrix_shape
+            flatten_transcoding_matrix, self.transcoding_matrix_shape
         )
 
-        # D=TxDspk
+        # D = Dspk x T
         decoding_matrix = jnp.dot(self.static_decoding_matrix, transcoding_matrix)
 
         # Calculate S - output speaker signals
@@ -121,8 +121,7 @@ class State:
             S,
             self.output_layout,
         )
-        # Output gains and in_phase vector
-        # output_gains = jnp.dot(self.input_matrix, decoding_matrix.T)
+        # In_phase vector
         in_phase_quad, in_phase_lin = self._in_phase_1(S)
         # Symmetry vector
         symmetric_gains = self._rearrange_gains(
@@ -193,24 +192,24 @@ class State:
         return (1.0 / self.n) * jnp.sum((variable**2) * self.w)
 
     @staticmethod
-    def _in_phase_1(output_gains):
+    def _in_phase_1(speaker_signals):
         """Function that calculates the not-in-phase contribution, accounting those gains which
         are negative
 
         Args:
-           output_gains (numpy Array): array of output gains of each of the N speakers to
-                recreate each of the L virtual directions sampling the sphere. Shape LxN
+           speaker_signals (numpy Array): array of output gains of each of the P speakers to
+                recreate each of the L virtual directions sampling the sphere. Shape LxP
 
         Returns:
             in_phase_quad (numpy Array): quadratic not-in-phase contribution of the set of
-                    N speakers when reproducing each of the L virtual sources . Shape 1xL
+                    P speakers when reproducing each of the L virtual sources . Shape 1xL
             in_phase_lin (numpy Array): linear not-in-phase contribution of the set of
-                    N speakers when reproducing each of the L virtual sources . Shape 1xL
+                    P speakers when reproducing each of the L virtual sources . Shape 1xL
         """
-        output_gains_R = jnp.real(output_gains)
-        mask = jnp.heaviside(-output_gains_R, 0)
-        in_phase_quad = jnp.sum((output_gains_R * mask) ** 2, axis=1)
-        in_phase_lin = jnp.sum((abs(output_gains_R) * mask), axis=1)
+        speaker_signals_R = jnp.real(speaker_signals)
+        mask = jnp.heaviside(-speaker_signals_R, 0)
+        in_phase_quad = jnp.sum((speaker_signals_R * mask) ** 2, axis=1)
+        in_phase_lin = jnp.sum((abs(speaker_signals_R) * mask), axis=1)
         return in_phase_quad, in_phase_lin
 
     @staticmethod
@@ -219,8 +218,8 @@ class State:
         of symmetric pairs are coincident in the same position
 
         Args:
-           layout (MyCoordinates): set of positions of speakers in layout
-           cloud(MyCoordinates): set of positions of directions sampling the sphere
+           layout (MyCoordinates): set of positions of P speakers in layout
+           cloud(MyCoordinates): set of positions of L directions sampling the sphere
            gains (numpy Array): array of gains to be rearranged
 
         Returns:
@@ -229,12 +228,12 @@ class State:
         pairs_layout = get_left_right_pairs(layout)
         pairs_cloud = get_left_right_pairs(cloud)
 
-        N = pairs_layout.size
+        P = pairs_layout.size
         L = pairs_cloud.size
 
         # first I get the order for columns
-        gains_columns = np.zeros(N).astype(int)
-        for i in range(N):
+        gains_columns = np.zeros(P).astype(int)
+        for i in range(P):
             aux = pairs_layout[i]
             if aux == 0:
                 gains_columns[i] = i
@@ -267,18 +266,18 @@ class State:
         in which coincident positions correspond to the gains of symmetric pairs.
 
         Args:
-            gains (numpy Array): array of output gains of each of the N speakers to
-                recreate each of the L virtual directions sampling the sphere. Shape LxN
+            gains (numpy Array): array of output gains of each of the P speakers to
+                recreate each of the L virtual directions sampling the sphere. Shape LxP
            reordered_gains (numpy Array): re-arranged array of output gains of each of the
-                N speakers to recreate each of the L virtual directions sampling the sphere,
+                P speakers to recreate each of the L virtual directions sampling the sphere,
                 in such order that each position corresponds to the symmetric pair of the
-                other input array "gains". Shape LxN
+                other input array "gains". Shape LxP
 
         Returns:
             asymmetry_quad (numpy Array): quadratic asymmetry contribution of the set of
-                    N speakers when reproducing each of the L virtual sources . Shape 1xL
+                    P speakers when reproducing each of the L virtual sources . Shape 1xL
             asymmetry_lin (numpy Array): linear asymmetry contribution of the set of
-                    N speakers when reproducing each of the L virtual sources . Shape 1xL
+                    P speakers when reproducing each of the L virtual sources . Shape 1xL
         """
         differences = gains - reordered_gains
         asymmetry_quad = jnp.sum(jnp.abs(differences) ** 2, axis=1)
