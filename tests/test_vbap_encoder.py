@@ -96,6 +96,28 @@ def test_vbap_3D_encoder3():
     np.testing.assert_allclose(speaker_gains, expected_gains, atol=1e-15)
 
 
+def test_vbap_3D_encoder4():
+    layout = MyCoordinates.mult_points(
+        np.array(
+            [
+                (-130, 0, 1),
+                (-120, 45, 1),
+                (-50, 0, 1),
+                (-40, 45, 1),
+                (0, 0, 1),
+                (40, 45, 1),
+                (50, 0, 1),
+                (120, 45, 1),
+                (130, 0, 1),
+            ]
+        )
+    )
+    virtual = MyCoordinates.mult_points_cart(np.mean(layout.cart()[:3, :], axis=0, keepdims=True))
+    speaker_gains = vbap_3D_encoder(virtual, layout)
+    expected_gains = np.array([1/3, 1/3, 1/3, 0, 0, 0, 0, 0, 0])
+    np.testing.assert_allclose(speaker_gains, expected_gains, atol=1e-15)
+
+
 # VBAP 2D
 def test_vbap_2D_encoder1():
     virtual = MyCoordinates.point(120, 0)
