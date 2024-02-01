@@ -27,11 +27,10 @@ import jax.numpy as jnp
 import numpy as np
 
 from universal_transcoder.calculations.cost_function import State
-from ..auxiliars.get_decoder_matrices import get_ambisonics_decoder_matrix
 
 
 def set_up_general(info: dict):
-    """Function to prepare the system for optimization. It generates the initial decoding matrix
+    """Function to prepare the system for optimization. It generates the initial transcoding matrix
     of the appropiate size and it stores in class State all the needed data for the optimization
 
     Args:
@@ -39,7 +38,7 @@ def set_up_general(info: dict):
             dictionary = {
                 "input_matrix_optimization": input,     # Input matrix that encodes in input format LxM
                 "cloud_optimization": cloud,            # Cloud of points sampling the sphere (L)
-                "output_layout": output_layout,         # Output layout of speakers to decode
+                "output_layout": output_layout,         # Output layout of speakers to decode (P speakers)
                 "coefficients": {                       # List of coefficients to the cost function
                     "energy": 0,
                     "radial_intensity": 0,
@@ -54,11 +53,11 @@ def set_up_general(info: dict):
                     "symmetry_quad": 0,
                     "total_gains_quad": 0,
                 },
-                "directional_weights": 1,               # Weights given to different directions sampling the sphere
+                "directional_weights": 1,               # Weights given to different directions sampling the sphere (L)
                 "show_results": True,                   # Flag to show results
                 "save_results": False,                  # Flag to save results
-                "cloud_plots": cloud,                   # Cloud of points sampling the sphere (P) for plots
-                "input_matrix_plots": matrix,           # Matrix that encodes in input format PxM, for plots
+                "cloud_plots": cloud,                   # Cloud of points sampling the sphere for plots
+                "input_matrix_plots": matrix,           # Matrix that encodes in input format, for plots
                 "results_file_name": "name",            # String of folder name where to save, if save_results=True
             }
 
@@ -80,7 +79,7 @@ def set_up_general(info: dict):
     if "Dspk" in info.keys():
         # If "transcoding" is activated
         Dspk = info["Dspk"]
-        P_aux=Dspk.shape[0] #number of output speakers
+        P_aux=Dspk.shape[0] #number of output speakers, to check coherence
         N=Dspk.shape[1] #number of channels in desired transcoding format
 
         #check if P_aux matches P, otherwise, raise error, introduced wrong data
@@ -117,8 +116,8 @@ def set_up_general(info: dict):
     # Set weights
     current_state.w = info["directional_weights"]
 
-    # Calculate cost with initial decoding matrix
+    # Calculate cost with initial transcoding matrix
     initial_cost = current_state.cost_function(T_flatten_initial)
-    print("\nCost value for initial decoding matrix: ", initial_cost)
+    print("\nCost value for initial transcoding matrix: ", initial_cost)
 
     return current_state, T_flatten_initial

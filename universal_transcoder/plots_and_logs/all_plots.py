@@ -50,9 +50,9 @@ def plots_general(
 
     Args:
         output_layout (MyCoordinates): positions of output speaker layout:
-                pyfar.Coordinates (N-speakers)
+                pyfar.Coordinates (P-speakers)
         speaker_signals (numpy Array): speaker signals resulting from decoding 
-                to input set of encoded L directions (LxN size)
+                to input set of encoded L directions (LxP size)
         cloud(MyCoordinates): set of points sampling the sphere (L)
         show_results (bool): Flag to show plots
         save_results (bool): Flag to save plots

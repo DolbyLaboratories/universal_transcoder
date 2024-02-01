@@ -63,6 +63,10 @@ def generate_json(data: dict, route_name: str):
         # Adapt cloud format
         data_dict["cloud_plots"] = data_dict["cloud_plots"].sph_deg().tolist()
 
+    if "Dspk" in data_dict:
+        data_dict["Dspk"] = data_dict["Dspk"].tolist()
+
+
     # Save in JSON
     with open(route_name, "w") as file:
         json.dump(data_dict, file)
@@ -135,7 +139,7 @@ def write_optimization_log(
     del data["input_matrix"]
     data["initial_flatten_matrix"] = data["initial_flatten_matrix"].tolist()
     optimization_log["set_up"] = data
-    optimization_log["optimised_decoding_matrix"] = optimization_result.x.tolist()
+    optimization_log["optimised_transcoding_matrix"] = optimization_result.x.tolist()
     if "static_decoding_matrix" in optimization_log["set_up"].keys():
         static_decoding = optimization_log["set_up"]["static_decoding_matrix"]
         if type(static_decoding) is not int:
