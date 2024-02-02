@@ -67,6 +67,11 @@ def generate_json(data: dict, route_name: str):
         data_dict["Dspk"] = data_dict["Dspk"].tolist()
 
 
+    if "directional_weights" in data_dict and isinstance(
+        data_dict["directional_weights"], np.ndarray
+    ):
+        data_dict["directional_weights"] = data_dict["directional_weights"].tolist()
+
     # Save in JSON
     with open(route_name, "w") as file:
         json.dump(data_dict, file)
@@ -137,6 +142,7 @@ def write_optimization_log(
     del data["cloud_points"]
     del data["output_layout"]
     del data["input_matrix"]
+    del data["w"]
     data["initial_flatten_matrix"] = data["initial_flatten_matrix"].tolist()
     optimization_log["set_up"] = data
     optimization_log["optimised_transcoding_matrix"] = optimization_result.x.tolist()
