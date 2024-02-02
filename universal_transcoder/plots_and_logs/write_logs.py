@@ -26,7 +26,10 @@ POSSIBILITY OF SUCH DAMAGE.
 import copy
 import json
 import os
+from typing import Dict, Any
+
 import jax.numpy as jnp
+from universal_transcoder.auxiliars.typing import Array
 import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.basemap import Basemap
@@ -65,7 +68,6 @@ def generate_json(data: dict, route_name: str):
 
     if "Dspk" in data_dict:
         data_dict["Dspk"] = data_dict["Dspk"].tolist()
-
 
     if "directional_weights" in data_dict and isinstance(
         data_dict["directional_weights"], np.ndarray
@@ -109,7 +111,7 @@ def write_optimization_log(
     current_state: State,
     optimization_result,
     execution_time: float,
-    cost_values: jnp,
+    cost_values: Array,
     show_results: bool,
     save_results: bool,
     results_file_name,
@@ -124,14 +126,14 @@ def write_optimization_log(
                 transcoding matrix shape and more
         optimization_result: containing all details of optimization process
         execution_time (float): time of execution of optimisation
-        cost_values (jax.numpy array): values of cost in each iteration
+        cost_values (jax array): values of cost in each iteration
         show_results: Flag to show results
         save_results: Flag to save results
         results_file_name: String of folder name where to save, if save_results=True
 
     """
 
-    optimization_log = {}
+    optimization_log: Dict[str, Any] = {}
     optimization_log["time_execution"] = execution_time
     optimization_log["n_it"] = optimization_result.nit
     optimization_log["success"] = optimization_result.success

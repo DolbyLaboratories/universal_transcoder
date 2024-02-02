@@ -50,7 +50,7 @@ def angular_distance(theta1, e1, theta2, e2):
     return dist
 
 
-def get_left_right_pairs(points: MyCoordinates, tol: int = 2):
+def get_left_right_pairs(points: MyCoordinates, tol: float = 2.):
     """Function to find the symmetric pairs in a layout, a set of positions,
     with a tolerance (default 2 degrees)
 
@@ -59,7 +59,7 @@ def get_left_right_pairs(points: MyCoordinates, tol: int = 2):
         tol (float): Degrees of tolerance allowed to find pairs
 
     Returns:
-        paired (numpy Array): array which positions corresponds to those of the
+        paired (Array): array which positions corresponds to those of the
         input layout, and in which points belonging to the same pair are "tagged"
         with the same number
     """

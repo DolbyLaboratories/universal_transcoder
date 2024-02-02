@@ -37,7 +37,7 @@ def get_allrad_decoder(file_name_json: Union[str, PathLike], type: str, order: i
     with open(file_name_json, "r") as file:
         dictionary = dict(json.load(file))
 
-    decoding_matrix = jnp.array(dictionary["Decoder"]["Matrix"])
+    decoding_matrix = np.array(dictionary["Decoder"]["Matrix"])
 
     # Apply inphase or maxre
     if type == "maxre":

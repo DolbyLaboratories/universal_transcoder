@@ -24,19 +24,21 @@ POSSIBILITY OF SUCH DAMAGE.
 """
 
 import jax.numpy as jnp
+from universal_transcoder.auxiliars.typing import ArrayLike
+from universal_transcoder.auxiliars.typing import JaxArray
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 
 
-def energy_calculation(speaker_signals: jnp):
+def energy_calculation(speaker_signals: ArrayLike) -> JaxArray:
     """Function to obtain the energy of each virtual source of a cloud of points in an output
     layout out from the coded channel gains
 
     Args:
-        speaker_signals (numpy Array): speaker signals (P speakers) resulting from decoding 
+        speaker_signals (Array): speaker signals (P speakers) resulting from decoding 
                 the input set of encoded L directions (LxP size)
 
     Returns:
-        energy (jax.numpy Array): contains the energy values for each virtual source (1xL)
+        energy (jax Array): contains the energy values for each virtual source (1xL)
     """
 
     # Calculate energy
@@ -46,19 +48,19 @@ def energy_calculation(speaker_signals: jnp):
 
 
 def intensity_calculation(
-    speaker_signals: jnp,
+    speaker_signals: ArrayLike,
     output_layout: MyCoordinates,
-):
+) -> JaxArray:
     """Function to obtain the intensity of each virtual source of a cloud of points in an output
     layout out from the coded channel gains
 
     Args:
-        speaker_signals (numpy Array): speaker signals (P speakers) resulting from decoding 
+        speaker_signals (Array): speaker signals (P speakers) resulting from decoding 
                 the input set of encoded L directions (LxP size)
         output_layout (MyCoordinates): positions of output speaker layout: (P speakers)
 
     Returns:
-        intensity (jax.numpy array): intensity vector for each virtual source,
+        intensity (jax array): intensity vector for each virtual source,
                 cartesian coordinates (Lx3)
     """
 
@@ -77,15 +79,15 @@ def intensity_calculation(
 
 def radial_I_calculation(
     cloud_points: MyCoordinates,
-    speaker_signals: jnp,
+    speaker_signals: ArrayLike,
     output_layout: MyCoordinates,
-):
+) -> JaxArray:
     """Function to obtain the radial intensity of each virtual source of a cloud of points in an output
     layout out from the coded channel gains
 
     Args:
         cloud_points (MyCoordinates): position of the virtual sources pyfar.Coordinates (L sources)
-        speaker_signals (numpy Array): speaker signals (P speakers) resulting from decoding 
+        speaker_signals (Array): speaker signals (P speakers) resulting from decoding 
                 the input set of encoded L directions (LxP size)
         output_layout (MyCoordinates): positions of output speaker layout: (P speakers)
 
@@ -107,15 +109,15 @@ def radial_I_calculation(
 
 def transverse_I_calculation(
     cloud_points: MyCoordinates,
-    speaker_signals: jnp,
+    speaker_signals: ArrayLike,
     output_layout: MyCoordinates,
-):
+) -> JaxArray:
     """Function to obtain the transverse intensity of each virtual source of a cloud of points in an output
     layout out from the coded channel gains
 
     Args:
         cloud_points (MyCoordinates): position of the virtual sources pyfar.Coordinates (L sources)
-        speaker_signals (numpy Array): speaker signals (P speakers) resulting from decoding 
+        speaker_signals (Array): speaker signals (P speakers) resulting from decoding 
                 the input set of encoded L directions (LxP size)
         output_layout (MyCoordinates): positions of output speaker layout: (P speakers)
 
@@ -137,16 +139,16 @@ def transverse_I_calculation(
     return transverse_intensity
 
 
-def angular_error(radial: jnp, transverse: jnp):
+def angular_error(radial: ArrayLike, transverse: ArrayLike) -> JaxArray:
     """Function to obtain the angular error of each virtual source of a cloud of points given the
     radial and transverse components of the intensity
 
     Args:
-        radial (jax.numpy array): contains the radial intensity values for each virtual source (1xL)
-        transverse (jax.numpy array): contains the transversal intensity values for each virtual source (1xL)
+        radial (array): contains the radial intensity values for each virtual source (1xL)
+        transverse (array): contains the transversal intensity values for each virtual source (1xL)
 
     Returns:
-        error (jax.numpy array): contains the angular error values for each virtual source (1xL)
+        error (jax array): contains the angular error values for each virtual source (1xL)
     """
     tan = jnp.abs(transverse) / jnp.abs(radial)
     error_rad = jnp.arctan(tan)  # -pi/2 to pi/2
@@ -154,15 +156,15 @@ def angular_error(radial: jnp, transverse: jnp):
     return error
 
 
-def width_angle(intensity: jnp):
+def width_angle(intensity: ArrayLike) -> JaxArray:
     """Function to obtain the width of each virtual source of a cloud of points given the
     radial component of the intensity
 
     Args:
-        intensity (jax.numpy array): contains the radial intensity values for each virtual source (1xL)
+        intensity (array): contains the radial intensity values for each virtual source (1xL)
 
     Returns:
-        width (jax.numpy array): contains the width values for each virtual source (1xL) in degrees
+        width (array): contains the width values for each virtual source (1xL) in degrees
     """
     width = jnp.degrees(jnp.arccos(jnp.abs(intensity)))
     return width

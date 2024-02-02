@@ -23,7 +23,11 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVE
 POSSIBILITY OF SUCH DAMAGE.
 """
 
+from typing import Optional, Tuple
+
 import jax.numpy as jnp
+from universal_transcoder.auxiliars.typing import ArrayLike, Array
+from universal_transcoder.auxiliars.typing import JaxArray
 import numpy as np
 from dataclasses import dataclass
 from universal_transcoder.auxiliars.get_left_right_pairs import get_left_right_pairs
@@ -47,10 +51,10 @@ class State:
     Main functions are documented below."""
 
     cloud_points: MyCoordinates
-    input_matrix: jnp
+    input_matrix: ArrayLike
     output_layout: MyCoordinates
     transcoding_matrix_shape: tuple = (0, 0)
-    initial_flatten_matrix: jnp = 0
+    initial_flatten_matrix: ArrayLike = 0
     ce: float = 0  # Energy Coefficient (quadratic)
     cir: float = 0  # Radial Intensity Coefficient (quadratic)
     cit: float = 0  # Transverse Intensity Coefficient (quadratic)
@@ -63,14 +67,14 @@ class State:
     csymlin: float = 0  # Symmetry Coefficient (linear)
     cminglin: float = 0  # Total gains Coefficient (linear)
     cmingquad: float = 0  # Total gains Coefficient (quadratic)
-    w: np = 1
+    w: ArrayLike = 1
     n: int = 1
     #
-    static_decoding_matrix: jnp = 1
-    frequency: int = None
-    extra: dict = None
+    static_decoding_matrix: ArrayLike = 1
+    frequency: Optional[int] = None
+    extra: Optional[dict] = None
 
-    def cost_function(self, flatten_transcoding_matrix: jnp):
+    def cost_function(self, flatten_transcoding_matrix: ArrayLike) -> JaxArray:
         """Cost function. Calculates the cost value
 
         Args:
@@ -192,18 +196,18 @@ class State:
         return (1.0 / self.n) * jnp.sum((variable**2) * self.w)
 
     @staticmethod
-    def _in_phase_1(speaker_signals):
+    def _in_phase_1(speaker_signals: ArrayLike) -> Tuple[JaxArray, JaxArray]:
         """Function that calculates the not-in-phase contribution, accounting those gains which
         are negative
 
         Args:
-           speaker_signals (numpy Array): array of output gains of each of the P speakers to
+           speaker_signals (Array): array of output gains of each of the P speakers to
                 recreate each of the L virtual directions sampling the sphere. Shape LxP
 
         Returns:
-            in_phase_quad (numpy Array): quadratic not-in-phase contribution of the set of
+            in_phase_quad (Array): quadratic not-in-phase contribution of the set of
                     P speakers when reproducing each of the L virtual sources . Shape 1xL
-            in_phase_lin (numpy Array): linear not-in-phase contribution of the set of
+            in_phase_lin (Array): linear not-in-phase contribution of the set of
                     P speakers when reproducing each of the L virtual sources . Shape 1xL
         """
         speaker_signals_R = jnp.real(speaker_signals)
@@ -213,17 +217,19 @@ class State:
         return in_phase_quad, in_phase_lin
 
     @staticmethod
-    def _rearrange_gains(layout: MyCoordinates, cloud: MyCoordinates, gains: jnp):
+    def _rearrange_gains(
+        layout: MyCoordinates, cloud: MyCoordinates, gains: Array
+    ) -> JaxArray:
         """Generates a rearranged copy of an input array of gains so that the gains
         of symmetric pairs are coincident in the same position
 
         Args:
            layout (MyCoordinates): set of positions of P speakers in layout
            cloud(MyCoordinates): set of positions of L directions sampling the sphere
-           gains (numpy Array): array of gains to be rearranged
+           gains (Array): array of gains to be rearranged
 
         Returns:
-            final_gains (numpy Array): same shape as input gains, but rearranged
+            final_gains (Array): same shape as input gains, but rearranged
         """
         pairs_layout = get_left_right_pairs(layout)
         pairs_cloud = get_left_right_pairs(cloud)
@@ -261,22 +267,24 @@ class State:
         return final_gains
 
     @staticmethod
-    def _symmetry_differences(gains: jnp, reordered_gains: jnp):
+    def _symmetry_differences(
+        gains: Array, reordered_gains: Array
+    ) -> Tuple[JaxArray, JaxArray]:
         """Function that calculates the asymmetry contribution, receiving as input two arrays,
         in which coincident positions correspond to the gains of symmetric pairs.
 
         Args:
-            gains (numpy Array): array of output gains of each of the P speakers to
+            gains (Array): array of output gains of each of the P speakers to
                 recreate each of the L virtual directions sampling the sphere. Shape LxP
-           reordered_gains (numpy Array): re-arranged array of output gains of each of the
+           reordered_gains (Array): re-arranged array of output gains of each of the
                 P speakers to recreate each of the L virtual directions sampling the sphere,
                 in such order that each position corresponds to the symmetric pair of the
                 other input array "gains". Shape LxP
 
         Returns:
-            asymmetry_quad (numpy Array): quadratic asymmetry contribution of the set of
+            asymmetry_quad (Array): quadratic asymmetry contribution of the set of
                     P speakers when reproducing each of the L virtual sources . Shape 1xL
-            asymmetry_lin (numpy Array): linear asymmetry contribution of the set of
+            asymmetry_lin (Array): linear asymmetry contribution of the set of
                     P speakers when reproducing each of the L virtual sources . Shape 1xL
         """
         differences = gains - reordered_gains

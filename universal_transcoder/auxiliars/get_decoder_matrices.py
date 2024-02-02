@@ -72,8 +72,7 @@ def get_vbap_decoder_matrix(layout_input: MyCoordinates, layout_output: MyCoordi
             virtual = MyCoordinates.point(input_speaker[0], input_speaker[1])
             decoder[:, m] = vbap_3D_encoder(virtual, layout_output)
 
-    decoder = jnp.array(decoder)
-    return decoder
+    return jnp.array(decoder)
 
 
 # Ambisonics to speakers
@@ -164,9 +163,9 @@ def get_ambisonics_decoder_matrix(order: int, layout_output: MyCoordinates, type
         gLF = np.array(gLF)
         factor = np.tile(gLF, (N, 1))
         decoder = (1.0 / N) * factor * C
-        decoder = jnp.array(decoder)
+        ret = jnp.array(decoder)
 
     elif type == "pseudo":
-        decoder = jnp.array(linalg.pinv(C).T)
+        ret = jnp.array(linalg.pinv(C).T)
 
-    return decoder
+    return ret

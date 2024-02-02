@@ -202,11 +202,11 @@ def get_all_sphere_points(space: int = 1, plot_show: bool = True):
         cloud_points (pyfar.Coordinates): points position
     """
 
-    points = []
+    points_list = []
     for j in range(-90, 90, space):
         for i in range(-180, 180, space):
-            points.append([i + 0.5, j + 0.5, 1])
-    points = np.array(points)
+            points_list.append([i + 0.5, j + 0.5, 1])
+    points = np.array(points_list)
 
     cloud_points = MyCoordinates.mult_points(points)
 

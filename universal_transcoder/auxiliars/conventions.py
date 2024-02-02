@@ -101,6 +101,4 @@ def get_convention(conventions: str, n: int):
             adapter.append(aux)  # (5, 4)
             adapter.append(aux)  # (5, 5)
 
-        adapter = np.array(adapter)
-
-    return adapter
+    return np.asarray(adapter)

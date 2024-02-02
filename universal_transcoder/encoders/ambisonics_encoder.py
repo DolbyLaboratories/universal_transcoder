@@ -25,10 +25,11 @@ POSSIBILITY OF SUCH DAMAGE.
 
 import math
 import numpy as np
+from universal_transcoder.auxiliars.typing import NpArray
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 
 
-def ambisonics_encoder(point: MyCoordinates, n: int):
+def ambisonics_encoder(point: MyCoordinates, n: int) -> NpArray:
     """Function to obtain the channel gains for the corresponding Ambisonics
      order,sorted in ACN format and normalized following SN3D
 
@@ -49,7 +50,7 @@ def ambisonics_encoder(point: MyCoordinates, n: int):
 
     # 0 - order
     if n >= 0:
-        encoder_matrix.append(1)  # W
+        encoder_matrix.append(1.)  # W
 
     # 1 - order
     if n >= 1:
@@ -247,6 +248,4 @@ def ambisonics_encoder(point: MyCoordinates, n: int):
             3.0 / 16.0 * math.sqrt(77.0) * math.cos(5.0 * theta) * math.cos(phi) ** 5
         )  # (5, 5)
 
-    encoder_matrix = np.array(encoder_matrix)
-
-    return encoder_matrix
+    return np.asarray(encoder_matrix)

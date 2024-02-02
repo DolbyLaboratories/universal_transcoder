@@ -24,7 +24,7 @@ POSSIBILITY OF SUCH DAMAGE.
 """
 
 import matplotlib.pyplot as plt
-import numpy as np
+from universal_transcoder.auxiliars.typing import Array
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 from universal_transcoder.plots_and_logs.e_i_plots import plot_ei_2D, plot_ei_3D
 from universal_transcoder.plots_and_logs.p_v_plots import plot_pv_2D, plot_pv_3D
@@ -39,7 +39,7 @@ from universal_transcoder.calculations.pressure_velocity import pressure_calcula
 
 def plots_general(
     output_layout: MyCoordinates,
-    speaker_signals: np,
+    speaker_signals: Array,
     cloud: MyCoordinates,
     show_results: bool,
     save_results: bool,
@@ -51,7 +51,7 @@ def plots_general(
     Args:
         output_layout (MyCoordinates): positions of output speaker layout:
                 pyfar.Coordinates (P-speakers)
-        speaker_signals (numpy Array): speaker signals resulting from decoding 
+        speaker_signals (Array): speaker signals resulting from decoding 
                 to input set of encoded L directions (LxP size)
         cloud(MyCoordinates): set of points sampling the sphere (L)
         show_results (bool): Flag to show plots

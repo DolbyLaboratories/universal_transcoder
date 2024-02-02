@@ -23,6 +23,8 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVE
 POSSIBILITY OF SUCH DAMAGE.
 """
 
+from typing import Union, Tuple
+
 import numpy as np
 from scipy.spatial import Delaunay
 
@@ -48,7 +50,7 @@ def vbap_2D_encoder(point: MyCoordinates, layout: MyCoordinates):
     layout_sph = layout.sph_deg()[:, 0]  # only thetas
 
     # Pair selection
-    pair = 0
+    pair = None
     # Check all pair of speakers in the array
     for i in range(len(layout_sph) - 1):
         if theta >= layout_sph[i] and theta <= layout_sph[i + 1]:
@@ -56,7 +58,7 @@ def vbap_2D_encoder(point: MyCoordinates, layout: MyCoordinates):
             break
 
     # If no pair was selected, then first and last speaker form a pair
-    if pair == 0:
+    if pair is None:
         pair = (layout_sph[0], layout_sph[-1])
 
     # Determine position of speakers of the pair in input array-order

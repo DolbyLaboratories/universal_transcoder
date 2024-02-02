@@ -24,20 +24,23 @@ POSSIBILITY OF SUCH DAMAGE.
 """
 
 import ssl
+from typing import Union
+
 import matplotlib.pyplot as plt
 import numpy as np
+from universal_transcoder.auxiliars.typing import ArrayLike, Array
 
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 from universal_transcoder.plots_and_logs.common_plots_functions import save_plot
 
 
 def plot_pv_2D(
-    pressure: np,
-    radial_v: np,
-    transverse_v: np,
+    pressure: Array,
+    radial_v: Array,
+    transverse_v: Array,
     cloud_points: MyCoordinates,
     save_results: bool,
-    results_file_name: bool = False,
+    results_file_name: Union[bool, str] = False,
 ):
     """
     Function to plot the pressure and velocity when
@@ -72,7 +75,7 @@ def plot_pv_2D(
         )
     )
     if maxima < 1.0:
-        lim = 1
+        lim = 1.
     elif maxima == 1.0:
         lim = 1.1
     else:
@@ -151,12 +154,12 @@ def plot_pv_2D(
 
 
 def plot_pv_3D(
-    pressure: np,
-    radial_v: np,
-    transverse_v: np,
+    pressure: ArrayLike,
+    radial_v: ArrayLike,
+    transverse_v: ArrayLike,
     cloud_points: MyCoordinates,
     save_results: bool,
-    results_file_name: bool = False,
+    results_file_name: Union[bool, str] = False,
 ):
     """
     Function to plot the pressure and velocity when

@@ -23,13 +23,16 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVE
 POSSIBILITY OF SUCH DAMAGE.
 """
 
+from typing import Dict, Any, Tuple
+
 import jax.numpy as jnp
+from universal_transcoder.auxiliars.typing import JaxArray
 import numpy as np
 
 from universal_transcoder.calculations.cost_function import State
 
 
-def set_up_general(info: dict):
+def set_up_general(info: Dict[str, Any]) -> Tuple[State, JaxArray]:
     """Function to prepare the system for optimization. It generates the initial transcoding matrix
     of the appropiate size and it stores in class State all the needed data for the optimization
 
@@ -63,7 +66,7 @@ def set_up_general(info: dict):
 
     Returns:
         current_state (State): contains side-information that the optimization process needs (1xL)
-        T_flatten_initial: (jax.numpy Array): vector of shape 1xNM to optimize
+        T_flatten_initial: (jax Array): vector of shape 1xNM to optimize
     """
     cloud = info["cloud_optimization"]
     layout = info["output_layout"]
@@ -72,19 +75,22 @@ def set_up_general(info: dict):
     M = input_matrix.shape[1]
     P = layout.sph_deg().shape[0]
 
-    # assume
-    Dspk = 1
-    N=P
     # unless:
     if "Dspk" in info.keys():
         # If "transcoding" is activated
         Dspk = info["Dspk"]
-        P_aux=Dspk.shape[0] #number of output speakers, to check coherence
-        N=Dspk.shape[1] #number of channels in desired transcoding format
+        P_aux = Dspk.shape[0]  # number of output speakers, to check coherence
+        N = Dspk.shape[1]  # number of channels in desired transcoding format
 
-        #check if P_aux matches P, otherwise, raise error, introduced wrong data
-        if (P_aux!=P):
-            raise ValueError("Introduced Dspk signal shape does not match defined output_layout. Dspk shape is PxN being P the number of speakers in output_layout and N the number of channels of desired transcoding format.")
+        # check if P_aux matches P, otherwise, raise error, introduced wrong data
+        if P_aux != P:
+            raise ValueError(
+                "Introduced Dspk signal shape does not match defined output_layout. Dspk shape is PxN being P the number of speakers in output_layout and N the number of channels of desired transcoding format."
+            )
+    else:
+        # assume
+        Dspk = 1
+        N = P
 
     # Generate Decoding initial matrix
     np.random.seed(0)

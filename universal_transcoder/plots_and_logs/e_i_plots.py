@@ -27,6 +27,8 @@ import ssl
 import math
 import matplotlib.pyplot as plt
 import numpy as np
+from universal_transcoder.auxiliars.typing import Array
+from universal_transcoder.auxiliars.typing import ArrayLike
 from matplotlib.colors import Normalize
 from matplotlib.ticker import FuncFormatter
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
@@ -38,9 +40,9 @@ from universal_transcoder.plots_and_logs.common_plots_functions import save_plot
 
 
 def plot_ei_2D(
-    energy: np,
-    radial_i: np,
-    transverse_i: np,
+    energy: Array,
+    radial_i: Array,
+    transverse_i: Array,
     cloud_points: MyCoordinates,
     save_results: bool,
     results_file_name=False,
@@ -50,10 +52,10 @@ def plot_ei_2D(
     decoding from an input format to an output layout. 2D plots.
 
     Args:
-        energy (jax.numpy Array): contains the energy values for each virtual source (1xL)
-        radial_i (jax.numpy array): contains the radial intensity values for each virtual
+        energy (Array): contains the energy values for each virtual source (1xL)
+        radial_i (Array): contains the radial intensity values for each virtual
                 source (1xL)
-        transverse_i (jax.numpy array): contains the transversal intensity values for each virtual
+        transverse_i (array): contains the transversal intensity values for each virtual
                 source (1xL)
         cloud(MyCoordinates): set of points sampling the sphere (L)
         save_results (bool): Flag to save plots
@@ -79,8 +81,8 @@ def plot_ei_2D(
     # Maxima
     maxima = np.max(np.array([np.max(energy), np.max(radial_i), np.max(transverse_i)]))
     if maxima < 0.9:
-        lim = 1
-    elif maxima == 1.0:
+        lim = 1.
+    elif np.isclose(maxima, 1.0, rtol=1e-09, atol=1e-09):
         lim = 1.1
     else:
         lim = maxima + 0.1
@@ -181,11 +183,10 @@ def plot_ei_2D(
         save_plot(plt, results_file_name, file_name)
 
 
-
 def plot_ei_3D(
-    energy: np,
-    radial_i: np,
-    transverse_i: np,
+    energy: ArrayLike,
+    radial_i: ArrayLike,
+    transverse_i: ArrayLike,
     cloud_points: MyCoordinates,
     save_results: bool,
     results_file_name=False,
@@ -363,11 +364,10 @@ def plot_ei_3D(
     plt.clim(0, 45)
 
     # Show
-    #plt.show()
+    # plt.show()
     ssl._create_default_https_context = ssl._create_default_https_context
 
     # Save plots
     if save_results and (type(results_file_name) == str):
         file_name = "plot_energy_intensity_3D.png"
         save_plot(plt, results_file_name, file_name)
-

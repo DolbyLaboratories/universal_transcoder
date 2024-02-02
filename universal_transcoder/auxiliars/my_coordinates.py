@@ -25,6 +25,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 import numpy as np
 import pyfar as pf
+from universal_transcoder.auxiliars.typing import NpArray
 
 
 class MyCoordinates(pf.Coordinates):
@@ -48,7 +49,7 @@ class MyCoordinates(pf.Coordinates):
 
     # Create Multi-points #
     @classmethod
-    def mult_points(cls, positions: np):
+    def mult_points(cls, positions: NpArray):
         thetas = positions[:, 0]
         phis = positions[:, 1]
         ds = positions[:, 2]
@@ -82,7 +83,7 @@ class MyCoordinates(pf.Coordinates):
 
     # Create Multi-points - CARTESIAN COORDINATES #
     @classmethod
-    def mult_points_cart(cls, positions: np):
+    def mult_points_cart(cls, positions: NpArray):
         x = positions[:, 0]
         y = positions[:, 1]
         z = positions[:, 2]

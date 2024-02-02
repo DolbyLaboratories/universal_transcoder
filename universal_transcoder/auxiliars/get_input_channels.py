@@ -25,6 +25,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 import jax.numpy as jnp
 import numpy as np
+from universal_transcoder.auxiliars.typing import ArrayLike
+from universal_transcoder.auxiliars.typing import NpArray
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 from universal_transcoder.encoders.ambisonics_encoder import ambisonics_encoder
 from universal_transcoder.encoders.vbap_encoder import vbap_2D_encoder, vbap_3D_encoder
@@ -32,7 +34,7 @@ from universal_transcoder.encoders.vbap_encoder import vbap_2D_encoder, vbap_3D_
 
 def get_input_channels_vbap(
     cloud_points: MyCoordinates, input_layout: MyCoordinates, normalize: bool = True
-):
+) -> np.ndarray:
     """Function to obtain the channel gains that encode in a multichannel layout for a cloud of points, where
     each row corresponds to the coding gains for one point, using VBAP
 
@@ -68,7 +70,7 @@ def get_input_channels_vbap(
     return input_channels
 
 
-def get_input_channels_ambisonics(cloud_points: MyCoordinates, order: int):
+def get_input_channels_ambisonics(cloud_points: MyCoordinates, order: int) -> NpArray:
     """Function to obtain the channel gains for a cloud of points that encode in
     a given ambisonics order, where each row corresponds to the coding gains
     for one point in the given Ambi-order
@@ -94,22 +96,22 @@ def get_input_channels_ambisonics(cloud_points: MyCoordinates, order: int):
 
 
 def get_input_channels_micro_cardioid(
-    cloud: MyCoordinates, mic_orientation: np, mic_position: MyCoordinates, f: float
-):
+    cloud: MyCoordinates, mic_orientation: NpArray, mic_position: MyCoordinates, f: float
+)-> NpArray:
     """Function to obtain the gains for a cloud of points that encode in cardioid-microphone, where
     each row corresponds to the coding channels for one point
 
     Args:
         cloud (MyCoordinates): positions of the virtual sources pyfar.Coordinates
                 (L points)
-        mic_orientation (np): array specifying orientation of the microphones
+        mic_orientation (numpy Array): array specifying orientation of the microphones
                 both in azimut and elevation
         mic_position (MyCoordinates) position of microphones
                 pyfar.Coordinates (M microphones)
         f (float): frequency of input sound waves in Hz
 
     Returns:
-        input_channels (numpy Array complex64): LxM matrix of channel gains
+        input_channels (numpy Array): LxM matrix of channel gains
                 for input layout
     """
     cloud_points_sph = cloud.sph_rad()
@@ -133,7 +135,7 @@ def get_input_channels_micro_cardioid(
 
 
 def get_input_channels_micro_omni(
-    cloud: MyCoordinates, mic_orientation: np, mic_position: MyCoordinates, f: float
+    cloud: MyCoordinates, mic_orientation: NpArray, mic_position: MyCoordinates, f: float
 ):
     """Function to obtain the gains for a cloud of points that encode in  omni-microphone , where
     each row corresponds to the coded channels for one point
@@ -141,14 +143,14 @@ def get_input_channels_micro_omni(
     Args:
         cloud (MyCoordinates): positions of the virtual sources pyfar.Coordinates
                 (L points)
-        mic_orientation (np): array specifying orientation of the microphones
+        mic_orientation (np Array): array specifying orientation of the microphones
                 both in azimut and elevation
         mic_position (MyCoordinates) position of microphones
                 pyfar.Coordinates (M microphones)
         f (float): frequency of input sound waves in Hz
 
     Returns:
-        input_channels (numpy Array complex64): LxM matrix of channel gains
+        input_channels (numpy Array): LxM matrix of channel gains
                 for input layout
     """
     cloud_points_sph = cloud.sph_rad()

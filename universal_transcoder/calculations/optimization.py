@@ -25,10 +25,14 @@ POSSIBILITY OF SUCH DAMAGE.
 
 import os
 import time
+from typing import Dict, Any
+
 import jax
 import jax.numpy as jnp
 import numpy as np
+from universal_transcoder.auxiliars.typing import NpArray
 from jax import grad
+from universal_transcoder.auxiliars.typing import ArrayLike
 from scipy.optimize import minimize
 from universal_transcoder.calculations.cost_function import State
 from universal_transcoder.calculations.set_up_system import (
@@ -45,7 +49,7 @@ from universal_transcoder.plots_and_logs.write_logs import (
 os.environ["JAX_ENABLE_X64"] = "1"
 
 
-def optimize(info: dict):
+def optimize(info: Dict[str, Any]) -> NpArray:
     """
     Complete optimization process. Function to prepare the optimization, to call the
     optimization obtaining the final optimised transcoding matrix (NxM) for each given situation.
@@ -109,7 +113,7 @@ def optimize(info: dict):
     # If show or save flags active
     if info["show_results"] or info["save_results"]:
 
-        D=T_optimized
+        D = T_optimized
         # unless
         if "Dspk" in info.keys():
             # D= Dspk x T
@@ -145,11 +149,11 @@ def optimize(info: dict):
 
 def bfgs_optim(
     current_state: State,
-    flatten_initial_dec: jnp,
+    flatten_initial_dec: ArrayLike,
     show_results: bool,
     save_results: bool,
     results_file_name,
-):
+) -> NpArray:
     """
     Optimization function to generate an optimized flatten transcoding matrix using
     BFGS method. It can also print through terminal or save an optimisation log
@@ -157,7 +161,7 @@ def bfgs_optim(
     Args:
         current_state (class State): saving cloud, input_matrix(LxM), output_layout(P)
                 and transcoding_matrix shape
-        flatten_initial_dec (numpy Array): not-optimized flatten transcoding matrix from
+        flatten_initial_dec (Array): not-optimized flatten transcoding matrix from
                 input format to output_layout ((NxM)x1 size)
         show_results (bool): flag to show plots and results
         save_results (bool): flag to save plots and results
@@ -165,7 +169,7 @@ def bfgs_optim(
                 String that gives name to the folder where results are saved
 
     Returns:
-        dec_matrix_bfgs (numpy Array): optimized flatten transcoding matrix ((NxM)x1 size)
+        dec_matrix_bfgs (Array): optimized flatten transcoding matrix ((NxM)x1 size)
     """
 
     # Initial time
