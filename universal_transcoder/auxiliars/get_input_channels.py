@@ -41,7 +41,7 @@ def get_input_channels_vbap(
                 (L points)
         input_layout (MyCoordinates): speaker positions given as pyfar.Coordinates
                 (M speakers)
-        normalize (bool): If activated, gains are normalized so that sum of all equals 1
+        normalize (bool): If activated, gains are normalized so that sum of all squares equals 1
 
     Returns:
         input_channels (numpy Array): LxM matrix of channel gains for input layout
