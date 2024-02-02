@@ -24,9 +24,10 @@ POSSIBILITY OF SUCH DAMAGE.
 """
 
 import jax.numpy as jnp
+
+from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 from universal_transcoder.auxiliars.typing import ArrayLike
 from universal_transcoder.auxiliars.typing import JaxArray
-from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 
 
 def energy_calculation(speaker_signals: ArrayLike) -> JaxArray:
@@ -34,7 +35,7 @@ def energy_calculation(speaker_signals: ArrayLike) -> JaxArray:
     layout out from the coded channel gains
 
     Args:
-        speaker_signals (Array): speaker signals (P speakers) resulting from decoding 
+        speaker_signals (Array): speaker signals (P speakers) resulting from decoding
                 the input set of encoded L directions (LxP size)
 
     Returns:
@@ -55,7 +56,7 @@ def intensity_calculation(
     layout out from the coded channel gains
 
     Args:
-        speaker_signals (Array): speaker signals (P speakers) resulting from decoding 
+        speaker_signals (Array): speaker signals (P speakers) resulting from decoding
                 the input set of encoded L directions (LxP size)
         output_layout (MyCoordinates): positions of output speaker layout: (P speakers)
 
@@ -87,7 +88,7 @@ def radial_I_calculation(
 
     Args:
         cloud_points (MyCoordinates): position of the virtual sources pyfar.Coordinates (L sources)
-        speaker_signals (Array): speaker signals (P speakers) resulting from decoding 
+        speaker_signals (Array): speaker signals (P speakers) resulting from decoding
                 the input set of encoded L directions (LxP size)
         output_layout (MyCoordinates): positions of output speaker layout: (P speakers)
 
@@ -117,7 +118,7 @@ def transverse_I_calculation(
 
     Args:
         cloud_points (MyCoordinates): position of the virtual sources pyfar.Coordinates (L sources)
-        speaker_signals (Array): speaker signals (P speakers) resulting from decoding 
+        speaker_signals (Array): speaker signals (P speakers) resulting from decoding
                 the input set of encoded L directions (LxP size)
         output_layout (MyCoordinates): positions of output speaker layout: (P speakers)
 

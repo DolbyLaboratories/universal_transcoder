@@ -24,9 +24,11 @@ POSSIBILITY OF SUCH DAMAGE.
 """
 
 import math
+
 import numpy as np
-from universal_transcoder.auxiliars.typing import NpArray
+
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
+from universal_transcoder.auxiliars.typing import NpArray
 
 
 def ambisonics_encoder(point: MyCoordinates, n: int) -> NpArray:
@@ -50,7 +52,7 @@ def ambisonics_encoder(point: MyCoordinates, n: int) -> NpArray:
 
     # 0 - order
     if n >= 0:
-        encoder_matrix.append(1.)  # W
+        encoder_matrix.append(1.0)  # W
 
     # 1 - order
     if n >= 1:

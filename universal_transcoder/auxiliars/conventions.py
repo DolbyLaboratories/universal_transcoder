@@ -23,8 +23,9 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVE
 POSSIBILITY OF SUCH DAMAGE.
 """
 
-import numpy as np
 import math as mh
+
+import numpy as np
 
 
 def get_convention(conventions: str, n: int):

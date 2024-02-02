@@ -30,6 +30,7 @@ from typing import Union
 import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.basemap import Basemap
+
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 
 

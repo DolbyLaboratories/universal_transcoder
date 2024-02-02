@@ -24,14 +24,16 @@ POSSIBILITY OF SUCH DAMAGE.
 """
 
 import os
-import numpy as np
+from math import sqrt
+
 import jax.numpy as jnp
+import numpy as np
+from scipy import linalg
+
+from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
+from universal_transcoder.encoders.ambisonics_encoder import ambisonics_encoder
 from universal_transcoder.encoders.vbap_encoder import vbap_2D_encoder
 from universal_transcoder.encoders.vbap_encoder import vbap_3D_encoder
-from universal_transcoder.encoders.ambisonics_encoder import ambisonics_encoder
-from scipy import linalg
-from math import sqrt
-from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 
 os.environ["JAX_ENABLE_X64"] = "1"
 

@@ -24,9 +24,10 @@ POSSIBILITY OF SUCH DAMAGE.
 """
 
 import jax.numpy as jnp
-from universal_transcoder.auxiliars.typing import JaxArray
-from universal_transcoder.auxiliars.typing import ArrayLike
+
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
+from universal_transcoder.auxiliars.typing import ArrayLike
+from universal_transcoder.auxiliars.typing import JaxArray
 
 
 def pressure_calculation(speaker_signals: ArrayLike) -> JaxArray:
@@ -34,7 +35,7 @@ def pressure_calculation(speaker_signals: ArrayLike) -> JaxArray:
     layout out of the coded channel gains
 
     Args:
-        speaker_signals (Array): speaker signals (P speakers) resulting from decoding 
+        speaker_signals (Array): speaker signals (P speakers) resulting from decoding
                 the input set of encoded L directions (LxP size)
 
     Returns:
@@ -55,7 +56,7 @@ def velocity_calculation(
     output layout out of the coded channel gains
 
     Args:
-        speaker_signals (Array): speaker signals (P speakers) resulting from decoding 
+        speaker_signals (Array): speaker signals (P speakers) resulting from decoding
                 the input set of encoded L directions (LxP size)
         output_layout (MyCoordinates): positions of output speaker layout: (P speakers)
 
@@ -69,7 +70,6 @@ def velocity_calculation(
 
     # Cardinal coordinates - unitary vectors of output speakers - Ui
     U = output_layout.cart()
-
 
     # Velocity
     aux = jnp.dot(speaker_signals, U)
@@ -88,7 +88,7 @@ def radial_V_calculation(
 
     Args:
         cloud_points (MyCoordinates): position of the virtual sources pyfar.Coordinates (L sources)
-        speaker_signals (Array): speaker signals (P speakers) resulting from decoding 
+        speaker_signals (Array): speaker signals (P speakers) resulting from decoding
                 the input set of encoded L directions (LxP size)
         output_layout (MyCoordinates): positions of output speaker layout: (P speakers)
 
@@ -118,7 +118,7 @@ def transversal_V_calculation(
 
     Args:
         cloud_points (MyCoordinates): position of the virtual sources pyfar.Coordinates (L sources)
-        speaker_signals (Array): speaker signals (P speakers) resulting from decoding 
+        speaker_signals (Array): speaker signals (P speakers) resulting from decoding
                 the input set of encoded L directions (LxP size)
         output_layout (MyCoordinates): positions of output speaker layout: (P speakers)
 

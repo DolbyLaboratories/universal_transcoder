@@ -23,15 +23,17 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVE
 POSSIBILITY OF SUCH DAMAGE.
 """
 
-import ssl
 import math
+import ssl
+
 import matplotlib.pyplot as plt
 import numpy as np
-from universal_transcoder.auxiliars.typing import Array
-from universal_transcoder.auxiliars.typing import ArrayLike
 from matplotlib.colors import Normalize
 from matplotlib.ticker import FuncFormatter
+
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
+from universal_transcoder.auxiliars.typing import Array
+from universal_transcoder.auxiliars.typing import ArrayLike
 from universal_transcoder.calculations.energy_intensity import (
     angular_error,
     width_angle,
@@ -81,7 +83,7 @@ def plot_ei_2D(
     # Maxima
     maxima = np.max(np.array([np.max(energy), np.max(radial_i), np.max(transverse_i)]))
     if maxima < 0.9:
-        lim = 1.
+        lim = 1.0
     elif np.isclose(maxima, 1.0, rtol=1e-09, atol=1e-09):
         lim = 1.1
     else:

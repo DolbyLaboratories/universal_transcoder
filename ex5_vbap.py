@@ -1,4 +1,3 @@
-
 import numpy as np
 from universal_transcoder.auxiliars.get_cloud_points import (
     get_equi_circumference_points,
@@ -14,9 +13,9 @@ output_layout = MyCoordinates.mult_points(
     np.array(
         [
             (-120, 0, 1),
-            (-30,0,1),
+            (-30, 0, 1),
             (0, 0, 1),
-            (30,0,1),
+            (30, 0, 1),
             (120, 0, 1),
         ]
     )

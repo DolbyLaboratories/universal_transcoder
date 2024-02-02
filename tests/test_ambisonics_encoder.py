@@ -24,6 +24,7 @@ POSSIBILITY OF SUCH DAMAGE.
 """
 
 import numpy as np
+
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 from universal_transcoder.encoders.ambisonics_encoder import ambisonics_encoder
 

@@ -24,14 +24,15 @@ POSSIBILITY OF SUCH DAMAGE.
 """
 
 import numpy as np
+
 from universal_transcoder.auxiliars.get_cloud_points import (
     get_equi_circumference_points,
 )
-from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
-from universal_transcoder.plots_and_logs.all_plots import plots_general
 from universal_transcoder.auxiliars.get_input_channels import (
     get_input_channels_vbap,
 )
+from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
+from universal_transcoder.plots_and_logs.all_plots import plots_general
 
 # Encoding multichannel without vbap
 output_layout = MyCoordinates.mult_points(

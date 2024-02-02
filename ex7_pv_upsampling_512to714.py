@@ -43,8 +43,7 @@ output_layout = MyCoordinates.mult_points(
             (135, 45, 1),
         ]
     )
-) 
-
+)
 
 
 basepath = Path(__file__).resolve().parents[0]
@@ -56,7 +55,7 @@ cloud_plots = get_all_sphere_points(1, False)
 input_matrix_optimization = get_input_channels_vbap(cloud_optimization, input_layout)
 input_matrix_plots = get_input_channels_vbap(cloud_plots, input_layout)
 
-'''
+"""
 #AUX
 input_layout = MyCoordinates.mult_points(
     np.array(
@@ -83,16 +82,16 @@ output_layout = MyCoordinates.mult_points(
 cloud_optimization = get_equi_circumference_points(36)
 cloud_plots = get_equi_circumference_points(360)
 input_matrix_optimization = get_input_channels_vbap(cloud_optimization, input_layout)
-input_matrix_plots = get_input_channels_vbap(cloud_plots, input_layout)'''
+input_matrix_plots = get_input_channels_vbap(cloud_plots, input_layout)"""
 
 dictionary = {
     "input_matrix_optimization": input_matrix_optimization,
     "cloud_optimization": cloud_optimization,
     "output_layout": output_layout,
     "coefficients": {
-        "energy": 1, #1,
-        "radial_intensity": 1, #1,
-        "transverse_intensity": 1, #1,
+        "energy": 1,  # 1,
+        "radial_intensity": 1,  # 1,
+        "transverse_intensity": 1,  # 1,
         "pressure": 0,
         "radial_velocity": 0,
         "transverse_velocity": 0,
@@ -106,7 +105,7 @@ dictionary = {
     "directional_weights": 1,
     "show_results": True,
     "save_results": False,
-    "results_file_name": "ex7_512to714_pv", # "aux_30to40_pv"
+    "results_file_name": "ex7_512to714_pv",  # "aux_30to40_pv"
     "input_matrix_plots": input_matrix_plots,
     "cloud_plots": cloud_plots,
 }

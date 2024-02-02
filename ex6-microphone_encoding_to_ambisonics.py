@@ -51,9 +51,7 @@ cloud_plots = get_equi_circumference_points(360, False)
 
 # frequency
 freq = 100
-in_chans = get_input_channels_micro_cardioid(
-    cloud, mic_orientation, mic_position, freq
-)
+in_chans = get_input_channels_micro_cardioid(cloud, mic_orientation, mic_position, freq)
 in_chans = np.array(np.abs(in_chans))
 
 input_matrix_plots = get_input_channels_micro_cardioid(
@@ -93,4 +91,3 @@ dictionary = {
     "channels_labels": [str(idx) for idx in range(len(mic_orientation))],
 }
 transcoding_matrices = optimize(dictionary)
-

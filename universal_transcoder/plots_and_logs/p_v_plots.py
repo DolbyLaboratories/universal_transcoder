@@ -28,9 +28,9 @@ from typing import Union
 
 import matplotlib.pyplot as plt
 import numpy as np
-from universal_transcoder.auxiliars.typing import ArrayLike, Array
 
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
+from universal_transcoder.auxiliars.typing import ArrayLike, Array
 from universal_transcoder.plots_and_logs.common_plots_functions import save_plot
 
 
@@ -75,7 +75,7 @@ def plot_pv_2D(
         )
     )
     if maxima < 1.0:
-        lim = 1.
+        lim = 1.0
     elif maxima == 1.0:
         lim = 1.1
     else:
@@ -150,7 +150,6 @@ def plot_pv_2D(
     if save_results and (type(results_file_name) == str):
         file_name = "plot_pressure_velocity_2D_dB.png"
         save_plot(plt, results_file_name, file_name)
-    
 
 
 def plot_pv_3D(
@@ -281,4 +280,3 @@ def plot_pv_3D(
     if save_results and (type(results_file_name) == str):
         file_name = "plot_pressure_velocity_3D.png"
         save_plot(plt, results_file_name, file_name)
-

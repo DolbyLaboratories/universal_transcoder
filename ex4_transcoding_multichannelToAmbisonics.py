@@ -2,14 +2,18 @@
 
 import numpy as np
 from universal_transcoder.auxiliars.get_cloud_points import (
-    get_equi_circumference_points,get_equi_t_design_points,
+    get_equi_circumference_points,
+    get_equi_t_design_points,
 )
 from universal_transcoder.auxiliars.get_input_channels import (
-    get_input_channels_vbap, get_input_channels_ambisonics,
+    get_input_channels_vbap,
+    get_input_channels_ambisonics,
 )
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 from universal_transcoder.calculations.optimization import optimize
-from universal_transcoder.auxiliars.get_decoder_matrices import get_ambisonics_decoder_matrix
+from universal_transcoder.auxiliars.get_decoder_matrices import (
+    get_ambisonics_decoder_matrix,
+)
 
 
 input_layout = MyCoordinates.mult_points(
@@ -36,23 +40,23 @@ output_layout = MyCoordinates.mult_points(
     )
 )
 
-#output_layout = get_equi_circumference_points(20, False)
+# output_layout = get_equi_circumference_points(20, False)
 cloud_optimization = get_equi_circumference_points(36, False)
 input_matrix_optimization = get_input_channels_vbap(cloud_optimization, input_layout)
-cloud_plots = get_equi_circumference_points(360,False)
+cloud_plots = get_equi_circumference_points(360, False)
 input_matrix_plots = get_input_channels_vbap(cloud_plots, input_layout)
 
 # Transcoding to Ambisonics First order. Generate Dspk
-order=1
-Dspk=get_ambisonics_decoder_matrix(order,output_layout, "pseudo")
+order = 1
+Dspk = get_ambisonics_decoder_matrix(order, output_layout, "pseudo")
 
 
 dictionary = {
     "input_matrix_optimization": input_matrix_optimization,
     "cloud_optimization": cloud_optimization,
-    "output_layout": output_layout, 
-    "Dspk":Dspk,
-    "ambisonics_encoding_order":1,
+    "output_layout": output_layout,
+    "Dspk": Dspk,
+    "ambisonics_encoding_order": 1,
     "coefficients": {
         "energy": 0,
         "radial_intensity": 0,

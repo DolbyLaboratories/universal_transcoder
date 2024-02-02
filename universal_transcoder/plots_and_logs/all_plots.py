@@ -24,18 +24,28 @@ POSSIBILITY OF SUCH DAMAGE.
 """
 
 import matplotlib.pyplot as plt
-from universal_transcoder.auxiliars.typing import Array
+
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
+from universal_transcoder.auxiliars.typing import Array
+from universal_transcoder.calculations.energy_intensity import (
+    energy_calculation,
+    radial_I_calculation,
+    transverse_I_calculation,
+)
+from universal_transcoder.calculations.pressure_velocity import (
+    pressure_calculation,
+    radial_V_calculation,
+    transversal_V_calculation,
+)
 from universal_transcoder.plots_and_logs.e_i_plots import plot_ei_2D, plot_ei_3D
 from universal_transcoder.plots_and_logs.p_v_plots import plot_pv_2D, plot_pv_3D
-from universal_transcoder.plots_and_logs.speakers_plots import (
-    plot_speaker_2D,
-)
 from universal_transcoder.plots_and_logs.paper_plots_to_R import (
     save_physics_to_file,
 )
-from universal_transcoder.calculations.energy_intensity import energy_calculation,radial_I_calculation, transverse_I_calculation
-from universal_transcoder.calculations.pressure_velocity import pressure_calculation, radial_V_calculation, transversal_V_calculation
+from universal_transcoder.plots_and_logs.speakers_plots import (
+    plot_speaker_2D,
+)
+
 
 def plots_general(
     output_layout: MyCoordinates,
@@ -51,7 +61,7 @@ def plots_general(
     Args:
         output_layout (MyCoordinates): positions of output speaker layout:
                 pyfar.Coordinates (P-speakers)
-        speaker_signals (Array): speaker signals resulting from decoding 
+        speaker_signals (Array): speaker signals resulting from decoding
                 to input set of encoded L directions (LxP size)
         cloud(MyCoordinates): set of points sampling the sphere (L)
         show_results (bool): Flag to show plots
@@ -62,22 +72,14 @@ def plots_general(
     # Energy
     energy = energy_calculation(speaker_signals)
     # Intensity
-    radial_i = radial_I_calculation(
-        cloud, speaker_signals, output_layout
-    )
-    transverse_i = transverse_I_calculation(
-        cloud, speaker_signals, output_layout
-    )
+    radial_i = radial_I_calculation(cloud, speaker_signals, output_layout)
+    transverse_i = transverse_I_calculation(cloud, speaker_signals, output_layout)
     # Pressure
     pressure = pressure_calculation(speaker_signals)
     # Velocity
-    radial_v = radial_V_calculation(
-        cloud, speaker_signals, output_layout
-    )
-    transverse_v = transversal_V_calculation(
-        cloud, speaker_signals, output_layout
-    )
-    
+    radial_v = radial_V_calculation(cloud, speaker_signals, output_layout)
+    transverse_v = transversal_V_calculation(cloud, speaker_signals, output_layout)
+
     plot_ei_2D(
         energy,
         radial_i,
@@ -120,7 +122,7 @@ def plots_general(
 
     if show_results:
         plt.show()
-    
+
     if save_results:
         # Generate txt file with data
         coordinates = cloud.sph_deg()
@@ -137,5 +139,3 @@ def plots_general(
             transverse_i,
             save_plot_name,
         )
-
-    

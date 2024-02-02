@@ -29,11 +29,12 @@ import os
 from typing import Dict, Any
 
 import jax.numpy as jnp
-from universal_transcoder.auxiliars.typing import Array
 import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.basemap import Basemap
+
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
+from universal_transcoder.auxiliars.typing import Array
 from universal_transcoder.calculations.cost_function import State
 
 

@@ -30,10 +30,11 @@ from typing import Dict, Any
 import jax
 import jax.numpy as jnp
 import numpy as np
-from universal_transcoder.auxiliars.typing import NpArray
 from jax import grad
-from universal_transcoder.auxiliars.typing import ArrayLike
 from scipy.optimize import minimize
+
+from universal_transcoder.auxiliars.typing import ArrayLike
+from universal_transcoder.auxiliars.typing import NpArray
 from universal_transcoder.calculations.cost_function import State
 from universal_transcoder.calculations.set_up_system import (
     set_up_general,

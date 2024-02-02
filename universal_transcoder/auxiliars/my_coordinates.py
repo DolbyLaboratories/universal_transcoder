@@ -25,6 +25,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 import numpy as np
 import pyfar as pf
+
 from universal_transcoder.auxiliars.typing import NpArray
 
 

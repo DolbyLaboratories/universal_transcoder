@@ -24,8 +24,9 @@ POSSIBILITY OF SUCH DAMAGE.
 """
 
 import os
-import numpy as np
+
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def normalize_S(S, normalize):

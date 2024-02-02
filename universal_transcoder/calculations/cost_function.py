@@ -23,15 +23,16 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVE
 POSSIBILITY OF SUCH DAMAGE.
 """
 
+from dataclasses import dataclass
 from typing import Optional, Tuple
 
 import jax.numpy as jnp
-from universal_transcoder.auxiliars.typing import ArrayLike, Array
-from universal_transcoder.auxiliars.typing import JaxArray
 import numpy as np
-from dataclasses import dataclass
+
 from universal_transcoder.auxiliars.get_left_right_pairs import get_left_right_pairs
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
+from universal_transcoder.auxiliars.typing import ArrayLike, Array
+from universal_transcoder.auxiliars.typing import JaxArray
 from universal_transcoder.calculations.energy_intensity import (
     transverse_I_calculation,
     energy_calculation,

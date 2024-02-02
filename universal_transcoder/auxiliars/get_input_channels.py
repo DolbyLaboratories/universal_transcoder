@@ -25,9 +25,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
 import jax.numpy as jnp
 import numpy as np
-from universal_transcoder.auxiliars.typing import ArrayLike
-from universal_transcoder.auxiliars.typing import NpArray
+
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
+from universal_transcoder.auxiliars.typing import NpArray
 from universal_transcoder.encoders.ambisonics_encoder import ambisonics_encoder
 from universal_transcoder.encoders.vbap_encoder import vbap_2D_encoder, vbap_3D_encoder
 
@@ -96,8 +96,11 @@ def get_input_channels_ambisonics(cloud_points: MyCoordinates, order: int) -> Np
 
 
 def get_input_channels_micro_cardioid(
-    cloud: MyCoordinates, mic_orientation: NpArray, mic_position: MyCoordinates, f: float
-)-> NpArray:
+    cloud: MyCoordinates,
+    mic_orientation: NpArray,
+    mic_position: MyCoordinates,
+    f: float,
+) -> NpArray:
     """Function to obtain the gains for a cloud of points that encode in cardioid-microphone, where
     each row corresponds to the coding channels for one point
 
@@ -135,7 +138,10 @@ def get_input_channels_micro_cardioid(
 
 
 def get_input_channels_micro_omni(
-    cloud: MyCoordinates, mic_orientation: NpArray, mic_position: MyCoordinates, f: float
+    cloud: MyCoordinates,
+    mic_orientation: NpArray,
+    mic_position: MyCoordinates,
+    f: float,
 ):
     """Function to obtain the gains for a cloud of points that encode in  omni-microphone , where
     each row corresponds to the coded channels for one point

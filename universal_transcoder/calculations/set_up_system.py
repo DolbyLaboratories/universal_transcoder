@@ -26,9 +26,9 @@ POSSIBILITY OF SUCH DAMAGE.
 from typing import Dict, Any, Tuple
 
 import jax.numpy as jnp
-from universal_transcoder.auxiliars.typing import JaxArray
 import numpy as np
 
+from universal_transcoder.auxiliars.typing import JaxArray
 from universal_transcoder.calculations.cost_function import State
 
 

@@ -27,7 +27,8 @@ import numpy as np
 from universal_transcoder.plots_and_logs.import_allrad_dec import get_allrad_decoder
 from universal_transcoder.plots_and_logs.all_plots import plots_general
 from universal_transcoder.auxiliars.get_cloud_points import (
-    get_equi_circumference_points, get_all_sphere_points,
+    get_equi_circumference_points,
+    get_all_sphere_points,
 )
 from universal_transcoder.auxiliars.get_input_channels import (
     get_input_channels_ambisonics,
@@ -46,7 +47,7 @@ decoding_matrix = get_allrad_decoder(
 
 
 # Cloud
-#cloud = get_equi_circumference_points(36, False)
+# cloud = get_equi_circumference_points(36, False)
 cloud = get_all_sphere_points(5, False)
 # Output layout
 layout_50 = MyCoordinates.mult_points(
@@ -81,8 +82,8 @@ output_layout = layout_704
 # Input channels
 input_matrix = get_input_channels_ambisonics(cloud, order)
 
-#Normalization
-resulting_signal=normalize_S(np.dot(input_matrix, decoding_matrix.T), "p")
+# Normalization
+resulting_signal = normalize_S(np.dot(input_matrix, decoding_matrix.T), "p")
 
 # Call plots and save results
 show_results = True

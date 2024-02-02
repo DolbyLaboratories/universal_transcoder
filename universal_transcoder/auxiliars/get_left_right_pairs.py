@@ -24,6 +24,7 @@ POSSIBILITY OF SUCH DAMAGE.
 """
 
 import numpy as np
+
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 
 
@@ -50,7 +51,7 @@ def angular_distance(theta1, e1, theta2, e2):
     return dist
 
 
-def get_left_right_pairs(points: MyCoordinates, tol: float = 2.):
+def get_left_right_pairs(points: MyCoordinates, tol: float = 2.0):
     """Function to find the symmetric pairs in a layout, a set of positions,
     with a tolerance (default 2 degrees)
 

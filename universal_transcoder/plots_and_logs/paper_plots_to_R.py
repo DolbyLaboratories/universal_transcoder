@@ -1,8 +1,7 @@
 import os
 
-import numpy as np
 import matplotlib.pyplot as pyp
-
+import numpy as np
 
 eps = np.finfo(float).eps
 

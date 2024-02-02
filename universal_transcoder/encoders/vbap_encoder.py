@@ -23,8 +23,6 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVE
 POSSIBILITY OF SUCH DAMAGE.
 """
 
-from typing import Union, Tuple
-
 import numpy as np
 from scipy.spatial import Delaunay
 

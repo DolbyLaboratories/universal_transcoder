@@ -24,6 +24,7 @@ POSSIBILITY OF SUCH DAMAGE.
 """
 
 import numpy as np
+
 from universal_transcoder.auxiliars.get_decoder_matrices import (
     get_vbap_decoder_matrix,
     get_ambisonics_decoder_matrix,

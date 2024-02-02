@@ -24,10 +24,13 @@ POSSIBILITY OF SUCH DAMAGE.
 """
 
 from typing import Union
-import numpy
+
 import jax
+import numpy
 
 NpArray = numpy.ndarray  # Numpy Array
 JaxArray = jax.Array  # Jax Array
 Array = Union[NpArray, JaxArray]  # Either Numpy or Jax Array
-ArrayLike = jax.typing.ArrayLike  # Anything that can be converted to a Jax or Numpy Array (e.g. Array, float, int, etc)
+ArrayLike = (
+    jax.typing.ArrayLike
+)  # Anything that can be converted to a Jax or Numpy Array (e.g. Array, float, int, etc)

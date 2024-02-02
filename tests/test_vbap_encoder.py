@@ -24,6 +24,7 @@ POSSIBILITY OF SUCH DAMAGE.
 """
 
 import numpy as np
+
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 from universal_transcoder.encoders.vbap_encoder import vbap_2D_encoder
 from universal_transcoder.encoders.vbap_encoder import vbap_3D_encoder
@@ -112,9 +113,11 @@ def test_vbap_3D_encoder4():
             ]
         )
     )
-    virtual = MyCoordinates.mult_points_cart(np.mean(layout.cart()[:3, :], axis=0, keepdims=True))
+    virtual = MyCoordinates.mult_points_cart(
+        np.mean(layout.cart()[:3, :], axis=0, keepdims=True)
+    )
     speaker_gains = vbap_3D_encoder(virtual, layout)
-    expected_gains = np.array([1/3, 1/3, 1/3, 0, 0, 0, 0, 0, 0])
+    expected_gains = np.array([1 / 3, 1 / 3, 1 / 3, 0, 0, 0, 0, 0, 0])
     np.testing.assert_allclose(speaker_gains, expected_gains, atol=1e-15)
 
 
