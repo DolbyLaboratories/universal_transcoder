@@ -111,3 +111,11 @@ class MyCoordinates(pf.Coordinates):
     def cart(self):
         cart_coord = self.get_cart(convention="right")
         return cart_coord
+
+    def discard_lower_hemisphere(self):
+        """
+           Remove the lower hemisphere points from the cloud
+           Returns:
+               New cloudd of points with lower hemisphere removed
+           """
+        return self[self.cart()[:, 2] >= 0]

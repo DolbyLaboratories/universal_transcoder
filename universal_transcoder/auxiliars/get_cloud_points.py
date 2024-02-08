@@ -23,15 +23,54 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVE
 POSSIBILITY OF SUCH DAMAGE.
 """
 
+import itertools
 import math
 import os
-from typing import Union
+from typing import Union, Iterable, Optional, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.basemap import Basemap
 
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
+from universal_transcoder.auxiliars.typing import NpArray
+
+
+
+
+
+def mix_clouds_of_points(
+    list_of_cloud_points: Iterable[MyCoordinates],
+    list_of_weights: Optional[Iterable[float]] = None,
+    discard_lower_hemisphere: bool = True,
+) -> Tuple[MyCoordinates, NpArray]:
+    """
+    Mix several clouds of points, and optionally discard the bottom hemisphere
+    Args:
+        list_of_cloud_points: List of cloud points to merge.
+        list_of_weights: If not None, list of weights for each cloud point.
+        discard_lower_hemisphere: If True, discard the lower hemisphere
+
+    Returns:
+        Merged cloud of points
+        Weight array
+    """
+
+    if discard_lower_hemisphere:
+        list_of_cloud_points = [cp.discard_lower_hemisphere() for cp in list_of_cloud_points]
+    npoints = [cp.cart().shape[0] for cp in list_of_cloud_points]
+    cloud_points = MyCoordinates.mult_points_cart(
+        np.vstack([cp.cart() for cp in list_of_cloud_points])
+    )
+    if list_of_weights is not None:
+        weights = np.asarray(
+            list(itertools.chain(*[[w / n] * n for n, w in zip(npoints, list_of_weights)]))
+        )
+        weights /= np.mean(weights)
+    else:
+        weights = np.ones(cloud_points.cart().shape[0])
+
+    return cloud_points, weights
 
 
 def get_equi_circumference_points(num_points: int, plot_show: bool = True):
