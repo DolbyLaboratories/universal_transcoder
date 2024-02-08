@@ -40,10 +40,7 @@ from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 file_name = "allrad_704_5OA_basic_decoder.json"
 order = 5
 
-# Import AllRad file (N3D and ACN)
-decoding_matrix = get_allrad_decoder(
-    "allrad_decoders/" + file_name, "inphase", order, "sn3d"
-)
+
 
 
 # Cloud
@@ -78,20 +75,27 @@ layout_704 = MyCoordinates.mult_points(
         ]
     )
 )
+
+
+# Import AllRad file (N3D and ACN)
+decoding_matrix = get_allrad_decoder(
+    "allrad_decoders/" + file_name, "maxre", order, "sn3d", normalize_energy=True, layout=layout_704
+)
 output_layout = layout_704
 # Input channels
 input_matrix = get_input_channels_ambisonics(cloud, order)
 
-# Normalization
-resulting_signal = normalize_S(np.dot(input_matrix, decoding_matrix.T), "p")
+# Speaker matrix
+speaker_matrix = np.dot(input_matrix, decoding_matrix.T)
+
 
 # Call plots and save results
 show_results = True
-save_results = False
+save_results = True
 save_plot_name = "paper_case2_ambi5OAto704_allrad_maxre"
 plots_general(
     output_layout,
-    resulting_signal,
+    speaker_matrix,
     cloud,
     show_results,
     save_results,

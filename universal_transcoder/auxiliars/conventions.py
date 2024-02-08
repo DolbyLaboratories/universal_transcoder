@@ -101,5 +101,8 @@ def get_convention(conventions: str, n: int):
             adapter.append(aux)  # (5, 3)
             adapter.append(aux)  # (5, 4)
             adapter.append(aux)  # (5, 5)
+    else:
+        raise ValueError(f"Unsupported convention '{conventions}'")
+
 
     return np.asarray(adapter)
