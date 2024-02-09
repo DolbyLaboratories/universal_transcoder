@@ -36,9 +36,6 @@ from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 from universal_transcoder.auxiliars.typing import NpArray
 
 
-
-
-
 def mix_clouds_of_points(
     list_of_cloud_points: Iterable[MyCoordinates],
     list_of_weights: Optional[Iterable[float]] = None,
@@ -46,6 +43,7 @@ def mix_clouds_of_points(
 ) -> Tuple[MyCoordinates, NpArray]:
     """
     Mix several clouds of points, and optionally discard the bottom hemisphere
+
     Args:
         list_of_cloud_points: List of cloud points to merge.
         list_of_weights: If not None, list of weights for each cloud point.
@@ -57,14 +55,20 @@ def mix_clouds_of_points(
     """
 
     if discard_lower_hemisphere:
-        list_of_cloud_points = [cp.discard_lower_hemisphere() for cp in list_of_cloud_points]
+        list_of_cloud_points = [
+            cp.discard_lower_hemisphere() for cp in list_of_cloud_points
+        ]
     npoints = [cp.cart().shape[0] for cp in list_of_cloud_points]
     cloud_points = MyCoordinates.mult_points_cart(
         np.vstack([cp.cart() for cp in list_of_cloud_points])
     )
     if list_of_weights is not None:
         weights = np.asarray(
-            list(itertools.chain(*[[w / n] * n for n, w in zip(npoints, list_of_weights)]))
+            list(
+                itertools.chain(
+                    *[[w / n] * n for n, w in zip(npoints, list_of_weights)]
+                )
+            )
         )
         weights /= np.mean(weights)
     else:
@@ -73,7 +77,9 @@ def mix_clouds_of_points(
     return cloud_points, weights
 
 
-def get_equi_circumference_points(num_points: int, plot_show: bool = True):
+def get_equi_circumference_points(
+    num_points: int, plot_show: bool = True
+) -> MyCoordinates:
     """Function to obtain the polar coordinates of equidistant
     points of a circumference
 
@@ -121,7 +127,7 @@ def get_equi_circumference_points(num_points: int, plot_show: bool = True):
 
 def get_equi_t_design_points(
     file_name: Union[str, os.PathLike], plot_show: bool = True
-):
+) -> MyCoordinates:
     """Function to obtain the polar and cartesian spherical
     coordinates of equidistant points of a sphere out of a given
     txt from http://neilsloane.com/sphdesigns/
@@ -131,7 +137,7 @@ def get_equi_t_design_points(
         plot_show(bool): if True plot of points is shown
 
     Returns:
-        cloud_points (pyfar.Coordinates): points position
+        cloud_points (MyCoordinates): points position
     """
 
     content = np.loadtxt(file_name, dtype=float)
@@ -191,7 +197,9 @@ def get_equi_t_design_points(
     return cloud_points
 
 
-def get_equi_fibonacci_sphere_points(num_points: int, plot_show: bool = True):
+def get_equi_fibonacci_sphere_points(
+    num_points: int, plot_show: bool = True
+) -> MyCoordinates:
     """Function to obtain the polar spherical coordinates of
     equidistant points of a sphere
 
@@ -200,7 +208,7 @@ def get_equi_fibonacci_sphere_points(num_points: int, plot_show: bool = True):
         plot_show(bool): if True plot of points is shown
 
     Returns:
-        cloud_points (pyfar.Coordinates): points position
+        cloud_points (MyCoordinates): points position
     """
 
     golden_ang = (3 - np.sqrt(5)) * np.pi  # golden angle
@@ -230,7 +238,7 @@ def get_equi_fibonacci_sphere_points(num_points: int, plot_show: bool = True):
     return cloud_points
 
 
-def get_all_sphere_points(space: int = 1, plot_show: bool = True):
+def get_all_sphere_points(space: int = 1, plot_show: bool = True) -> MyCoordinates:
     """Function to obtain the coordinates of equidistant points of a
     sphere, with a gap/spacing between them (expressed in degrees) given
 
