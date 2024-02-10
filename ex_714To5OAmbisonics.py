@@ -21,33 +21,6 @@ from universal_transcoder.plots_and_logs.import_allrad_dec import get_allrad_dec
 
 basepath = Path(__file__).resolve().parents[0]
 
-
-def arrange(cloud):
-    ###Add points to elevation plane=0 and remove elevation<0 points because input format is in upper hemisphere
-    sph = cloud.sph_deg()
-    newSph = []
-    for i in range(sph.shape[0]):
-        if sph[i][1] >= 0:
-            newSph.append(sph[i])
-    zero_elevation = get_equi_circumference_points(10, False)
-    zero_elevation_sph = zero_elevation.sph_deg()
-    for i in range(zero_elevation_sph.shape[0]):
-        newSph.append(zero_elevation_sph[i])
-    output_layout = MyCoordinates.mult_points(np.array(newSph))
-    return output_layout
-
-
-def arrange2(cloud):
-    ###Just remove elevation<0 points because input format is in upper hemisphere
-    sph = cloud.sph_deg()
-    newSph = []
-    for i in range(sph.shape[0]):
-        if sph[i][1] >= 0:
-            newSph.append(sph[i])
-    output_layout = MyCoordinates.mult_points(np.array(newSph))
-    return output_layout
-
-
 # USAT #######################################################
 
 # Input Multichannel 7.0.4
@@ -89,8 +62,9 @@ input_matrix_optimization = get_input_channels_vbap(cloud_optimization, input_la
 t_design_output = (
     basepath / "universal_transcoder" / "encoders" / "t-design" / "des.3.56.9.txt"
 )
-output_layout = get_equi_t_design_points(t_design_output, False)
-output_layout = arrange(output_layout)
+output_layout,_= mix_clouds_of_points(
+    [get_equi_t_design_points(t_design_output, False),get_equi_circumference_points(36,False)], list_of_weights=[1,1], discard_lower_hemisphere=True
+)
 
 # Cloud of points to be encoded in input format (7.1.4) for plotting
 cloud_plots = get_all_sphere_points(1, False).discard_lower_hemisphere()
@@ -114,8 +88,8 @@ dictionary = {
         "radial_intensity": 1,
         "transverse_intensity": 1,
         "pressure": 10,
-        "radial_velocity": 1,
-        "transverse_velocity": 1,
+        "radial_velocity": 5,
+        "transverse_velocity": 5,
         "in_phase_quad": 0,
         "symmetry_quad": 0,
         "in_phase_lin": 0,
@@ -153,13 +127,13 @@ plots_general(
     show_results,
     save_results,
     "704transcoding5OA_direct",
-)
+) 
 #######################################################
 
 # AllRad decoding
 
 
-
+'''
 # Cloud
 # cloud = get_equi_circumference_points(36, False)
 cloud = get_all_sphere_points(5, False)
@@ -220,3 +194,4 @@ plots_general(
     save_results,
     save_plot_name,
 )
+'''
