@@ -71,7 +71,6 @@ def plot_ei_2D(
     # Calculations
     # Energy dB
     energy_db = 10 * np.log10(energy)
-    print("energy dbs ", energy_db.shape)
     # Angular Error
     ang_err = angular_error(radial_i, transverse_i)
     ang_err_rad = ang_err * math.pi / 180
