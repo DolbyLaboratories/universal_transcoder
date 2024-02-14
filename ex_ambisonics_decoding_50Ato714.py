@@ -33,23 +33,23 @@ input_matrix_optimization = get_input_channels_ambisonics(cloud_optimization, or
 output_layout = MyCoordinates.mult_points(
     np.array(
         [
-            (30, 0, 1),
+            (-135, 45, 1),
+            (-120, 0, 1),
+            (-90, 0, 1),
+            (-45, 45, 1),
             (-30, 0, 1),
             (0, 0, 1),
-            (90, 0, 1),
-            (-90, 0, 1),
-            (120, 0, 1),
-            (-120, 0, 1),
+            (30, 0, 1),
             (45, 45, 1),
-            (-45, 45, 1),
+            (90, 0, 1),
+            (120, 0, 1),
             (135, 45, 1),
-            (-135, 45, 1),
         ]
     )
 )
 
 # Cloud of points to be encoded in input format (5OA) for plotting
-cloud_plots = get_all_sphere_points(1, False)
+cloud_plots = get_all_sphere_points(10, False)
 
 # Input matrix for plotting
 input_matrix_plots = get_input_channels_ambisonics(cloud_plots, order)
@@ -87,13 +87,13 @@ optimize(dictionary)
 # No optimization #####################################
 ### AllRad
 
-file_name = "allrad_704_5OA_basic_decoder.json"
+file_name = "allrad_704_5OA_maxre_decoder.json"
 order = 5
 
 # Import AllRad file (N3D and ACN)
 decoding_matrix = get_allrad_decoder(
     "allrad_decoders/" + file_name,
-    type="inphase", # basic / maxre / inphase
+    type="maxre", # basic / maxre / inphase
     order=order,
     convention="sn3d",
     normalize_energy=True,
@@ -107,9 +107,9 @@ input_matrix = get_input_channels_ambisonics(cloud_plots, order)
 speaker_matrix = np.dot(input_matrix, decoding_matrix.T)
 
 # Call plots and save results
-show_results = True
+show_results = False
 save_results = True
-save_plot_name = "5OAdecoding714_allrad_inphase" # basic / maxre / inphase
+save_plot_name = "5OAdecoding714_allrad_maxre" # basic / maxre / inphase
 plots_general(
     output_layout,
     speaker_matrix,
