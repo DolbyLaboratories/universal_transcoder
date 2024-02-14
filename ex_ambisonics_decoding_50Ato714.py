@@ -49,7 +49,7 @@ output_layout = MyCoordinates.mult_points(
 )
 
 # Cloud of points to be encoded in input format (5OA) for plotting
-cloud_plots = get_all_sphere_points(10, False)
+cloud_plots = get_all_sphere_points(1, False)
 
 # Input matrix for plotting
 input_matrix_plots = get_input_channels_ambisonics(cloud_plots, order)
