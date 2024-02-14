@@ -85,7 +85,9 @@ def set_up_general(info: Dict[str, Any]) -> Tuple[State, JaxArray]:
         # check if P_aux matches P, otherwise, raise error, introduced wrong data
         if P_aux != P:
             raise ValueError(
-                "Introduced Dspk signal shape does not match defined output_layout. Dspk shape is PxN being P the number of speakers in output_layout and N the number of channels of desired transcoding format."
+                "Introduced Dspk signal shape does not match defined output_layout. "
+                "Dspk shape is PxN being P the number of speakers in output_layout "
+                "and N the number of channels of desired transcoding format."
             )
     else:
         # assume
@@ -95,7 +97,10 @@ def set_up_general(info: Dict[str, Any]) -> Tuple[State, JaxArray]:
     # Generate Decoding initial matrix
     np.random.seed(0)
     save_shape = (N, M)
-    T_flatten_initial = jnp.ones(N * M) + 0.2 * jnp.array(np.random.randn(N * M))
+    if "T_initial" in info.keys():
+        T_flatten_initial = info["T_initial"].flatten()
+    else:
+        T_flatten_initial = jnp.ones(N * M) + 0.2 * jnp.array(np.random.randn(N * M))
 
     # Create 'current state' class
     current_state = State(cloud, input_matrix, layout, save_shape, T_flatten_initial)

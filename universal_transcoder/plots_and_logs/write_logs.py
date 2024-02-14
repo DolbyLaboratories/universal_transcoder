@@ -70,6 +70,9 @@ def generate_json(data: dict, route_name: str):
     if "Dspk" in data_dict:
         data_dict["Dspk"] = data_dict["Dspk"].tolist()
 
+    if "T_initial" in data_dict:
+        data_dict["T_initial"] = data_dict["T_initial"].tolist()
+
     if "directional_weights" in data_dict and isinstance(
         data_dict["directional_weights"], np.ndarray
     ):
