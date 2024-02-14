@@ -60,7 +60,7 @@ input_matrix_optimization = get_input_channels_vbap(cloud_optimization, input_la
 
 # Set of virtual output speakers
 t_design_output = (
-    basepath / "universal_transcoder" / "encoders" / "t-design" / "des.3.56.9.txt"
+    basepath / "universal_transcoder" / "encoders" / "t-design" / "des.3.60.10.txt"
 )
 output_layout,_= mix_clouds_of_points(
     [get_equi_t_design_points(t_design_output, False),get_equi_circumference_points(36,False)], list_of_weights=[1,1], discard_lower_hemisphere=True
@@ -129,69 +129,3 @@ plots_general(
     "704transcoding5OA_direct",
 ) 
 #######################################################
-
-# AllRad decoding
-
-
-'''
-# Cloud
-# cloud = get_equi_circumference_points(36, False)
-cloud = get_all_sphere_points(5, False)
-# Output layout
-layout_50 = MyCoordinates.mult_points(
-    np.array(
-        [
-            (-120, 0, 1),
-            (-30, 0, 1),
-            (0, 0, 1),
-            (30, 0, 1),
-            (120, 0, 1),
-        ]
-    )
-)
-layout_704 = MyCoordinates.mult_points(
-    np.array(
-        [
-            (-135, 45, 1),
-            (-120, 0, 1),
-            (-90, 0, 1),
-            (-45, 45, 1),
-            (-30, 0, 1),
-            (0, 0, 1),
-            (30, 0, 1),
-            (45, 45, 1),
-            (90, 0, 1),
-            (120, 0, 1),
-            (135, 45, 1),
-        ]
-    )
-)
-
-file_name = "allrad_704_5OA_basic_decoder.json"
-order = 5
-
-# Import AllRad file (N3D and ACN)
-decoding_matrix = get_allrad_decoder(
-    "allrad_decoders/" + file_name, "maxre", order, "sn3d", normalize_energy=True, layout=layout_704
-)
-output_layout = layout_704
-# Input channels
-input_matrix = get_input_channels_ambisonics(cloud, order)
-
-# Speaker matrix
-speaker_matrix = np.dot(input_matrix, decoding_matrix.T)
-
-
-# Call plots and save results
-show_results = True
-save_results = True
-save_plot_name = "paper_case2_ambi5OAto704_allrad_maxre"
-plots_general(
-    output_layout,
-    speaker_matrix,
-    cloud,
-    show_results,
-    save_results,
-    save_plot_name,
-)
-'''

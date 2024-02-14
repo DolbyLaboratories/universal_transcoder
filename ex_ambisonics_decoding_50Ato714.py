@@ -74,8 +74,8 @@ dictionary = {
         "total_gains_quad": 0,
     },
     "directional_weights": 1,
-    "show_results": True,
-    "results_file_name": "5OAdecoding714",
+    "show_results": False,
+    "results_file_name": "5OAdecoding714_USAT",
     "save_results": True,
     "input_matrix_plots": input_matrix_plots,
     "cloud_plots": cloud_plots,
@@ -93,7 +93,7 @@ order = 5
 # Import AllRad file (N3D and ACN)
 decoding_matrix = get_allrad_decoder(
     "allrad_decoders/" + file_name,
-    type="basic", # basic / maxre / inphase
+    type="inphase", # basic / maxre / inphase
     order=order,
     convention="sn3d",
     normalize_energy=True,
@@ -109,7 +109,7 @@ speaker_matrix = np.dot(input_matrix, decoding_matrix.T)
 # Call plots and save results
 show_results = True
 save_results = True
-save_plot_name = "5OAdecoding714_allrad_basic" # basic / maxre / inphase
+save_plot_name = "5OAdecoding714_allrad_inphase" # basic / maxre / inphase
 plots_general(
     output_layout,
     speaker_matrix,
