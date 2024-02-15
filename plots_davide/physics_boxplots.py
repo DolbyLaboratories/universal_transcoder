@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -13,14 +14,42 @@ def _get_path(name):
     return PLOTS_PATH / name / "signal_data.txt"
 
 
-def box_plot(ut_txt_path, comp_txt_path, comp_name="comp", plot_type="pv"):
+def filter_elevation(df, remove_negative_elevation=True):
+    elevation = df["elevation"]
+    mask = np.ones(len(elevation), dtype=bool)
+    prob = 1 - np.cos(np.deg2rad(elevation.to_numpy()))  # Probability of removal
+    prob_cumsum = np.cumsum(prob)
+    prob_int = prob_cumsum.astype(int)
+    mask[1:] = np.logical_not(prob_int[1:] - prob_int[:-1])
+    if remove_negative_elevation:
+        mask[elevation < 0] = False
+    return df[mask]
+
+
+def box_plot(ut_txt_path, comp_txt_path, comp_name="comp", plot_type="pv", title=""):
 
     ut_df = pd.read_csv(ut_txt_path, names=COLUMNS, header=None)
     ut_df["Method"] = "USAT"
+    filter_elevation(ut_df)
     comp_df = pd.read_csv(comp_txt_path, names=COLUMNS, header=None)
     comp_df["Method"] = comp_name
+    filter_elevation(comp_df)
 
-    combined_dfs = pd.concat([ut_df, comp_df])
+    ref_df = pd.DataFrame(
+        {
+            "azimuth": [0],
+            "elevation": [0],
+            "P": [1],
+            "V_r": [1],
+            "V_t": [0],
+            "E": [1],
+            "I_r": [1],
+            "I_t": [0],
+            "Method": ["Ideal"],
+        }
+    )
+
+    combined_dfs = pd.concat([ref_df, ut_df, comp_df])
 
     # Selecting columns for the boxplot
     if plot_type == "pv":
@@ -40,9 +69,19 @@ def box_plot(ut_txt_path, comp_txt_path, comp_name="comp", plot_type="pv"):
     )
 
     # Adding hue to the boxplot
+    sns.set(style="ticks")
     sns.boxplot(
-        data=df_long, x="Quantity", y="Value", hue="Method"
-    )
+        data=df_long,
+        x="Quantity",
+        y="Value",
+        hue="Method",
+        showfliers=False,
+        dodge=True,
+        fill=False,
+    ).set_title(title)
+
+    plt.legend(title=None, loc="upper right")  # bbox_to_anchor=(1.05, 1),
+    plt.grid()
 
     # Display the plot
     plt.show()
@@ -53,5 +92,27 @@ if __name__ == "__main__":
         _get_path("5OAdecoding714_USAT"),
         _get_path("5OAdecoding714_allrad_maxre"),
         plot_type="ei",
-        comp_name="AllRad"
+        comp_name="AllRad",
+        title="5th order HOA decoding to 7.0.4",
+    )
+    box_plot(
+        _get_path("704transcoding5OA_USAT"),
+        _get_path("704transcoding5OA_direct"),
+        plot_type="pv",
+        comp_name="Remapping (VBAP)",
+        title="Transcoding 7.0.4 to 5th order HOA",
+    )
+    box_plot(
+        _get_path("ex_decoding_301_irregular"),
+        _get_path("ex_decoding_301irregular_vbap.png"),
+        plot_type="ei",
+        comp_name="Remapping (VBAP)",
+        title="Decoding 5.0.2 to a 3.0.1 irregular layout"
+    )
+    box_plot(
+        _get_path("panning51_USAT"),
+        _get_path("panning51_direct"),
+        plot_type="ei",
+        comp_name="Tangent law / VBAP",
+        title="Rendering to 5.1"
     )
