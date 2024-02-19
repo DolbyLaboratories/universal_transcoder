@@ -4,7 +4,7 @@ from pathlib import Path
 
 # PLOTS_PATH = Path(__file__).resolve().parents[1] / "saved_results"
 PLOTS_PATH = Path("saved_results")
-r_script_path = os.path.join("plots_davide", "make_r_spherical_plots_ut.r")
+r_script_path = os.path.join("plots_davide", "make_r_spherical_plots")
 
 
 def _get_path(name):
@@ -12,20 +12,30 @@ def _get_path(name):
 
 
 def run_r_plots(file_name):
-    folder, name = os.path.split(file_name)
-    os.system(" ".join(["Rscript --vanilla", r_script_path, str(file_name), folder]))
+    txt_path = _get_path(file_name)
+    folder, _ = os.path.split(txt_path)
+    name = file_name.split("_")[0]
+    r_script = "_".join([r_script_path, name]) + ".r"
+    os.system(
+        " ".join(
+            [
+                "Rscript --vanilla",
+                r_script,
+                str(txt_path),
+                folder,
+            ]
+        )
+    )
     return
 
 
 if __name__ == "__main__":
-    run_r_plots(_get_path("5OAdecoding714_USAT"))
-    run_r_plots(_get_path("5OAdecoding714_allrad_maxre"))
+    run_r_plots("5OAdecoding714_USAT")
+    run_r_plots("5OAdecoding714_allrad_maxre")
     #
-    run_r_plots(_get_path("704transcoding5OA_USAT"))
-    run_r_plots(_get_path("704transcoding5OA_direct"))
+    run_r_plots("704transcoding5OA_USAT")
+    run_r_plots("704transcoding5OA_direct")
     #
-    run_r_plots(_get_path("ex_decoding_301_irregular"))
-    run_r_plots(_get_path("ex_decoding_301irregular_vbap.png"))
+    run_r_plots("ex_decoding_301_irregular")
+    run_r_plots("ex_decoding_301irregular_vbap.png")
     #
-    run_r_plots(_get_path("panning51_USAT"))
-    run_r_plots(_get_path("panning51_direct"))
