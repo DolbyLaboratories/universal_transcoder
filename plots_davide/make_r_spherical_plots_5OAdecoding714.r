@@ -82,11 +82,9 @@ for(mode in modes)
         legend='E (dB)'
         value <- data$V6
         value = 10*log10(value)
-        minv = -3  # for Ambi and SWF
-        maxv =  3
-#         minv = -5  # for vbap
-#         maxv =  0
-        ticks = 0.5
+        minv = -6  # for Ambi and SWF
+        maxv =  8
+        ticks = 2
         print("Doing energy.")
         }
 
@@ -110,9 +108,6 @@ for(mode in modes)
         minv = 0
         maxv = 30 # 90
         ticks = 5
-#         minv = 0
-#         maxv = 1
-#         ticks = 0.2
         print("Doing intensity T.")
         invert=-1
         }
@@ -141,11 +136,9 @@ for(mode in modes)
         legend='p (dB)'
         value <- data$V3
         value = 10*log10(value)
-        minv = -2.5  # for Ambi and SWF
-        maxv =  2
-#         minv = -5  # for vbap
-#         maxv =  0
-        ticks = 0.5
+        minv = -6  # for Ambi and SWF
+        maxv =  8
+        ticks = 2
         print("Doing pressure.")
         }
 
@@ -169,9 +162,6 @@ for(mode in modes)
         minv = 0
         maxv = 30 # 90
         ticks = 5
-#         minv = 0
-#         maxv = 1
-#         ticks = 0.2
         print("Doing velocity T.")
         invert=-1
         }
