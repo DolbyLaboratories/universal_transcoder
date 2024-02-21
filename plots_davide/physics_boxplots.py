@@ -23,6 +23,18 @@ plt.rc("text", usetex=True)
 
 COLUMNS = ["azimuth", "elevation", "P", "V_r", "V_t", "E", "I_r", "I_t"]
 PLOTS_PATH = Path(__file__).resolve().parents[1] / "saved_results"
+LATEX_NAMES = {
+    "P": r"$P$",
+    "V_r": r"$V^R$",
+    "V_t": r"$V^T$",
+    "E": r"$E$",
+    "I_r": r"$I^R$",
+    "I_t": r"$I^T$",
+    "ASW": "ASW",
+    "P_dB": r"$P$",
+    "E_dB": r"$E$",
+    "delta": r"$\delta$",
+}
 
 
 def _get_path(name):
@@ -50,11 +62,29 @@ def filter_elevation(df, remove_negative_elevation=True):
     return df[mask]
 
 
+def energy_to_db(energy):
+    return 10 * np.log10(energy)
+
+
+def pressure_to_db(pressure):
+    return 10 * np.log10(pressure)
+
+
+def trans_to_delta(iv_trans):
+    return np.rad2deg(np.arcsin(iv_trans))
+
+
+def radtrans_to_asw(iv_rad, iv_trans):
+    iv = np.sqrt(iv_rad**2 + iv_trans**2)
+    return 3 / 8 * 2 * np.rad2deg(np.arccos(iv))
+
+
 def box_plot(
     ut_txt_path,
     comp_txt_path,
     comp_name="comp",
     plot_type="pv",
+    scale="human",
     title="",
     save_fig=True,
 ):
@@ -80,54 +110,82 @@ def box_plot(
         }
     )
 
-    combined_dfs = pd.concat([ref_df, ut_df, comp_df])
+    df = pd.concat([ref_df, ut_df, comp_df])
 
     # Selecting columns for the boxplot
-    if plot_type == "pv":
-        selected_columns = ["P", "V_r", "V_t"]
-    elif plot_type == "ei":
-        selected_columns = ["E", "I_r", "I_t"]
+    if scale == "linear":
+        if plot_type == "pv":
+            selected_columns = (["P", "V_r", "V_t"],)
+        elif plot_type == "ei":
+            selected_columns = (["E", "I_r", "I_t"],)
+        else:
+            raise ValueError("Wrong value for plot_type")
+        unitlabels = ("",)
+    elif scale == "human":
+        if plot_type == "pv":
+            df["P_dB"] = pressure_to_db(df["P"])
+            df["delta"] = trans_to_delta(df["V_t"])
+            df["ASW"] = radtrans_to_asw(df["V_r"], df["V_t"])
+            selected_columns = (["P_dB"], ["delta", "ASW"])
+        elif plot_type == "ei":
+            df["E_dB"] = energy_to_db(df["E"])
+            df["delta"] = trans_to_delta(df["I_t"])
+            df["ASW"] = radtrans_to_asw(df["I_r"], df["I_t"])
+            selected_columns = (["E_dB"], ["delta", "ASW"])
+        else:
+            raise ValueError("Wrong value for plot_type")
+
+        unitlabels = ("dB", "deg")
     else:
         raise ValueError("Wrong value for plot_type")
 
     # Convert to longform
-    df_long = pd.melt(
-        combined_dfs,
-        id_vars="Method",
-        value_vars=selected_columns,
-        var_name="Quantity",
-        value_name="Value",
-    )
+    df_long_list = [
+        pd.melt(
+            df,
+            id_vars="Method",
+            value_vars=sc,
+            var_name="Quantity",
+            value_name="Value",
+        ).replace({"Quantity": LATEX_NAMES})
+        for sc in selected_columns
+    ]
 
     # Adding hue to the boxplot
-
     # Then when creating the figure
     mm = 1 / 25.4  # mm in inches
     width = 76 * mm  # Replace by 159 mm for 2-column plots
     aspect_ratio = 1  # Replace by whatever apprpriate
-    fig, ax = plt.subplots(figsize=(width, aspect_ratio * width))
-    ax = sns.boxplot(
-        ax=ax,
-        data=df_long,
-        x="Quantity",
-        y="Value",
-        hue="Method",
-        showfliers=False,
-        dodge=True,
-        fill=False,
+    fig, axs = plt.subplots(
+        1,
+        len(df_long_list),
+        figsize=(width, aspect_ratio * width),
+        width_ratios=[len(sc) for sc in selected_columns],
     )
-    ax.set_title(title)
+    plt.suptitle(title)
 
-    plt.grid()
+    for ax, df, unit in zip(axs, df_long_list, unitlabels):
+        sns.boxplot(
+            ax=ax,
+            data=df,
+            x="Quantity",
+            y="Value",
+            hue="Method",
+            showfliers=False,
+            dodge=True,
+            fill=False,
+        )
 
-    if plot_type == "pv":
-        ax.set_xticklabels([r"$P$", r"$V^R$", r"$V^T$"])
-    elif plot_type == "ei":
-        ax.set_xticklabels([r"$E$", r"$I^R$", r"$I^T$"])
-    ax.set_xlabel('')
-    ax.set_ylabel('')
+        ax.grid()
+        ax.set_xlabel("")
+        ax.set_ylabel(unit)
+        ax.get_legend().remove()
+
     plt.subplots_adjust(bottom=0.2)
-    plt.legend(
+    lines, labels = axs[0].get_legend_handles_labels()
+    fig.legend(
+        lines,
+        labels,
         title=None,
         loc="upper center",
         bbox_to_anchor=(0.5, -0.15),
@@ -157,7 +215,7 @@ if __name__ == "__main__":
         _get_path("704transcoding5OA_USAT"),
         _get_path("704transcoding5OA_direct"),
         plot_type="pv",
-        comp_name="Remapping",
+        comp_name="HOA enc.",
         title="Transcoding 7.0.4 to 5OA",
     )
     box_plot(
