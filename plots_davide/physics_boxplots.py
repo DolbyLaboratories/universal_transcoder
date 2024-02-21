@@ -5,7 +5,20 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-sns.set_style("white")
+# Set up font in the header of the file
+from matplotlib import rc
+rc(
+    "font",
+    **{
+        "family": "serif",
+        "serif": ["Times"],
+        "size": 9,  # Equivalent to \small in LaTeX
+    }
+)
+rc("text", usetex=True)
+sns.set(style="ticks", font="Times New Roman")   # If we use seaborn
+
+
 COLUMNS = ["azimuth", "elevation", "P", "V_r", "V_t", "E", "I_r", "I_t"]
 PLOTS_PATH = Path(__file__).resolve().parents[1] / "saved_results"
 
@@ -69,8 +82,14 @@ def box_plot(ut_txt_path, comp_txt_path, comp_name="comp", plot_type="pv", title
     )
 
     # Adding hue to the boxplot
-    sns.set(style="ticks")
-    sns.boxplot(
+
+    # Then when creating the figure
+    mm = 1 / 25.4  # mm in inches
+    width = 76 * mm   # Replace by 159 mm for 2-column plots
+    aspect_ratio = 1.3  # Replace by whatever apprpriate
+    fig, ax = plt.subplots(figsize=(width, aspect_ratio*width))
+    ax = sns.boxplot(
+        ax=ax,
         data=df_long,
         x="Quantity",
         y="Value",
@@ -78,12 +97,25 @@ def box_plot(ut_txt_path, comp_txt_path, comp_name="comp", plot_type="pv", title
         showfliers=False,
         dodge=True,
         fill=False,
-    ).set_title(title)
+    )
+    ax.set_title(title)
 
     plt.legend(title=None, loc="upper right")  # bbox_to_anchor=(1.05, 1),
     plt.grid()
 
+    if plot_type == "pv":
+        ax.set_xticklabels([r"$P$", r"$V_r$", r"$V_t$"])
+    elif plot_type == "ei":
+        ax.set_xticklabels([r"$E$", r"$I_r$", r"$I_t$"])
+
+    plt.subplots_adjust(bottom=0.3)
+    plt.legend(title=None, loc="upper center", bbox_to_anchor=(0.5, -0.25), ncol=1, frameon=False)
+    plt.tight_layout()
+
+
     # Display the plot
+
+
     plt.show()
 
 
@@ -107,12 +139,12 @@ if __name__ == "__main__":
         _get_path("ex_decoding_301irregular_vbap.png"),
         plot_type="ei",
         comp_name="Remapping (VBAP)",
-        title="Decoding 5.0.2 to a 3.0.1 irregular layout"
+        title="Decoding 5.0.2 to a 3.0.1 irregular layout",
     )
     box_plot(
         _get_path("panning51_USAT"),
         _get_path("panning51_direct"),
         plot_type="ei",
         comp_name="Tangent law / VBAP",
-        title="Rendering to 5.1"
+        title="Rendering to 5.1",
     )
