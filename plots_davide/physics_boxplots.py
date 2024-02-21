@@ -6,18 +6,19 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # Set up font in the header of the file
-from matplotlib import rc
+# sns.set(style="ticks", font="Times New Roman", font)
 
-rc(
+plt.rc(
     "font",
     **{
         "family": "serif",
-        "serif": ["Times"],
-        "size": 9,  # Equivalent to \small in LaTeX
+        "serif": ["Times New Roman"],
+        "size": 9,
     }
 )
-rc("text", usetex=True)
-sns.set(style="ticks", font="Times New Roman")  # If we use seaborn
+plt.rc("axes", **{"labelsize": 9, "titlesize": 9})
+plt.rc("text", usetex=True)
+# If we use seaborn
 
 
 COLUMNS = ["azimuth", "elevation", "P", "V_r", "V_t", "E", "I_r", "I_t"]
@@ -29,12 +30,12 @@ def _get_path(name):
 
 
 def _save_plots(name):
-    name_png = name.lower().replace(" ", "_") + ".png"
-    name_pdf = name.lower().replace(" ", "_") + ".pdf"
+    name_png = "boxplot_" + name.lower().replace(" ", "_") + ".png"
+    name_pdf = "boxplot_" + name.lower().replace(" ", "_") + ".pdf"
     path_png = PLOTS_PATH / name_png
     path_pdf = PLOTS_PATH / name_pdf
-    plt.savefig(path_pdf)
-    plt.savefig(path_png)
+    plt.savefig(path_pdf, bbox_inches="tight")
+    plt.savefig(path_png, bbox_inches="tight")
 
 
 def filter_elevation(df, remove_negative_elevation=True):
@@ -103,7 +104,7 @@ def box_plot(
     # Then when creating the figure
     mm = 1 / 25.4  # mm in inches
     width = 76 * mm  # Replace by 159 mm for 2-column plots
-    aspect_ratio = 1.3  # Replace by whatever apprpriate
+    aspect_ratio = 1  # Replace by whatever apprpriate
     fig, ax = plt.subplots(figsize=(width, aspect_ratio * width))
     ax = sns.boxplot(
         ax=ax,
@@ -117,21 +118,23 @@ def box_plot(
     )
     ax.set_title(title)
 
-    plt.legend(title=None, loc="upper right")  # bbox_to_anchor=(1.05, 1),
     plt.grid()
 
     if plot_type == "pv":
         ax.set_xticklabels([r"$P$", r"$V^R$", r"$V^T$"])
     elif plot_type == "ei":
         ax.set_xticklabels([r"$E$", r"$I^R$", r"$I^T$"])
-
-    plt.subplots_adjust(bottom=0.3)
+    ax.set_xlabel('')
+    ax.set_ylabel('')
+    plt.subplots_adjust(bottom=0.2)
     plt.legend(
         title=None,
         loc="upper center",
-        bbox_to_anchor=(0.5, -0.25),
-        ncol=1,
+        bbox_to_anchor=(0.5, -0.15),
+        ncol=3,
         frameon=False,
+        columnspacing=0.8,
+        handletextpad=0.5,
     )
     plt.tight_layout()
 
@@ -154,20 +157,20 @@ if __name__ == "__main__":
         _get_path("704transcoding5OA_USAT"),
         _get_path("704transcoding5OA_direct"),
         plot_type="pv",
-        comp_name="Remapping (VBAP)",
+        comp_name="Remapping",
         title="Transcoding 7.0.4 to 5OA",
     )
     box_plot(
         _get_path("ex_decoding_301_irregular"),
         _get_path("ex_decoding_301irregular_vbap.png"),
         plot_type="ei",
-        comp_name="Remapping (VBAP)",
+        comp_name="Remapping",
         title="Decoding 5.0.2 to 3.0.1 irregular",
     )
     box_plot(
         _get_path("panning51_USAT"),
         _get_path("panning51_direct"),
         plot_type="ei",
-        comp_name="Tangent law / VBAP",
+        comp_name="Tangent law",
         title="Rendering to 5.1",
     )
