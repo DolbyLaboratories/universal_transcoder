@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 
 # Set up font in the header of the file
 from matplotlib import rc
+
 rc(
     "font",
     **{
@@ -16,7 +17,7 @@ rc(
     }
 )
 rc("text", usetex=True)
-sns.set(style="ticks", font="Times New Roman")   # If we use seaborn
+sns.set(style="ticks", font="Times New Roman")  # If we use seaborn
 
 
 COLUMNS = ["azimuth", "elevation", "P", "V_r", "V_t", "E", "I_r", "I_t"]
@@ -25,6 +26,15 @@ PLOTS_PATH = Path(__file__).resolve().parents[1] / "saved_results"
 
 def _get_path(name):
     return PLOTS_PATH / name / "signal_data.txt"
+
+
+def _save_plots(name):
+    name_png = name.lower().replace(" ", "_") + ".png"
+    name_pdf = name.lower().replace(" ", "_") + ".pdf"
+    path_png = PLOTS_PATH / name_png
+    path_pdf = PLOTS_PATH / name_pdf
+    plt.savefig(path_pdf)
+    plt.savefig(path_png)
 
 
 def filter_elevation(df, remove_negative_elevation=True):
@@ -39,7 +49,14 @@ def filter_elevation(df, remove_negative_elevation=True):
     return df[mask]
 
 
-def box_plot(ut_txt_path, comp_txt_path, comp_name="comp", plot_type="pv", title=""):
+def box_plot(
+    ut_txt_path,
+    comp_txt_path,
+    comp_name="comp",
+    plot_type="pv",
+    title="",
+    save_fig=True,
+):
 
     ut_df = pd.read_csv(ut_txt_path, names=COLUMNS, header=None)
     ut_df["Method"] = "USAT"
@@ -85,9 +102,9 @@ def box_plot(ut_txt_path, comp_txt_path, comp_name="comp", plot_type="pv", title
 
     # Then when creating the figure
     mm = 1 / 25.4  # mm in inches
-    width = 76 * mm   # Replace by 159 mm for 2-column plots
+    width = 76 * mm  # Replace by 159 mm for 2-column plots
     aspect_ratio = 1.3  # Replace by whatever apprpriate
-    fig, ax = plt.subplots(figsize=(width, aspect_ratio*width))
+    fig, ax = plt.subplots(figsize=(width, aspect_ratio * width))
     ax = sns.boxplot(
         ax=ax,
         data=df_long,
@@ -104,19 +121,25 @@ def box_plot(ut_txt_path, comp_txt_path, comp_name="comp", plot_type="pv", title
     plt.grid()
 
     if plot_type == "pv":
-        ax.set_xticklabels([r"$P$", r"$V_r$", r"$V_t$"])
+        ax.set_xticklabels([r"$P$", r"$V^R$", r"$V^T$"])
     elif plot_type == "ei":
-        ax.set_xticklabels([r"$E$", r"$I_r$", r"$I_t$"])
+        ax.set_xticklabels([r"$E$", r"$I^R$", r"$I^T$"])
 
     plt.subplots_adjust(bottom=0.3)
-    plt.legend(title=None, loc="upper center", bbox_to_anchor=(0.5, -0.25), ncol=1, frameon=False)
+    plt.legend(
+        title=None,
+        loc="upper center",
+        bbox_to_anchor=(0.5, -0.25),
+        ncol=1,
+        frameon=False,
+    )
     plt.tight_layout()
 
-
     # Display the plot
-
-
-    plt.show()
+    if save_fig:
+        _save_plots(title)
+    else:
+        plt.show()
 
 
 if __name__ == "__main__":
@@ -125,21 +148,21 @@ if __name__ == "__main__":
         _get_path("5OAdecoding714_allrad_maxre"),
         plot_type="ei",
         comp_name="AllRad",
-        title="5th order HOA decoding to 7.0.4",
+        title="Decoding 5OA to 7.0.4",
     )
     box_plot(
         _get_path("704transcoding5OA_USAT"),
         _get_path("704transcoding5OA_direct"),
         plot_type="pv",
         comp_name="Remapping (VBAP)",
-        title="Transcoding 7.0.4 to 5th order HOA",
+        title="Transcoding 7.0.4 to 5OA",
     )
     box_plot(
         _get_path("ex_decoding_301_irregular"),
         _get_path("ex_decoding_301irregular_vbap.png"),
         plot_type="ei",
         comp_name="Remapping (VBAP)",
-        title="Decoding 5.0.2 to a 3.0.1 irregular layout",
+        title="Decoding 5.0.2 to 3.0.1 irregular",
     )
     box_plot(
         _get_path("panning51_USAT"),
