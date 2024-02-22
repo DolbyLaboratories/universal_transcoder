@@ -15,7 +15,10 @@ def run_r_plots(file_name):
     txt_path = _get_path(file_name)
     folder, _ = os.path.split(txt_path)
     name = file_name.split("_")[0]
-    r_script = "_".join([r_script_path, name]) + ".r"
+    # r_script = "_".join([r_script_path, name]) + ".r"
+    r_script = "_".join([r_script_path, "all"]) + ".r"
+    is_hemispherical = 0 if ("5OA" in file_name) else 1
+    is_714 = 1 if ("7" in file_name) else 0
     os.system(
         " ".join(
             [
@@ -23,6 +26,8 @@ def run_r_plots(file_name):
                 r_script,
                 str(txt_path),
                 folder,
+                str(is_hemispherical),
+                str(is_714),
             ]
         )
     )

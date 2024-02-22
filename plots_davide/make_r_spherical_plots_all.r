@@ -6,17 +6,31 @@ library(dplyr)
 library(scales)
 
 
-doSphPlot<-function(data, value, legend_name, what='prova', minv=-2, maxv=2, ticks=0.5, invert=1, optimal_point=0, is_hemisphere=0){
+doSphPlot<-function(data, value, legend_name, what='prova', minv=-2, maxv=2, ticks=0.5, invert=1, optimal_point=0, is_hemisphere=0, is_714=1){
     # Create grid
-    grid <- st_sf(st_make_grid(cellsize = c(1,1), offset = c(-180,-0.5), n = c(360,90),
+    if(is_hemisphere == 1){
+        grid <- st_sf(st_make_grid(cellsize = c(1,1), offset = c(-180,-0.5), n = c(360,90),
                               crs = st_crs(4326), what = 'polygons'))
+    }
+    else{
+        grid <- st_sf(st_make_grid(cellsize = c(1,1), offset = c(-180,-90), n = c(360,180),
+                              crs = st_crs(4326), what = 'polygons'))
+    }
+
 
     # dplyr::mutate is the verb to change/add a column
     grid <- grid %>% mutate(valore = value)
 
     # SPK
-    spk_azimuth = c(-135.0, -120.0,  -90.0,  -45.0,  -30.0,    0.0,   30.0,   45.0,   90.0, 120.0,  135.0)
-    spk_elevation = c(45.0,  0.0,  0.0, 45.0,  0.0,  0.0,  0.0, 45.0,  0.0,  0.0, 45.0)
+    if(is_714 == 1){
+        spk_azimuth = c(-135.0, -120.0,  -90.0,  -45.0,  -30.0,    0.0,   30.0,   45.0,   90.0, 120.0,  135.0)
+        spk_elevation = c(45.0,  0.0,  0.0, 45.0,  0.0,  0.0,  0.0, 45.0,  0.0,  0.0, 45.0)
+    }
+    else{
+        spk_azimuth = c(10.0, -45.0, 180.0, 0.0)
+        spk_elevation = c(0.0, 0.0, 0.0,  80)
+    }
+
     spk <- data.frame(spk_azimuth, spk_elevation)
     spk <- st_as_sf(spk, coords = c('spk_azimuth', 'spk_elevation'), crs = 4326)
 
@@ -28,6 +42,7 @@ doSphPlot<-function(data, value, legend_name, what='prova', minv=-2, maxv=2, tic
     # Plot polygons with color and mollweide projection
     ggplot() +
         geom_sf(data = grid, aes(fill=valore, col = valore)) +
+
 
         geom_sf(data=st_graticule(crs = st_crs(4326),
                             lat = seq(-60,60,30),
@@ -84,8 +99,18 @@ if (length(args)==1) {
   # default output folder name
   args[2] = "out"
 }
-
+if (length(args)==2) {
+  # is_hemisphere ?
+  args[3] = 0
+}
+if (length(args)==3) {
+  # is_714 ?
+  args[4] = 1
+}
 files_list <- c(args[1])
+is_hemisphere = c(args[3])
+is_714 = c(args[4])
+
 
 modes <- c(1, 2, 3)
 # energy
@@ -141,7 +166,8 @@ for(mode in modes)
         folder = file.path(args[2], rootname[[1]][1])
         plotname = paste(folder, what_plot, sep = "_", collapse = NULL)
         print(plotname)
-        doSphPlot(data, value, legend, what=plotname, minv=minv, maxv=maxv, ticks=ticks, invert=invert, optimal_point=optimal_point)
+        doSphPlot(data, value, legend, what=plotname, minv=minv, maxv=maxv, ticks=ticks, invert=invert,
+                    optimal_point=optimal_point, is_hemisphere=is_hemisphere, is_714=is_714)
     }
 }
 
@@ -200,7 +226,8 @@ for(mode in modes)
         folder = file.path(args[2], rootname[[1]][1])
         plotname = paste(folder, what_plot, sep = "_", collapse = NULL)
         print(plotname)
-        doSphPlot(data, value, legend, what=plotname, minv=minv, maxv=maxv, ticks=ticks, invert=invert, optimal_point=optimal_point)
+        doSphPlot(data, value, legend, what=plotname, minv=minv, maxv=maxv, ticks=ticks, invert=invert,
+                    optimal_point=optimal_point, is_hemisphere=is_hemisphere, is_714=is_714)
     }
 }
 

@@ -3,9 +3,11 @@
 library(sf)
 library(ggplot2)
 library(dplyr)
+library(scales)
 
 
-doSphPlot<-function(data, value, legend_name, what='prova', minv=-2, maxv=2, ticks=0.5, invert=1){
+
+doSphPlot<-function(data, value, legend_name, what='prova', minv=-2, maxv=2, ticks=0.5, invert=1, optimal_point=0){
     # Create grid
     grid <- st_sf(st_make_grid(cellsize = c(1,1), offset = c(-180,-90), n = c(360,180),
                               crs = st_crs(4326), what = 'polygons'))
@@ -40,8 +42,26 @@ doSphPlot<-function(data, value, legend_name, what='prova', minv=-2, maxv=2, tic
         geom_sf(data = spk, size = 3) +
         geom_sf_text(data=labels, aes(label = text), col = 'white', nudge_x = 15, nudge_y = 4) +  # nundge doesn't work...
 
-        scale_fill_viridis_c(limits=c(minv, maxv), breaks=seq(minv, maxv,by=ticks), direction=invert) +
-        scale_color_viridis_c(limits=c(minv, maxv), breaks=seq(minv, maxv,by=ticks), guide = FALSE, direction=invert) +
+        # scale_fill_viridis_c(limits=c(minv, maxv), breaks=seq(minv, maxv,by=ticks), direction=invert) +
+        # scale_color_viridis_c(limits=c(minv, maxv), breaks=seq(minv, maxv,by=ticks), guide = FALSE, direction=invert) +
+
+        scale_fill_gradient2(
+                low = muted("blue"),
+                mid = "gray90",
+                high = muted("red"),
+                midpoint = optimal_point,
+                limits=c(minv, maxv), breaks=seq(minv, maxv,by=ticks),
+              ) +
+
+        scale_color_gradient2(
+                low = muted("blue"),
+                mid = "gray90",
+                high = muted("red"),
+                midpoint = optimal_point,
+                limits=c(minv, maxv), breaks=seq(minv, maxv,by=ticks),
+                guide = 'none',
+              ) +
+
 
         coord_sf(crs = st_crs('ESRI:54009')) +
         labs(fill = legend_name, x = NULL, y = NULL) +
@@ -75,6 +95,8 @@ for(mode in modes)
         data_path <- paste(filename, '.txt', sep = "", collapse = NULL)
         data <- read.csv(data_path, header = FALSE)
 
+        optimal_point = 0
+
         invert=1
         if(mode == 1){
         # energy
@@ -83,8 +105,9 @@ for(mode in modes)
         value <- data$V6
         value = 10*log10(value)
         minv = -6  # for Ambi and SWF
-        maxv =  8
+        maxv =  6
         ticks = 2
+        optimal_point = 0
         print("Doing energy.")
         }
 
@@ -96,6 +119,7 @@ for(mode in modes)
         minv = 0 # -0.641548
         maxv = 1 # 0.938332
         ticks = 0.2
+        optimal_point = 1
         print("Doing intensity R.")
         }
 
@@ -108,6 +132,7 @@ for(mode in modes)
         minv = 0
         maxv = 30 # 90
         ticks = 5
+        optimal_point = 0
         print("Doing intensity T.")
         invert=-1
         }
@@ -116,7 +141,7 @@ for(mode in modes)
         folder = file.path(args[2], rootname[[1]][1])
         plotname = paste(folder, what_plot, sep = "_", collapse = NULL)
         print(plotname)
-        doSphPlot(data, value, legend, what=plotname, minv=minv, maxv=maxv, ticks=ticks, invert=invert)
+        doSphPlot(data, value, legend, what=plotname, minv=minv, maxv=maxv, ticks=ticks, invert=invert, optimal_point=optimal_point)
     }
 }
 
@@ -129,6 +154,8 @@ for(mode in modes)
         data_path <- paste(filename, '.txt', sep = "", collapse = NULL)
         data <- read.csv(data_path, header = FALSE)
 
+        optimal_point = 0
+
         invert=1
         if(mode == 1){
         # energy
@@ -137,8 +164,9 @@ for(mode in modes)
         value <- data$V3
         value = 10*log10(value)
         minv = -6  # for Ambi and SWF
-        maxv =  8
+        maxv =  6
         ticks = 2
+        optimal_point = 0
         print("Doing pressure.")
         }
 
@@ -148,8 +176,9 @@ for(mode in modes)
         legend=expression('V'['R'])
         value <- data$V4
         minv = 0 # -0.641548
-        maxv = 1 # 0.938332
+        maxv = 1.2 # 0.938332
         ticks = 0.2
+        optimal_point = 1
         print("Doing velocity R.")
         }
 
@@ -162,6 +191,7 @@ for(mode in modes)
         minv = 0
         maxv = 30 # 90
         ticks = 5
+        optimal_point = 0
         print("Doing velocity T.")
         invert=-1
         }
@@ -170,7 +200,7 @@ for(mode in modes)
         folder = file.path(args[2], rootname[[1]][1])
         plotname = paste(folder, what_plot, sep = "_", collapse = NULL)
         print(plotname)
-        doSphPlot(data, value, legend, what=plotname, minv=minv, maxv=maxv, ticks=ticks, invert=invert)
+        doSphPlot(data, value, legend, what=plotname, minv=minv, maxv=maxv, ticks=ticks, invert=invert, optimal_point=optimal_point)
     }
 }
 
