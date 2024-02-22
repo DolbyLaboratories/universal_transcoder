@@ -4,6 +4,7 @@ library(sf)
 library(ggplot2)
 library(dplyr)
 library(scales)
+library(ramify)
 
 rad2deg <- function(rad) {(rad * 180) / (pi)}
 deg2rad <- function(deg) {(deg * pi) / (180)}
@@ -16,12 +17,14 @@ trans_to_delta<-function(iv_rad, iv_trans){
 #     return np.rad2deg(np.arctan2(iv_trans, iv_rad))
 
 radtrans_to_asw<-function(iv_rad, iv_trans){
-    iv = sqrt(iv_rad**2 + iv_trans**2)
-    return(c(3 / 8 * 2 * rad2deg(acos(iv)) ))
+    iv <- sqrt(iv_rad**2 + iv_trans**2)
+    iv_clip <- ramify::clip(iv, .min=0, .max=1)
+    aws <- 3 / 8 * 2 * rad2deg(acos(iv_clip))
+    return(c(aws))
 }
 
 # def radtrans_to_asw(iv_rad, iv_trans):
-#     iv = np.sqrt(iv_rad**2 + iv_trans**2)
+#     iv = np.clip(np.sqrt(iv_rad**2 + iv_trans**2), 0, 1)
 #     return 3 / 8 * 2 * np.rad2deg(np.arccos(iv))
 
 doSphPlot<-function(data, value, legend_name, what='prova', minv=-2, maxv=2, ticks=0.5, invert=1, optimal_point=0, is_hemisphere=0, is_714=1){
@@ -83,7 +86,7 @@ doSphPlot<-function(data, value, legend_name, what='prova', minv=-2, maxv=2, tic
                 high = muted("red"),
                 midpoint = optimal_point,
                 limits=c(minv, maxv), breaks=seq(minv, maxv,by=ticks),
-                na.value = "grey30"
+                na.value = muted("red", l=20)
               ) +
 
         scale_color_gradient2(
@@ -93,7 +96,7 @@ doSphPlot<-function(data, value, legend_name, what='prova', minv=-2, maxv=2, tic
                 midpoint = optimal_point,
                 limits=c(minv, maxv), breaks=seq(minv, maxv,by=ticks),
                 guide = 'none',
-                na.value = "grey30"
+                na.value = muted("red", l=20)
               ) +
 
 
@@ -149,8 +152,8 @@ for(mode in modes)
             legend='E (dB)'
             value <- data$V6
             value = 10*log10(value)
-            minv = -6  # for Ambi and SWF
-            maxv =  6
+            minv = -4  # for Ambi and SWF
+            maxv =  4
             ticks = 2
             optimal_point = 0
             print("Doing energy.")
@@ -239,8 +242,8 @@ for(mode in modes)
             legend='p (dB)'
             value <- data$V3
             value = 10*log10(value)
-            minv = -6  # for Ambi and SWF
-            maxv =  6
+            minv = -4  # for Ambi and SWF
+            maxv =  4
             ticks = 2
             optimal_point = 0
             print("Doing pressure.")
