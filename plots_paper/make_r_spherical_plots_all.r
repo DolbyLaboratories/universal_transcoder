@@ -175,7 +175,7 @@ for(mode in modes)
             value <- data$V8
             value = asin(value) / pi * 180
             minv = 0
-            maxv = 30 # 90
+            maxv = 40 # 90
             ticks = 5
             optimal_point = 0
             print("Doing intensity T.")
@@ -190,7 +190,7 @@ for(mode in modes)
             i_t <- data$V8
             value = radtrans_to_asw(i_r, i_t)
             minv = 0
-            maxv = 30 # 90
+            maxv = 40 # 90
             ticks = 5
             optimal_point = 0
             print("Doing AWS.")
@@ -205,7 +205,7 @@ for(mode in modes)
             i_t <- data$V8
             value = trans_to_delta(i_r, i_t)
             minv = 0
-            maxv = 30 # 90
+            maxv = 40 # 90
             ticks = 5
             optimal_point = 0
             print("Doing delta.")
@@ -265,7 +265,7 @@ for(mode in modes)
             value <- data$V5
             value = asin(value) / pi * 180
             minv = 0
-            maxv = 30 # 90
+            maxv = 40 # 90
             ticks = 5
             optimal_point = 0
             print("Doing velocity T.")
@@ -280,7 +280,7 @@ for(mode in modes)
             v_t <- data$V5
             value = radtrans_to_asw(v_r, v_t)
             minv = 0
-            maxv = 30 # 90
+            maxv = 40 # 90
             ticks = 5
             optimal_point = 0
             print("Doing AWS.")
@@ -295,7 +295,7 @@ for(mode in modes)
             v_t <- data$V5
             value = trans_to_delta(v_r, v_t)
             minv = 0
-            maxv = 30 # 90
+            maxv = 40 # 90
             ticks = 5
             optimal_point = 0
             print("Doing delta.")

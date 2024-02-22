@@ -18,7 +18,7 @@ def run_r_plots(file_name):
     name = file_name.split("_")[0]
     # r_script = "_".join([R_SCRIPT_PATH, name]) + ".r"
     r_script = "_".join([R_SCRIPT_PATH, "all"]) + ".r"
-    is_hemispherical = 0 if ("5OA" in file_name) else 1
+    is_hemispherical = 0 if ("5OAdecoding714" in file_name) else 1
     is_714 = 1 if ("7" in file_name) else 0
 
     # make plots
