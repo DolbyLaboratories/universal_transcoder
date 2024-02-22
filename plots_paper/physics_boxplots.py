@@ -78,7 +78,7 @@ def radtrans_to_delta(iv_rad, iv_trans):
 
 
 def radtrans_to_asw(iv_rad, iv_trans):
-    iv = np.sqrt(iv_rad**2 + iv_trans**2)
+    iv = np.clip(np.sqrt(iv_rad**2 + iv_trans**2), 0, 1)
     return 3 / 8 * 2 * np.rad2deg(np.arccos(iv))
 
 
@@ -157,7 +157,7 @@ def box_plot(
     # Then when creating the figure
     mm = 1 / 25.4  # mm in inches
     width = 76 * mm  # Replace by 159 mm for 2-column plots
-    aspect_ratio = 1  # Replace by whatever apprpriate
+    aspect_ratio = 0.75  # Replace by whatever apprpriate
     fig, axs = plt.subplots(
         1,
         len(df_long_list),
@@ -183,14 +183,14 @@ def box_plot(
         ax.set_ylabel(unit)
         ax.get_legend().remove()
 
-    plt.subplots_adjust(bottom=0.2)
+    plt.subplots_adjust(bottom=0.1)
     lines, labels = axs[0].get_legend_handles_labels()
     fig.legend(
         lines,
         labels,
         title=None,
         loc="upper center",
-        bbox_to_anchor=(0.5, -0.15),
+        bbox_to_anchor=(0.5, -0.05),
         ncol=3,
         frameon=False,
         columnspacing=0.8,
