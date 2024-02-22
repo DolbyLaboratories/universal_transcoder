@@ -5,6 +5,8 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+# Needed LaTeX packages: cm-super, type1cm, dvipng
+
 # Set up font in the header of the file
 # sns.set(style="ticks", font="Times New Roman", font)
 
@@ -48,6 +50,7 @@ def _save_plots(name):
     path_pdf = PLOTS_PATH / name_pdf
     plt.savefig(path_pdf, bbox_inches="tight")
     plt.savefig(path_png, bbox_inches="tight")
+    print("Plots saved in: %s" % PLOTS_PATH)
 
 
 def filter_elevation(df, remove_negative_elevation=True):
@@ -88,7 +91,6 @@ def box_plot(
     title="",
     save_fig=True,
 ):
-
     ut_df = pd.read_csv(ut_txt_path, names=COLUMNS, header=None)
     ut_df["Method"] = "USAT"
     filter_elevation(ut_df)
