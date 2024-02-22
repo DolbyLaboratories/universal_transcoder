@@ -5,6 +5,24 @@ library(ggplot2)
 library(dplyr)
 library(scales)
 
+rad2deg <- function(rad) {(rad * 180) / (pi)}
+deg2rad <- function(deg) {(deg * pi) / (180)}
+
+trans_to_delta<-function(iv_rad, iv_trans){
+        rad2deg(atan2(iv_trans, iv_rad))
+    }
+
+# def radtrans_to_delta(iv_rad, iv_trans):
+#     return np.rad2deg(np.arctan2(iv_trans, iv_rad))
+
+radtrans_to_asw<-function(iv_rad, iv_trans){
+    iv = sqrt(iv_rad**2 + iv_trans**2)
+    return(c(3 / 8 * 2 * rad2deg(acos(iv)) ))
+}
+
+# def radtrans_to_asw(iv_rad, iv_trans):
+#     iv = np.sqrt(iv_rad**2 + iv_trans**2)
+#     return 3 / 8 * 2 * np.rad2deg(np.arccos(iv))
 
 doSphPlot<-function(data, value, legend_name, what='prova', minv=-2, maxv=2, ticks=0.5, invert=1, optimal_point=0, is_hemisphere=0, is_714=1){
     # Create grid
@@ -65,6 +83,7 @@ doSphPlot<-function(data, value, legend_name, what='prova', minv=-2, maxv=2, tic
                 high = muted("red"),
                 midpoint = optimal_point,
                 limits=c(minv, maxv), breaks=seq(minv, maxv,by=ticks),
+                na.value = "grey30"
               ) +
 
         scale_color_gradient2(
@@ -74,6 +93,7 @@ doSphPlot<-function(data, value, legend_name, what='prova', minv=-2, maxv=2, tic
                 midpoint = optimal_point,
                 limits=c(minv, maxv), breaks=seq(minv, maxv,by=ticks),
                 guide = 'none',
+                na.value = "grey30"
               ) +
 
 
@@ -112,7 +132,7 @@ is_hemisphere = c(args[3])
 is_714 = c(args[4])
 
 
-modes <- c(1, 2, 3)
+modes <- c(1, 2, 3, 4, 5)
 # energy
 for(mode in modes)
     {
@@ -124,42 +144,72 @@ for(mode in modes)
 
         invert=1
         if(mode == 1){
-        # energy
-        what_plot = 'energy_dB'
-        legend='E (dB)'
-        value <- data$V6
-        value = 10*log10(value)
-        minv = -6  # for Ambi and SWF
-        maxv =  6
-        ticks = 2
-        optimal_point = 0
-        print("Doing energy.")
+            # energy
+            what_plot = 'energy_dB'
+            legend='E (dB)'
+            value <- data$V6
+            value = 10*log10(value)
+            minv = -6  # for Ambi and SWF
+            maxv =  6
+            ticks = 2
+            optimal_point = 0
+            print("Doing energy.")
         }
 
         if(mode == 2){
-        # radial intensity
-        what_plot = 'intensity_R'
-        legend=expression('I'['R'])
-        value <- data$V7
-        minv = 0 # -0.641548
-        maxv = 1 # 0.938332
-        ticks = 0.2
-        optimal_point = 1
-        print("Doing intensity R.")
+            # radial intensity
+            what_plot = 'intensity_R'
+            legend=expression('I'['R'])
+            value <- data$V7
+            minv = 0 # -0.641548
+            maxv = 1 # 0.938332
+            ticks = 0.2
+            optimal_point = 1
+            print("Doing intensity R.")
         }
 
         if(mode == 3){
-        # transverse intensity
-        what_plot = 'intensity_T'
-        legend=expression('I'['T']*' (deg)')
-        value <- data$V8
-        value = asin(value) / pi * 180
-        minv = 0
-        maxv = 30 # 90
-        ticks = 5
-        optimal_point = 0
-        print("Doing intensity T.")
-        invert=-1
+            # transverse intensity
+            what_plot = 'intensity_T'
+            legend=expression('I'['T']*' (deg)')
+            value <- data$V8
+            value = asin(value) / pi * 180
+            minv = 0
+            maxv = 30 # 90
+            ticks = 5
+            optimal_point = 0
+            print("Doing intensity T.")
+            invert=-1
+        }
+
+        if(mode == 4){
+            # average source width
+            what_plot = 'asw_i'
+            legend=expression('ASW'*' (deg)')
+            i_r <- data$V7
+            i_t <- data$V8
+            value = radtrans_to_asw(i_r, i_t)
+            minv = 0
+            maxv = 30 # 90
+            ticks = 5
+            optimal_point = 0
+            print("Doing AWS.")
+            invert=-1
+        }
+
+        if(mode == 5){
+            # average source width
+            what_plot = 'delta_i'
+            legend=expression(delta*' (deg)')
+            i_r <- data$V7
+            i_t <- data$V8
+            value = trans_to_delta(i_r, i_t)
+            minv = 0
+            maxv = 30 # 90
+            ticks = 5
+            optimal_point = 0
+            print("Doing delta.")
+            invert=-1
         }
 
         rootname = strsplit(filename, '_')
@@ -184,42 +234,72 @@ for(mode in modes)
 
         invert=1
         if(mode == 1){
-        # energy
-        what_plot = 'pressure_dB'
-        legend='p (dB)'
-        value <- data$V3
-        value = 10*log10(value)
-        minv = -6  # for Ambi and SWF
-        maxv =  6
-        ticks = 2
-        optimal_point = 0
-        print("Doing pressure.")
+            # energy
+            what_plot = 'pressure_dB'
+            legend='p (dB)'
+            value <- data$V3
+            value = 10*log10(value)
+            minv = -6  # for Ambi and SWF
+            maxv =  6
+            ticks = 2
+            optimal_point = 0
+            print("Doing pressure.")
         }
 
         if(mode == 2){
-        # radial intensity
-        what_plot = 'velocity_R'
-        legend=expression('V'['R'])
-        value <- data$V4
-        minv = 0 # -0.641548
-        maxv = 1.2 # 0.938332
-        ticks = 0.2
-        optimal_point = 1
-        print("Doing velocity R.")
+            # radial intensity
+            what_plot = 'velocity_R'
+            legend=expression('V'['R'])
+            value <- data$V4
+            minv = 0 # -0.641548
+            maxv = 1.2 # 0.938332
+            ticks = 0.2
+            optimal_point = 1
+            print("Doing velocity R.")
         }
 
         if(mode == 3){
-        # transverse intensity
-        what_plot = 'velocity_T'
-        legend=expression('V'['T']*' (deg)')
-        value <- data$V5
-        value = asin(value) / pi * 180
-        minv = 0
-        maxv = 30 # 90
-        ticks = 5
-        optimal_point = 0
-        print("Doing velocity T.")
-        invert=-1
+            # transverse intensity
+            what_plot = 'velocity_T'
+            legend=expression('V'['T']*' (deg)')
+            value <- data$V5
+            value = asin(value) / pi * 180
+            minv = 0
+            maxv = 30 # 90
+            ticks = 5
+            optimal_point = 0
+            print("Doing velocity T.")
+            invert=-1
+        }
+
+        if(mode == 4){
+            # average source width
+            what_plot = 'asw_v'
+            legend=expression('ASW'*' (deg)')
+            v_r <- data$V4
+            v_t <- data$V5
+            value = radtrans_to_asw(v_r, v_t)
+            minv = 0
+            maxv = 30 # 90
+            ticks = 5
+            optimal_point = 0
+            print("Doing AWS.")
+            invert=-1
+        }
+
+        if(mode == 5){
+            # average source width
+            what_plot = 'delta_v'
+            legend=expression(delta*' (deg)')
+            v_r <- data$V4
+            v_t <- data$V5
+            value = trans_to_delta(v_r, v_t)
+            minv = 0
+            maxv = 30 # 90
+            ticks = 5
+            optimal_point = 0
+            print("Doing delta.")
+            invert=-1
         }
 
         rootname = strsplit(filename, '_')
