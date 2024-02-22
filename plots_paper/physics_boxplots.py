@@ -73,8 +73,8 @@ def pressure_to_db(pressure):
     return 10 * np.log10(pressure)
 
 
-def trans_to_delta(iv_trans):
-    return np.rad2deg(np.arcsin(iv_trans))
+def radtrans_to_delta(iv_rad, iv_trans):
+    return np.rad2deg(np.arctan2(iv_trans, iv_rad))
 
 
 def radtrans_to_asw(iv_rad, iv_trans):
@@ -126,12 +126,12 @@ def box_plot(
     elif scale == "human":
         if plot_type == "pv":
             df["P_dB"] = pressure_to_db(df["P"])
-            df["delta"] = trans_to_delta(df["V_t"])
+            df["delta"] = radtrans_to_delta(df["V_r"], df["V_t"])
             df["ASW"] = radtrans_to_asw(df["V_r"], df["V_t"])
             selected_columns = (["P_dB"], ["delta", "ASW"])
         elif plot_type == "ei":
             df["E_dB"] = energy_to_db(df["E"])
-            df["delta"] = trans_to_delta(df["I_t"])
+            df["delta"] = radtrans_to_delta(df["V_r"], df["V_t"])
             df["ASW"] = radtrans_to_asw(df["I_r"], df["I_t"])
             selected_columns = (["E_dB"], ["delta", "ASW"])
         else:
