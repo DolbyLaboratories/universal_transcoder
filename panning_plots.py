@@ -40,22 +40,23 @@ def panning_plots_2d(input_matrix, decoder_matrix, output_layout:MyCoordinates, 
     output_layout = output_layout.sph_deg()
     azimuth = cloud.sph_deg()[:, 0]
     elevation = cloud.sph_rad()[:, 1]
-    mask_horizon = (elevation < 0.01) * (elevation > -0.01)
     speaker_gains = np.dot(input_matrix, decoder_matrix.T)
     speaker_gains_db = 20 * np.log10(speaker_gains)
+
+    # Remove information of cloud points out of elevation = 0 plane
+    mask_horizon = (elevation < 0.01) * (elevation > -0.01)
     azimuth = azimuth[mask_horizon]
     speaker_gains = speaker_gains[mask_horizon, :]
     speaker_gains_db = speaker_gains_db[mask_horizon, :]
 
-    # Vertical lines - position of output speakers
-    print(output_layout)
+    # Remove information of speakers out of elevation = 0 plane
     mask_condition = (np.abs(output_layout[:, 1]) < 0.01)
-    print("mask ", mask_condition)
-    filtered_output_layout = output_layout[mask_condition]
-    vertical_lines=np.sort(filtered_output_layout[:,0])
-    print(vertical_lines)
+    output_layout = output_layout[mask_condition]
+    speaker_gains=speaker_gains[:,mask_condition]
+    speaker_gains_db=speaker_gains_db[:,mask_condition]
 
-    # Only get data from speakers located in the azimut plane
+    # Vertical lines - position of output speakers
+    vertical_lines=np.sort(output_layout[:,0])
 
     # Limits 
     lim_min = np.min(speaker_gains) - 0.02
