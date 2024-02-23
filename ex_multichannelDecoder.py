@@ -49,11 +49,11 @@ input_matrix_optimization = np.identity(n)
 output_layout = MyCoordinates.mult_points(
     np.array(
         [
-            (-30, 0, 1),
-            (30, 0, 1),
-            (0, 0, 1),
-            (-120, 0, 1),
-            (120, 0, 1),
+            (30, 0, 1), # L
+            (-30, 0, 1), # R
+            (0, 0, 1), # C
+            (120, 0, 1), # Ls
+            (-120, 0, 1), # Rs
         ]
     )
 )
