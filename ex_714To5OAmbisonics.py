@@ -67,7 +67,7 @@ output_layout,_= mix_clouds_of_points(
 )
 
 # Cloud of points to be encoded in input format (7.1.4) for plotting
-cloud_plots = get_all_sphere_points(1, False).discard_lower_hemisphere()
+cloud_plots = get_all_sphere_points(1,False)#get_all_sphere_points(1, False).discard_lower_hemisphere()
 
 # Input matrix for plotting
 input_matrix_plots = get_input_channels_vbap(cloud_plots, input_layout)
@@ -104,7 +104,7 @@ dictionary = {
     "input_matrix_plots": input_matrix_plots,
     "cloud_plots": cloud_plots,
 }
-optimize(dictionary)
+#optimize(dictionary)
 #######################################################
 
 
@@ -126,6 +126,6 @@ plots_general(
     cloud_plots,
     show_results,
     save_results,
-    "704transcoding5OA_direct",
+    save_plot_name,
 ) 
 #######################################################
