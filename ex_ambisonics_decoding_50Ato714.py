@@ -7,6 +7,7 @@ import numpy as np
 from universal_transcoder.auxiliars.get_cloud_points import (
     get_all_sphere_points,
     get_equi_t_design_points,
+    get_equi_circumference_points
 )
 from universal_transcoder.auxiliars.get_input_channels import (
     get_input_channels_ambisonics,
@@ -33,17 +34,17 @@ input_matrix_optimization = get_input_channels_ambisonics(cloud_optimization, or
 output_layout = MyCoordinates.mult_points(
     np.array(
         [
-            (-135, 45, 1),
-            (-120, 0, 1),
-            (-90, 0, 1),
-            (-45, 45, 1),
-            (-30, 0, 1),
-            (0, 0, 1),
-            (30, 0, 1),
-            (45, 45, 1),
-            (90, 0, 1),
-            (120, 0, 1),
-            (135, 45, 1),
+            (30, 0, 1), # L
+            (-30, 0, 1), # R
+            (0, 0, 1), # C
+            (90, 0, 1), # Ls
+            (-90, 0, 1), # Rs
+            (120, 0, 1), # Lb
+            (-120, 0, 1), # Rb
+            (45, 45, 1), # Tfl
+            (-45, 45, 1), # Tfr
+            (135, 45, 1), # Tbl
+            (-135, 45, 1), # Tbr
         ]
     )
 )
@@ -87,7 +88,7 @@ optimize(dictionary)
 # No optimization #####################################
 ### AllRad
 
-file_name = "allrad_704_5OA_maxre_decoder.json"
+file_name = "704ordered_decoder.json"
 order = 5
 
 # Import AllRad file (N3D and ACN)
