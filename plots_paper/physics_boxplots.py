@@ -65,6 +65,7 @@ def filter_elevation(df, remove_negative_elevation=True):
     return df[mask]
 
 
+
 def energy_to_db(energy):
     return 10 * np.log10(energy)
 
@@ -126,14 +127,14 @@ def box_plot(
     elif scale == "human":
         if plot_type == "pv":
             df["P_dB"] = pressure_to_db(df["P"])
-            df["delta"] = radtrans_to_delta(df["V_r"], df["V_t"])
             df["ASW"] = radtrans_to_asw(df["V_r"], df["V_t"])
-            selected_columns = (["P_dB"], ["delta", "ASW"])
+            df["delta"] = radtrans_to_delta(df["V_r"], df["V_t"])
+            selected_columns = (["P_dB"], ["ASW", "delta"])
         elif plot_type == "ei":
             df["E_dB"] = energy_to_db(df["E"])
-            df["delta"] = radtrans_to_delta(df["V_r"], df["V_t"])
             df["ASW"] = radtrans_to_asw(df["I_r"], df["I_t"])
-            selected_columns = (["E_dB"], ["delta", "ASW"])
+            df["delta"] = radtrans_to_delta(df["V_r"], df["V_t"])
+            selected_columns = (["E_dB"], ["ASW", "delta"])
         else:
             raise ValueError("Wrong value for plot_type")
 
