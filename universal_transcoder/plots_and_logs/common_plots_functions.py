@@ -49,4 +49,4 @@ def save_plot(plot: plt, specific_path: str, file_name: str):
     path = os.path.join("saved_results", specific_path)
     full_path = os.path.join(path, file_name)
     os.makedirs(path, exist_ok=True)
-    plot.savefig(full_path, dpi=300)
+    plot.savefig(full_path, dpi=300, bbox_inches="tight")
