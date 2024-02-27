@@ -71,9 +71,9 @@ def panning_plots_2d(
     vertical_lines = np.sort(output_layout[:, 0])
 
     # Limits
-    lim_min = np.min(speaker_gains) - 0.02
+    lim_min = -0.1
     lim_min_db = -40  # np.max(speaker_gains_db) - 0.5
-    lim_max = np.max(speaker_gains) + 0.02
+    lim_max = 1.3
     lim_max_db = 1  # np.max(speaker_gains_db) + 0.5
 
     # Size
