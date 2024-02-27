@@ -113,6 +113,11 @@ def set_up_general(info: Dict[str, Any]) -> Tuple[State, JaxArray]:
     current_state.cphquad = info["coefficients"]["in_phase_quad"]
     current_state.csymquad = info["coefficients"]["symmetry_quad"]
     current_state.cmingquad = info["coefficients"]["total_gains_quad"]
+    try:
+        current_state.csparsequad = info["coefficients"]["sparsity_quad"]
+    except KeyError:
+        current_state.csparsequad = 0
+
     # Linear terms
     current_state.cp = info["coefficients"]["pressure"]
     current_state.cvr = info["coefficients"]["radial_velocity"]
@@ -120,6 +125,10 @@ def set_up_general(info: Dict[str, Any]) -> Tuple[State, JaxArray]:
     current_state.cphlin = info["coefficients"]["in_phase_lin"]
     current_state.csymlin = info["coefficients"]["symmetry_lin"]
     current_state.cminglin = info["coefficients"]["total_gains_lin"]
+    try:
+        current_state.csparselin = info["coefficients"]["sparsity_lin"]
+    except KeyError:
+        current_state.csparselin = 0
 
     # Others
     current_state.static_decoding_matrix = Dspk

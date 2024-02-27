@@ -68,6 +68,8 @@ class State:
     csymlin: float = 0  # Symmetry Coefficient (linear)
     cminglin: float = 0  # Total gains Coefficient (linear)
     cmingquad: float = 0  # Total gains Coefficient (quadratic)
+    csparselin: float = 0  # Sparsity Coefficient (linear)
+    csparsequad: float = 0  # Sparsity Coefficient (quadratic)
     w: ArrayLike = 1
     n: int = 1
     #
@@ -132,6 +134,7 @@ class State:
         symmetric_gains = self._rearrange_gains(
             self.output_layout, self.cloud_points, S
         )
+        sparsity_quad, sparsity_lin = self._sparsity(S)
         asymmetry_quad, asymmetry_lin = self._symmetry_differences(S, symmetric_gains)
         asymmetry_quad = jnp.real(asymmetry_quad)
         asymmetry_lin = jnp.real(asymmetry_lin)
@@ -157,23 +160,10 @@ class State:
         C_sym_quad = self._quadratic_avg(asymmetry_quad)
         C_ph_lin = self._quadratic_avg(in_phase_lin)
         C_sym_lin = self._quadratic_avg(asymmetry_lin)
+        C_sparse_quad = self._quadratic_avg(sparsity_quad)
+        C_sparse_lin = self._quadratic_avg(sparsity_lin)
         C_min_gains_lin = total_gains_lin
         C_min_gains_quad = total_gains_quad
-
-        self._print(
-            C_e,
-            C_ir,
-            C_it,
-            C_p,
-            C_vr,
-            C_vt,
-            C_ph_quad,
-            C_sym_quad,
-            C_ph_lin,
-            C_sym_lin,
-            C_min_gains_lin,
-            C_min_gains_quad,
-        )
 
         # Calculate complete cost value
         cost_value = (
@@ -189,6 +179,26 @@ class State:
             + self.csymlin * C_sym_lin
             + self.cminglin * C_min_gains_lin
             + self.cmingquad * C_min_gains_quad
+            + self.csparsequad * C_sparse_quad
+            + self.csparselin * C_sparse_lin
+        )
+
+        self._print(
+            cost_value,
+            C_e,
+            C_ir,
+            C_it,
+            C_p,
+            C_vr,
+            C_vt,
+            C_ph_quad,
+            C_sym_quad,
+            C_ph_lin,
+            C_sym_lin,
+            C_min_gains_lin,
+            C_min_gains_quad,
+            C_sparse_lin,
+            C_sparse_quad,
         )
 
         return cost_value
@@ -215,7 +225,13 @@ class State:
         mask = jnp.heaviside(-speaker_signals_R, 0)
         in_phase_quad = jnp.sum((speaker_signals_R * mask) ** 2, axis=1)
         in_phase_lin = jnp.sum((abs(speaker_signals_R) * mask), axis=1)
-        return in_phase_quad, in_phase_lin
+
+        energy = energy_calculation(output_gains)
+        pressure = pressure_calculation(output_gains)
+        return (
+            in_phase_quad / (energy + jnp.finfo(float).eps),
+            in_phase_lin / (jnp.abs(pressure) + jnp.finfo(float).eps),
+        )
 
     @staticmethod
     def _rearrange_gains(
@@ -291,7 +307,37 @@ class State:
         differences = gains - reordered_gains
         asymmetry_quad = jnp.sum(jnp.abs(differences) ** 2, axis=1)
         asymmetry_lin = jnp.sum(jnp.abs(differences), axis=1)
-        return asymmetry_quad, asymmetry_lin
+        energy = energy_calculation(gains)
+        pressure = pressure_calculation(gains)
+        return (
+            asymmetry_quad / (energy + jnp.finfo(float).eps),
+            asymmetry_lin / (jnp.abs(pressure) + jnp.finfo(float).eps),
+        )
+
+    @staticmethod
+    def _sparsity(gains: jnp.ndarray):
+        """
+        Function that returns the amout of sparsity of a gain matrix per each input point
+
+        Args:p
+            gains (numpy Array):   array of output gains of each of the P speakers to
+                recreate each of the L virtual directions sampling the sphere. Shape LxP
+
+        Returns:
+            sparsity_quad (numpy Array):  quadratic sparsity vector shape L of
+            sparsity_lin (numpy Array): linear sparsity vector shape L
+        """
+
+        l2 = jnp.sum(jnp.abs(gains) ** 2, axis=1)
+        l1 = jnp.sum(jnp.abs(gains), axis=1)
+        sparse_lin = l1 - jnp.sqrt(l2)
+        sparse_sq = l1**2 - l2
+        energy = energy_calculation(gains)
+        pressure = pressure_calculation(gains)
+        return (
+            sparse_sq / (energy + jnp.finfo(float).eps),
+            sparse_lin / (jnp.abs(pressure) + jnp.finfo(float).eps),
+        )
 
     def reset_state(self):
         self.ce = 0
@@ -306,10 +352,13 @@ class State:
         self.csymquad = 0
         self.cminglin = 0
         self.cmingquad = 0
+        self.csparselin = 0
+        self.csparsequad = 0
         return
 
     def _print(
         self,
+        total_cost,
         C_e,
         C_ir,
         C_it,
@@ -322,30 +371,26 @@ class State:
         C_sym_lin,
         C_min_gains_lin,
         C_min_gains_quad,
+        C_sparse_lin,
+        C_sparse_quad,
     ):
-        print(
-            "Costs: \n Pressure ",
-            C_p,
-            "  Veloc.Rad ",
-            C_vr,
-            " Veloc.Trans ",
-            C_vt,
-            " energy ",
-            C_e,
-            " Inten.Rad ",
-            C_ir,
-            " Inten.Trans ",
-            C_it,
-            " In phase (quad)",
-            C_ph_quad,
-            " Symmetry (quad)",
-            C_sym_quad,
-            " In phase (lin)",
-            C_ph_lin,
-            " Symmetry (lin)",
-            C_sym_lin,
-            " Total gains (lin)",
-            C_min_gains_lin,
-            " Total gains (quad)",
-            C_min_gains_quad,
-        )
+        try:
+            print(
+                f"Total cost: {total_cost: .2g}. Cost components: \n"
+                f"Pressure {C_p:.2g}, "
+                f"Veloc.Rad {C_vr:.2g}, "
+                f"Veloc.Trans {C_vt:.2g}.\n"
+                f"Energy {C_e:.2g}, "
+                f"Inten.Rad {C_ir:.2g}, "
+                f"Inten.Trans {C_it:.2g}.\n"
+                f"In phase (lin) {C_ph_lin:.2g}, "
+                f"Symmetry (lin) {C_sym_lin:.2g}, "
+                f"Total gains (lin) {C_min_gains_lin:.2g}, "
+                f"Sparsity (lin) {C_sparse_lin:.2g}.\n"
+                f"In phase (quad) {C_ph_quad:.2g}, "
+                f"Symmetry (quad) {C_sym_quad:.2g}, "
+                f"Total gains (quad) {C_min_gains_quad:.2g}, "
+                f"Sparsity (quad) {C_sparse_quad:.2g}.\n"
+            )
+        except TypeError:  # Jax dynamic expressions
+            pass

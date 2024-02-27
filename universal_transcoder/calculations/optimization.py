@@ -72,10 +72,12 @@ def optimize(info: Dict[str, Any]) -> NpArray:
                     "transverse_velocity": 0,
                     "in_phase_lin": 0,
                     "symmetry_lin": 0,
+                    "sparsity_lin": 0,
                     "total_gains_quad": 0,
                     "in_phase_quad": 0,
                     "symmetry_quad": 0,
                     "total_gains_quad": 0,
+                    "sparsity_quad": 0,
                 },
                 "directional_weights": 1,               # Weights given to different directions sampling the sphere (L)
                 "show_results": True,                   # Flag to show results
