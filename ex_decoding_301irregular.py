@@ -73,7 +73,7 @@ cloud_optimization, weights = mix_clouds_of_points(
     list_of_weights=[0.5, 0.3, 0.1, 0.1],
     discard_lower_hemisphere=True,
 )
-cloud_plots = get_all_sphere_points(1, plot_show=False).discard_lower_hemisphere()
+cloud_plots = get_all_sphere_points(10, plot_show=False).discard_lower_hemisphere()
 
 # Getting gain matrix
 input_matrix_optimization = get_input_channels_vbap(cloud_optimization, input_layout)
@@ -87,15 +87,15 @@ optimization_dict = {
     "cloud_optimization": cloud_optimization,
     "output_layout": output_layout,
     "coefficients": {
-        "energy": 1,
-        "radial_intensity": 3,
+        "energy": 5,
+        "radial_intensity": 2,
         "transverse_intensity": 1,
         "pressure": 0,
         "radial_velocity": 0,
         "transverse_velocity": 0,
         "in_phase_quad": 10000,
         "symmetry_quad": 0,
-        "in_phase_lin": 100,
+        "in_phase_lin": 0,
         "symmetry_lin": 0.0,
         "total_gains_lin": 0,
         "total_gains_quad": 0,
