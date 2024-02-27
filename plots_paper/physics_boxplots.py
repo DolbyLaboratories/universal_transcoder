@@ -165,7 +165,7 @@ def box_plot(
         figsize=(width, aspect_ratio * width),
         width_ratios=[len(sc) for sc in selected_columns],
     )
-    plt.suptitle(title)
+    #plt.suptitle(title)
 
     for ax, df, unit in zip(axs, df_long_list, unitlabels):
         sns.boxplot(
@@ -184,17 +184,17 @@ def box_plot(
         ax.set_ylabel(unit)
         ax.get_legend().remove()
 
-    plt.subplots_adjust(bottom=0.1)
+    plt.subplots_adjust(bottom=0.4)
     lines, labels = axs[0].get_legend_handles_labels()
     fig.legend(
         lines,
         labels,
         title=None,
         loc="upper center",
-        bbox_to_anchor=(0.5, -0.05),
+        bbox_to_anchor=(0.5, 0.05),
         ncol=3,
         frameon=False,
-        columnspacing=0.8,
+        columnspacing=1,
         handletextpad=0.5,
     )
     plt.tight_layout()
