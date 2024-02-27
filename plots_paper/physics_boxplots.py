@@ -20,7 +20,6 @@ plt.rc(
 )
 plt.rc("axes", **{"labelsize": 9, "titlesize": 9})
 plt.rc("text", usetex=True)
-# If we use seaborn
 
 
 COLUMNS = ["azimuth", "elevation", "P", "V_r", "V_t", "E", "I_r", "I_t"]
