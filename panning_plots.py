@@ -71,7 +71,7 @@ def panning_plots_2d(
     vertical_lines = np.sort(output_layout[:, 0])
 
     # Limits
-    lim_min = -0.1
+    lim_min = -0.15
     lim_min_db = -40  # np.max(speaker_gains_db) - 0.5
     lim_max = 1.3
     lim_max_db = 1  # np.max(speaker_gains_db) + 0.5
@@ -123,6 +123,7 @@ def panning_plots_2d(
     plt.ylabel("gain (linear)") # Set title for the x-axis
     # Plot title
     plt.title(title)
+    plt.grid()
     # Adjust the size of the graph within the figure
     left, bottom, width, height = 0.12, 0.2, 0.6, 0.6
     ax.set_position([left, bottom, width, height])
@@ -158,6 +159,8 @@ def panning_plots_2d(
     plt.ylabel("gain (dB)")
     # Title
     plt.title(title)
+    # Turn grid on
+    plt.grid()
     # Adjust the size of the graph within the figure
     left, bottom, width, height = 0.12, 0.2, 0.6, 0.6
     ax.set_position([left, bottom, width, height])
