@@ -226,8 +226,8 @@ class State:
         in_phase_quad = jnp.sum((speaker_signals_R * mask) ** 2, axis=1)
         in_phase_lin = jnp.sum((abs(speaker_signals_R) * mask), axis=1)
 
-        energy = energy_calculation(output_gains)
-        pressure = pressure_calculation(output_gains)
+        energy = energy_calculation(speaker_signals)
+        pressure = pressure_calculation(speaker_signals)
         return (
             in_phase_quad / (energy + jnp.finfo(float).eps),
             in_phase_lin / (jnp.abs(pressure) + jnp.finfo(float).eps),
