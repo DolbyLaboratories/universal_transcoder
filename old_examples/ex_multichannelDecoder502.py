@@ -23,10 +23,15 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVE
 POSSIBILITY OF SUCH DAMAGE.
 """
 
+from pathlib import Path
+
 import numpy as np
 
 from universal_transcoder.auxiliars.get_cloud_points import (
     get_equi_circumference_points,
+    get_equi_t_design_points,
+    mix_clouds_of_points,
+    get_all_sphere_points,
 )
 from universal_transcoder.auxiliars.get_input_channels import (
     get_input_channels_vbap,
@@ -38,31 +43,29 @@ from universal_transcoder.calculations.optimization import optimize
 
 # USAD #######################################################
 
-# Cloud of points to be encoded in input format (one-to-one panning)
-n = 72
-cloud_optimization = get_equi_circumference_points(n, False)
-
-# Input matrix for optimization
-input_matrix_optimization = np.identity(n)
 
 # Set of output speakers
 output_layout = MyCoordinates.mult_points(
     np.array(
         [
-            (30, 0, 1), # L
-            (-30, 0, 1), # R
-            (0, 0, 1), # C
-            (120, 0, 1), # Ls
-            (-120, 0, 1), # Rs
+            (30, 0, 1),
+            (-30, 0, 1),
+            (0, 0, 1),
+            (110, 0, 1),
+            (-110, 0, 1),
+            (90, 45, 1),
+            (-90, 45, 1),
         ]
     )
 )
 
-# Cloud of points to be encoded in input format (one-to-one panning) for plotting
-cloud_plots = cloud_optimization
+# Cloud of points to be encoded in input format (one-to-one panning)
+cloud_optimization = get_all_sphere_points(10, plot_show=False).discard_lower_hemisphere()
 
-# Input matrix for plotting
-input_matrix_plots = input_matrix_optimization
+# Input matrix for optimization
+n = cloud_optimization.cart().shape[0]
+input_matrix_optimization = np.identity(n)
+
 
 
 dictionary = {
@@ -70,14 +73,14 @@ dictionary = {
     "cloud_optimization": cloud_optimization,
     "output_layout": output_layout,
     "coefficients": {
-        "energy": 5,
-        "radial_intensity": 2,
-        "transverse_intensity": 1,
+        "energy": 10,
+        "radial_intensity": 10,
+        "transverse_intensity": 10,
         "pressure": 0,
         "radial_velocity": 0,
         "transverse_velocity": 0,
-        "in_phase_quad": 10000,
-        "symmetry_quad": 2,
+        "in_phase_quad": 100,
+        "symmetry_quad": 10,
         "in_phase_lin": 0,
         "symmetry_lin": 0,
         "total_gains_lin": 0,
@@ -86,9 +89,9 @@ dictionary = {
     "directional_weights": 1,
     "show_results": False,
     "save_results": True,
-    "input_matrix_plots": input_matrix_plots,
-    "cloud_plots": cloud_plots,
-    "results_file_name": "panning51_USAT",
+    "input_matrix_plots": input_matrix_optimization,
+    "cloud_plots": cloud_optimization,
+    "results_file_name": "panning502_USAT",
 }
 optimize(dictionary)
 
@@ -96,23 +99,20 @@ optimize(dictionary)
 ##############################################################
 
 
-
 # No optimization ############################################
-decoder_matrix = get_input_channels_vbap(cloud_plots, output_layout).T
+decoder_matrix = get_input_channels_vbap(cloud_optimization, output_layout).T
 
-speaker_signals = np.dot(input_matrix_plots, decoder_matrix.T)
+speaker_signals = np.dot(input_matrix_optimization, decoder_matrix.T)
 
 show_results = False
 save_results = True
-save_plot_name = "panning51_direct"
+save_plot_name = "panning502_direct"
 plots_general(
     output_layout,
     speaker_signals,
-    cloud_plots,
+    cloud_optimization,
     show_results,
     save_results,
     save_plot_name,
 )
 ##############################################################
-
-

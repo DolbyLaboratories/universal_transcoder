@@ -72,10 +72,12 @@ def optimize(info: Dict[str, Any]) -> NpArray:
                     "transverse_velocity": 0,
                     "in_phase_lin": 0,
                     "symmetry_lin": 0,
+                    "sparsity_lin": 0,
                     "total_gains_quad": 0,
                     "in_phase_quad": 0,
                     "symmetry_quad": 0,
                     "total_gains_quad": 0,
+                    "sparsity_quad": 0,
                 },
                 "directional_weights": 1,               # Weights given to different directions sampling the sphere (L)
                 "show_results": True,                   # Flag to show results
@@ -111,6 +113,7 @@ def optimize(info: Dict[str, Any]) -> NpArray:
         current_state.transcoding_matrix_shape
     )
 
+
     # If show or save flags active
     if info["show_results"] or info["save_results"]:
 
@@ -119,6 +122,11 @@ def optimize(info: Dict[str, Any]) -> NpArray:
         if "Dspk" in info.keys():
             # D= Dspk x T
             D = jnp.dot(info["Dspk"], T_optimized)
+        
+        # Save T
+        if info["save_results"]:
+            name="saved_results/"+info["results_file_name"]+"/"+info["results_file_name"]+".npy"
+            np.save(name, T_optimized)
 
         if "cloud_plots" in info:
             # Resulting speaker signals

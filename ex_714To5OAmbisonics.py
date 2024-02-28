@@ -27,17 +27,17 @@ basepath = Path(__file__).resolve().parents[0]
 input_layout = MyCoordinates.mult_points(
     np.array(
         [
-            (-135, 45, 1),
-            (-120, 0, 1),
-            (-90, 0, 1),
-            (-45, 45, 1),
-            (-30, 0, 1),
-            (0, 0, 1),
-            (30, 0, 1),
-            (45, 45, 1),
-            (90, 0, 1),
-            (120, 0, 1),
-            (135, 45, 1),
+            (30, 0, 1), # L
+            (-30, 0, 1), # R
+            (0, 0, 1), # C
+            (90, 0, 1), # Ls
+            (-90, 0, 1), # Rs
+            (120, 0, 1), # Lb
+            (-120, 0, 1), # Rb
+            (45, 45, 1), # Tfl
+            (-45, 45, 1), # Tfr
+            (135, 45, 1), # Tbl
+            (-135, 45, 1), # Tbr
         ]
     )
 )
@@ -98,7 +98,7 @@ dictionary = {
         "total_gains_quad": 0,
     },
     "directional_weights": weights,
-    "show_results": False,
+    "show_results": True,
     "save_results": True,
     "results_file_name": "704transcoding5OA_USAT",
     "input_matrix_plots": input_matrix_plots,
@@ -126,6 +126,6 @@ plots_general(
     cloud_plots,
     show_results,
     save_results,
-    "704transcoding5OA_direct",
+    save_plot_name,
 ) 
 #######################################################

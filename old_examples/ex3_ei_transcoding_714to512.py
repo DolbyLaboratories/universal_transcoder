@@ -98,18 +98,26 @@ dictionary = {
         "pressure": 0,
         "radial_velocity": 0,
         "transverse_velocity": 0,
-        "in_phase_quad": 1,
-        "symmetry_quad": 1,
-        "in_phase_lin": 0,
-        "symmetry_lin": 0,
-        "total_gains_lin": 0,
-        "total_gains_quad": 0,
+        "in_phase_quad": 1000,
+        "symmetry_quad": 1000,
+        "in_phase_lin": 1000,
+        "symmetry_lin": 1000,
+        "total_gains_lin": 1000,
+        "total_gains_quad": 1000,
+        "sparsity_quad": 0.1,#1,
+        "sparsity_lin": 0.1,#1,
     },
-    "directional_weights": 1,
+    "directional_weights": weights,
     "show_results": False,
-    "save_results": True,
-    "results_file_name": "ex3_714to512_ei",
+    "save_results": False,
+    "results_file_name": "ex8_714to714_ei",
     "input_matrix_plots": input_matrix_plots,
     "cloud_plots": cloud_plots,
 }
-print(optimize(dictionary))
+transcoding_matrix = optimize(dictionary)
+
+transcoding_matrix_dB = 20*np.log10(np.abs(transcoding_matrix))
+transcoding_matrix_dB[transcoding_matrix_dB < -30] = -np.inf
+
+np.set_printoptions(precision=1, suppress=True)
+print(transcoding_matrix_dB)

@@ -20,7 +20,6 @@ plt.rc(
 )
 plt.rc("axes", **{"labelsize": 9, "titlesize": 9})
 plt.rc("text", usetex=True)
-# If we use seaborn
 
 
 COLUMNS = ["azimuth", "elevation", "P", "V_r", "V_t", "E", "I_r", "I_t"]
@@ -63,6 +62,7 @@ def filter_elevation(df, remove_negative_elevation=True):
     if remove_negative_elevation:
         mask[elevation < 0] = False
     return df[mask]
+
 
 
 def energy_to_db(energy):
@@ -126,14 +126,14 @@ def box_plot(
     elif scale == "human":
         if plot_type == "pv":
             df["P_dB"] = pressure_to_db(df["P"])
-            df["delta"] = radtrans_to_delta(df["V_r"], df["V_t"])
             df["ASW"] = radtrans_to_asw(df["V_r"], df["V_t"])
-            selected_columns = (["P_dB"], ["delta", "ASW"])
+            df["delta"] = radtrans_to_delta(df["V_r"], df["V_t"])
+            selected_columns = (["P_dB"], ["ASW", "delta"])
         elif plot_type == "ei":
             df["E_dB"] = energy_to_db(df["E"])
-            df["delta"] = radtrans_to_delta(df["V_r"], df["V_t"])
             df["ASW"] = radtrans_to_asw(df["I_r"], df["I_t"])
-            selected_columns = (["E_dB"], ["delta", "ASW"])
+            df["delta"] = radtrans_to_delta(df["V_r"], df["V_t"])
+            selected_columns = (["E_dB"], ["ASW", "delta"])
         else:
             raise ValueError("Wrong value for plot_type")
 
@@ -164,7 +164,7 @@ def box_plot(
         figsize=(width, aspect_ratio * width),
         width_ratios=[len(sc) for sc in selected_columns],
     )
-    plt.suptitle(title)
+    #plt.suptitle(title)
 
     for ax, df, unit in zip(axs, df_long_list, unitlabels):
         sns.boxplot(
@@ -183,17 +183,17 @@ def box_plot(
         ax.set_ylabel(unit)
         ax.get_legend().remove()
 
-    plt.subplots_adjust(bottom=0.1)
+    plt.subplots_adjust(bottom=0.4)
     lines, labels = axs[0].get_legend_handles_labels()
     fig.legend(
         lines,
         labels,
         title=None,
         loc="upper center",
-        bbox_to_anchor=(0.5, -0.05),
+        bbox_to_anchor=(0.5, 0.05),
         ncol=3,
         frameon=False,
-        columnspacing=0.8,
+        columnspacing=1,
         handletextpad=0.5,
     )
     plt.tight_layout()

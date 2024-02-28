@@ -12,7 +12,6 @@ from universal_transcoder.auxiliars.get_input_channels import (
 from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 from universal_transcoder.calculations.optimization import optimize
 
-
 input_layout = MyCoordinates.mult_points(
     np.array(
         [
@@ -45,14 +44,24 @@ output_layout = MyCoordinates.mult_points(
     )
 )
 
+output_layout = input_layout
+
 basepath = Path(__file__).resolve().parents[0]
 t_design = (
-    basepath / "universal_transcoder" / "encoders" / "t-design" / "des.3.56.9.txt"
+        basepath / "universal_transcoder" / "encoders" / "t-design" / "des.3.56.9.txt"
 )
-cloud_optimization = get_equi_t_design_points(t_design, False)
-cloud_plots = get_all_sphere_points(1, False)
+cloud_optimization = get_equi_t_design_points(t_design, plot_show=False)
+cloud_plots = get_all_sphere_points(5, plot_show=False)
+
+# Restrict to the upper hemisphere
+cloud_optimization = cloud_optimization[cloud_optimization.cart()[:, 2] >= 0]
+cloud_plots = cloud_plots[cloud_plots.cart()[:, 2] >= 0]
+
+
 input_matrix_optimization = get_input_channels_vbap(cloud_optimization, input_layout)
 input_matrix_plots = get_input_channels_vbap(cloud_plots, input_layout)
+
+
 
 dictionary = {
     "input_matrix_optimization": input_matrix_optimization,
