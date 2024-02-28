@@ -61,48 +61,53 @@ doSphPlot<-function(data, value, legend_name, what='prova', minv=-2, maxv=2, tic
     labels <- st_as_sf(labels, coords = c('x','y'), crs = 4326)
 
     # Plot polygons with color and mollweide projection
-    ggplot() +
-        geom_sf(data = grid, aes(fill=valore, col = valore)) +
+    p <- ggplot() +
+        geom_sf(data = grid, aes(fill=valore, col = valore))
 
+    grid_color <- "white"
+    # if (grepl("energy", what)) {
+    #     grid_color <- "gray60"
+    # }
 
-        geom_sf(data=st_graticule(crs = st_crs(4326),
-                            lat = seq(-60,60,30),
-                            lon = seq(-180, 180, 30)),
-                            col = 'white', size = 0.2) +
-        geom_sf(data=st_graticule(crs = st_crs(4326),
-                            lat = 0,
-                            lon = seq(-180, 180, 90)),
-                            col = 'white', size = 0.5) +
+    p <- p +
+    geom_sf(data=st_graticule(crs = st_crs(4326),
+                        lat = seq(-60,60,30),
+                        lon = seq(-180, 180, 30)),
+                        col = grid_color, size = 0.2) +
+    geom_sf(data=st_graticule(crs = st_crs(4326),
+                        lat = 0,
+                        lon = seq(-180, 180, 90)),
+                        col = grid_color, size = 0.5)
 
-        geom_sf(data = spk, size = 3) +
-        geom_sf_text(data=labels, aes(label = text), col = 'white', nudge_x = 15, nudge_y = 4) +  # nundge doesn't work...
+    p <- p +
+    geom_sf(data = spk, size = 3) +
+    geom_sf_text(data=labels, aes(label = text), col = "gray60", nudge_x = 15, nudge_y = 4) +  # nundge doesn't work...
 
-        # scale_fill_viridis_c(limits=c(minv, maxv), breaks=seq(minv, maxv,by=ticks), direction=invert) +
-        # scale_color_viridis_c(limits=c(minv, maxv), breaks=seq(minv, maxv,by=ticks), guide = FALSE, direction=invert) +
+    # scale_fill_viridis_c(limits=c(minv, maxv), breaks=seq(minv, maxv,by=ticks), direction=invert) +
+    # scale_color_viridis_c(limits=c(minv, maxv), breaks=seq(minv, maxv,by=ticks), guide = FALSE, direction=invert) +
 
-        scale_fill_gradient2(
-                low = muted("blue"),
-                mid = "gray90",
-                high = muted("red"),
-                midpoint = optimal_point,
-                limits=c(minv, maxv), breaks=seq(minv, maxv,by=ticks),
-                na.value = muted("red", l=20)
-              ) +
+    scale_fill_gradient2(
+            low = "#ff7f0e", # muted("blue"),
+            mid = "gray95",
+            high = "#1f77b4", # muted("red"),
+            midpoint = optimal_point,
+            limits=c(minv, maxv), breaks=seq(minv, maxv,by=ticks),
+            na.value = muted("#1f77b4")
+          ) +
 
-        scale_color_gradient2(
-                low = muted("blue"),
-                mid = "gray90",
-                high = muted("red"),
-                midpoint = optimal_point,
-                limits=c(minv, maxv), breaks=seq(minv, maxv,by=ticks),
-                guide = 'none',
-                na.value = muted("red", l=20)
-              ) +
+    scale_color_gradient2(
+            low = "#ff7f0e", # muted("blue"),
+            mid = "gray95",
+            high = "#1f77b4", # muted("red"),
+            midpoint = optimal_point,
+            limits=c(minv, maxv), breaks=seq(minv, maxv,by=ticks),
+            guide = 'none',
+            na.value = muted("#1f77b4")
+          ) +
 
-
-        coord_sf(crs = st_crs('ESRI:54009')) +
-        labs(fill = legend_name, x = NULL, y = NULL) +
-        theme(panel.background = element_blank())
+    coord_sf(crs = st_crs('ESRI:54009')) +
+    labs(fill = legend_name, x = NULL, y = NULL) +
+    theme(panel.background = element_blank())
 
     name = paste(what, '.png', sep = "", collapse = NULL)
     ggsave(name, width = 15, units = "cm")
@@ -178,7 +183,7 @@ for(mode in modes)
             value <- data$V8
             value = asin(value) / pi * 180
             minv = 0
-            maxv = 40 # 90
+            maxv = 60 # 90
             ticks = 5
             optimal_point = 0
             print("Doing intensity T.")
@@ -188,12 +193,12 @@ for(mode in modes)
         if(mode == 4){
             # average source width
             what_plot = 'asw_i'
-            legend=expression('ASW'*' (deg)')
+            legend=c('ASW\n(deg)')
             i_r <- data$V7
             i_t <- data$V8
             value = radtrans_to_asw(i_r, i_t)
             minv = 0
-            maxv = 40 # 90
+            maxv = 60 # 90
             ticks = 5
             optimal_point = 0
             print("Doing AWS.")
@@ -208,7 +213,7 @@ for(mode in modes)
             i_t <- data$V8
             value = trans_to_delta(i_r, i_t)
             minv = 0
-            maxv = 40 # 90
+            maxv = 60 # 90
             ticks = 5
             optimal_point = 0
             print("Doing delta.")
@@ -268,7 +273,7 @@ for(mode in modes)
             value <- data$V5
             value = asin(value) / pi * 180
             minv = 0
-            maxv = 40 # 90
+            maxv = 60 # 90
             ticks = 5
             optimal_point = 0
             print("Doing velocity T.")
@@ -278,12 +283,12 @@ for(mode in modes)
         if(mode == 4){
             # average source width
             what_plot = 'asw_v'
-            legend=expression('ASW'*' (deg)')
+            legend=c('ASW\n(deg)')
             v_r <- data$V4
             v_t <- data$V5
             value = radtrans_to_asw(v_r, v_t)
             minv = 0
-            maxv = 40 # 90
+            maxv = 60 # 90
             ticks = 5
             optimal_point = 0
             print("Doing AWS.")
@@ -293,12 +298,12 @@ for(mode in modes)
         if(mode == 5){
             # average source width
             what_plot = 'delta_v'
-            legend=expression(delta*' (deg)')
+            legend=paste(c(expression(delta)), "\n(grad)")
             v_r <- data$V4
             v_t <- data$V5
             value = trans_to_delta(v_r, v_t)
             minv = 0
-            maxv = 40 # 90
+            maxv = 60 # 90
             ticks = 5
             optimal_point = 0
             print("Doing delta.")
