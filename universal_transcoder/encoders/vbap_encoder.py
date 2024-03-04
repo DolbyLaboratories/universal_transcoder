@@ -43,7 +43,7 @@ def vbap_2D_encoder(point: MyCoordinates, layout: MyCoordinates):
                 as was introduced in the input layout
     """
 
-    theta = point.get_sph(convention="top_elev", unit="deg")[0][0]
+    theta = point.sph_deg()[0][0]
     layout_sph = layout.get_sph(convention="top_elev", unit="deg")[:, 0] # only thetas
     layout_sph_sorted = np.sort(layout_sph) # Sort in ascending azimut order
     sort_positions = np.argsort(layout_sph) # Save original positions

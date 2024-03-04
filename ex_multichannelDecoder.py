@@ -97,7 +97,7 @@ optimize(dictionary)
 
 
 
-# No optimization ############################################
+# VBAP ############################################
 decoder_matrix = get_input_channels_vbap(cloud_plots, output_layout).T
 
 speaker_signals = np.dot(input_matrix_plots, decoder_matrix.T)
@@ -105,6 +105,25 @@ speaker_signals = np.dot(input_matrix_plots, decoder_matrix.T)
 show_results = False
 save_results = True
 save_plot_name = "panning51_direct"
+plots_general(
+    output_layout,
+    speaker_signals,
+    cloud_plots,
+    show_results,
+    save_results,
+    save_plot_name,
+)
+##############################################################
+
+
+# VBIP ############################################
+decoder_matrix = get_input_channels_vbap(cloud_plots, output_layout, vbip=True).T
+
+speaker_signals = np.dot(input_matrix_plots, decoder_matrix.T)
+
+show_results = False
+save_results = True
+save_plot_name = "panning51_vbip"
 plots_general(
     output_layout,
     speaker_signals,

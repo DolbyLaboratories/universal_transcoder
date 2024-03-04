@@ -33,7 +33,7 @@ from universal_transcoder.encoders.vbap_encoder import vbap_2D_encoder, vbap_3D_
 
 
 def get_input_channels_vbap(
-    cloud_points: MyCoordinates, input_layout: MyCoordinates, normalize: bool = True
+    cloud_points: MyCoordinates, input_layout: MyCoordinates, normalize: bool = True, vbip:bool=False,
 ) -> np.ndarray:
     """Function to obtain the channel gains that encode in a multichannel layout for a cloud of points, where
     each row corresponds to the coding gains for one point, using VBAP
@@ -44,6 +44,7 @@ def get_input_channels_vbap(
         input_layout (MyCoordinates): speaker positions given as pyfar.Coordinates
                 (M speakers)
         normalize (bool): If activated, gains are normalized so that sum of all squares equals 1
+        vbip (bool): Use vbip instead of vbap
 
     Returns:
         input_channels (numpy Array): LxM matrix of channel gains for input layout
@@ -62,6 +63,9 @@ def get_input_channels_vbap(
             cloud_points_sph[i, 0], cloud_points_sph[i, 1], cloud_points_sph[i, 2]
         )
         input_channels[i, :] = encoder(virtual, input_layout)
+        if vbip:
+            input_channels[i, :] = np.sqrt(input_channels[i, :])
+
 
     if normalize:
         sum2 = np.sqrt(np.sum(input_channels**2, axis=1))

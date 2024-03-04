@@ -199,10 +199,15 @@ full_path = "saved_results/" + folder_name
 decoder_matrix = np.load(full_path + "panning51_USAT.npy")
 title = "USAT"
 panning_plots_2d(input_matrix, decoder_matrix, output_layout, cloud, folder_name, title)
-## Direct
+## VBAP
 folder_name = "panning51_direct/"
 title = "Tangent law / VBAP"
 decoder_matrix = get_input_channels_vbap(cloud, output_layout).T
+panning_plots_2d(input_matrix, decoder_matrix, output_layout, cloud, folder_name, title)
+## VBIPP
+folder_name = "panning51_vbip/"
+title = "VBIP"
+decoder_matrix = get_input_channels_vbap(cloud, output_layout, vbip=True).T
 panning_plots_2d(input_matrix, decoder_matrix, output_layout, cloud, folder_name, title)
 
 ############################################################################
@@ -302,7 +307,7 @@ panning_plots_2d(
     title,
     legend_tags=["L", "R", "S", "T"],
 )
-## AllRad
+## remapping
 folder_name = "ex_decoding_301_irregular_vbap"
 title = "Channel remapping (VBAP)"
 decoding_matrix_vbap = np.zeros((4, 7))
@@ -320,4 +325,7 @@ panning_plots_2d(
     legend_tags=["L", "R", "S", "T"],
 )
 
+
+
 ############################################################################
+
