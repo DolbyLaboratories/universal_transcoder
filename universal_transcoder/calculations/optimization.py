@@ -113,7 +113,6 @@ def optimize(info: Dict[str, Any]) -> NpArray:
         current_state.transcoding_matrix_shape
     )
 
-
     # If show or save flags active
     if info["show_results"] or info["save_results"]:
 
@@ -122,10 +121,16 @@ def optimize(info: Dict[str, Any]) -> NpArray:
         if "Dspk" in info.keys():
             # D= Dspk x T
             D = jnp.dot(info["Dspk"], T_optimized)
-        
+
         # Save T
         if info["save_results"]:
-            name="saved_results/"+info["results_file_name"]+"/"+info["results_file_name"]+".npy"
+            name = (
+                "saved_results/"
+                + info["results_file_name"]
+                + "/"
+                + info["results_file_name"]
+                + ".npy"
+            )
             np.save(name, T_optimized)
 
         if "cloud_plots" in info:
@@ -211,6 +216,8 @@ def bfgs_optim(
 
     # End time
     execution_time = time.time() - start_time
+
+    print("Optimization time ", execution_time)
 
     # Optimization Log
     if show_results or save_results:
