@@ -49,11 +49,11 @@ input_matrix_optimization = np.identity(n)
 output_layout = MyCoordinates.mult_points(
     np.array(
         [
-            (30, 0, 1), # L
-            (-30, 0, 1), # R
-            (0, 0, 1), # C
-            (120, 0, 1), # Ls
-            (-120, 0, 1), # Rs
+            (30, 0, 1),  # L
+            (-30, 0, 1),  # R
+            (0, 0, 1),  # C
+            (120, 0, 1),  # Ls
+            (-120, 0, 1),  # Rs
         ]
     )
 )
@@ -84,11 +84,11 @@ dictionary = {
         "total_gains_quad": 0,
     },
     "directional_weights": 1,
-    "show_results": False,
-    "save_results": True,
+    "show_results": True,
+    "save_results": False,
     "input_matrix_plots": input_matrix_plots,
     "cloud_plots": cloud_plots,
-    "results_file_name": "panning51_USAT",
+    "results_file_name": "ex4_ObjectTo50_USAT",
 }
 optimize(dictionary)
 
@@ -96,15 +96,14 @@ optimize(dictionary)
 ##############################################################
 
 
-
 # VBAP ############################################
 decoder_matrix = get_input_channels_vbap(cloud_plots, output_layout).T
 
 speaker_signals = np.dot(input_matrix_plots, decoder_matrix.T)
 
-show_results = False
-save_results = True
-save_plot_name = "panning51_direct"
+show_results = True
+save_results = False
+save_plot_name = "ex4_ObjectTo50_direct"
 plots_general(
     output_layout,
     speaker_signals,
@@ -133,5 +132,3 @@ plots_general(
     save_plot_name,
 )
 ##############################################################
-
-

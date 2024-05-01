@@ -7,7 +7,6 @@ import numpy as np
 from universal_transcoder.auxiliars.get_cloud_points import (
     get_all_sphere_points,
     get_equi_t_design_points,
-    get_equi_circumference_points
 )
 from universal_transcoder.auxiliars.get_input_channels import (
     get_input_channels_ambisonics,
@@ -16,6 +15,7 @@ from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 from universal_transcoder.calculations.optimization import optimize
 from universal_transcoder.plots_and_logs.all_plots import plots_general
 from universal_transcoder.plots_and_logs.import_allrad_dec import get_allrad_decoder
+
 basepath = Path(__file__).resolve().parents[0]
 
 # USAT #######################################################
@@ -26,7 +26,7 @@ t_design = (
 )
 cloud_optimization = get_equi_t_design_points(t_design, False)
 
-#Input Ambisonics 5th Order
+# Input Ambisonics 5th Order
 order = 5
 input_matrix_optimization = get_input_channels_ambisonics(cloud_optimization, order)
 
@@ -34,17 +34,17 @@ input_matrix_optimization = get_input_channels_ambisonics(cloud_optimization, or
 output_layout = MyCoordinates.mult_points(
     np.array(
         [
-            (30, 0, 1), # L
-            (-30, 0, 1), # R
-            (0, 0, 1), # C
-            (90, 0, 1), # Ls
-            (-90, 0, 1), # Rs
-            (120, 0, 1), # Lb
-            (-120, 0, 1), # Rb
-            (45, 45, 1), # Tfl
-            (-45, 45, 1), # Tfr
-            (135, 45, 1), # Tbl
-            (-135, 45, 1), # Tbr
+            (30, 0, 1),  # L
+            (-30, 0, 1),  # R
+            (0, 0, 1),  # C
+            (90, 0, 1),  # Ls
+            (-90, 0, 1),  # Rs
+            (120, 0, 1),  # Lb
+            (-120, 0, 1),  # Rb
+            (45, 45, 1),  # Tfl
+            (-45, 45, 1),  # Tfr
+            (135, 45, 1),  # Tbl
+            (-135, 45, 1),  # Tbr
         ]
     )
 )
@@ -75,8 +75,8 @@ dictionary = {
         "total_gains_quad": 0,
     },
     "directional_weights": 1,
-    "show_results": False,
-    "results_file_name": "5OAdecoding714_USAT",
+    "show_results": True,
+    "results_file_name": "ex1_50Ato704_USAT",
     "save_results": True,
     "input_matrix_plots": input_matrix_plots,
     "cloud_plots": cloud_plots,
@@ -94,7 +94,7 @@ order = 5
 # Import AllRad file (N3D and ACN)
 decoding_matrix = get_allrad_decoder(
     "allrad_decoders/" + file_name,
-    type="maxre", # basic / maxre / inphase
+    type="maxre",  # basic / maxre / inphase
     order=order,
     convention="sn3d",
     normalize_energy=True,
@@ -110,7 +110,7 @@ speaker_matrix = np.dot(input_matrix, decoding_matrix.T)
 # Call plots and save results
 show_results = False
 save_results = True
-save_plot_name = "5OAdecoding714_allrad_maxre" # basic / maxre / inphase
+save_plot_name = "ex1_50Ato704_ALLRAD_maxre"
 plots_general(
     output_layout,
     speaker_matrix,

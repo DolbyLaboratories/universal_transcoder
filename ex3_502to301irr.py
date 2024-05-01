@@ -1,5 +1,3 @@
-
-
 import numpy as np
 from pathlib import Path
 from universal_transcoder.auxiliars.get_cloud_points import (
@@ -43,19 +41,18 @@ output_layout = MyCoordinates.mult_points(
     )
 )
 
-show_results = False
-save_results = True
+show_results = True
+save_results = False
 
 
-
-## Transcoding usiing vbap
+## Transcoding using vbap
 decoding_matrix_vbap = np.zeros((4, 7))
 for ci in range(7):
     vbap_gains = vbap_3D_encoder(input_layout[ci], output_layout)
     decoding_matrix_vbap[:, ci] = vbap_gains / np.sqrt(np.sum(vbap_gains**2))
 
 
-## Decidubg with USAT
+# USAT #######################################################
 
 # Clouds of points
 basepath = Path(__file__).resolve().parents[0]
@@ -99,19 +96,22 @@ optimization_dict = {
         "symmetry_lin": 0.0,
         "total_gains_lin": 0,
         "total_gains_quad": 0,
-        "sparsity_quad": 0.01,  # 1,
-        "sparsity_lin": 0.001,  # 1,
+        "sparsity_quad": 0.01,
+        "sparsity_lin": 0.001,
     },
     "directional_weights": 1,  # weights,
     "show_results": show_results,
     "save_results": save_results,
-    "results_file_name": "ex_decoding_301_irregular",
+    "results_file_name": "ex3_50to301irr_USAT",
     "input_matrix_plots": input_matrix_plots,
     "cloud_plots": cloud_plots,
     "T_initial": T_initial,
 }
 transcoding_matrix = optimize(optimization_dict)
+#######################################################
 
+
+# No optimization #####################################
 
 np.set_printoptions(precision=2, suppress=True)
 
@@ -124,7 +124,7 @@ print(decoding_matrix_vbap_dB)
 # Corresponding plots
 input_matrix_plots = get_input_channels_vbap(cloud_plots, input_layout)
 speaker_signals = np.dot(input_matrix_plots, decoding_matrix_vbap.T)
-save_plot_name = "ex_decoding_301irregular_vbap.png"
+save_plot_name = "ex3_50to301irr_vbap.png"
 plots_general(
     output_layout,
     speaker_signals,

@@ -27,17 +27,17 @@ basepath = Path(__file__).resolve().parents[0]
 input_layout = MyCoordinates.mult_points(
     np.array(
         [
-            (30, 0, 1), # L
-            (-30, 0, 1), # R
-            (0, 0, 1), # C
-            (90, 0, 1), # Ls
-            (-90, 0, 1), # Rs
-            (120, 0, 1), # Lb
-            (-120, 0, 1), # Rb
-            (45, 45, 1), # Tfl
-            (-45, 45, 1), # Tfr
-            (135, 45, 1), # Tbl
-            (-135, 45, 1), # Tbr
+            (30, 0, 1),  # L
+            (-30, 0, 1),  # R
+            (0, 0, 1),  # C
+            (90, 0, 1),  # Ls
+            (-90, 0, 1),  # Rs
+            (120, 0, 1),  # Lb
+            (-120, 0, 1),  # Rb
+            (45, 45, 1),  # Tfl
+            (-45, 45, 1),  # Tfr
+            (135, 45, 1),  # Tbl
+            (-135, 45, 1),  # Tbr
         ]
     )
 )
@@ -52,7 +52,9 @@ cloud_optimization_list = [
     input_layout,
 ]
 cloud_optimization, weights = mix_clouds_of_points(
-    cloud_optimization_list, list_of_weights=[0.6, 0.3, 0.1], discard_lower_hemisphere=True
+    cloud_optimization_list,
+    list_of_weights=[0.6, 0.3, 0.1],
+    discard_lower_hemisphere=True,
 )
 
 # Input matrix for optimization
@@ -62,8 +64,13 @@ input_matrix_optimization = get_input_channels_vbap(cloud_optimization, input_la
 t_design_output = (
     basepath / "universal_transcoder" / "encoders" / "t-design" / "des.3.60.10.txt"
 )
-output_layout,_= mix_clouds_of_points(
-    [get_equi_t_design_points(t_design_output, False),get_equi_circumference_points(36,False)], list_of_weights=[1,1], discard_lower_hemisphere=True
+output_layout, _ = mix_clouds_of_points(
+    [
+        get_equi_t_design_points(t_design_output, False),
+        get_equi_circumference_points(36, False),
+    ],
+    list_of_weights=[1, 1],
+    discard_lower_hemisphere=True,
 )
 
 # Cloud of points to be encoded in input format (7.1.4) for plotting
@@ -99,8 +106,8 @@ dictionary = {
     },
     "directional_weights": weights,
     "show_results": True,
-    "save_results": True,
-    "results_file_name": "704transcoding5OA_USAT",
+    "save_results": False,
+    "results_file_name": "ex2_704to5OA_USAT",
     "input_matrix_plots": input_matrix_plots,
     "cloud_plots": cloud_plots,
 }
@@ -117,9 +124,9 @@ decoder_matrix = np.dot(Dspk, transcoding_matrix.T)
 
 speaker_signals = np.dot(input_matrix, decoder_matrix.T)
 
-show_results = False
-save_results = True
-save_plot_name = "704transcoding5OA_direct"
+show_results = True
+save_results = False
+save_plot_name = "ex2_704to5OA_direct"
 plots_general(
     output_layout,
     speaker_signals,
@@ -127,5 +134,5 @@ plots_general(
     show_results,
     save_results,
     save_plot_name,
-) 
+)
 #######################################################
