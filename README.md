@@ -77,7 +77,7 @@ A dictionary like the one below is passed as input to the function `optimize()` 
 
 
 
-<img src="images/USAT-schema.png" width="850"/>
+<img src="images/USAT-schema.png" width="80%"/>
 
 
 ```
