@@ -5,7 +5,8 @@ format to any other given format or speaker layout, maximizing the preservation 
 
 ## LICENSE
 
-Copyright 2023 Dolby Laboratories
+Copyright (c) 2024 Dolby Laboratories, Amaia Sagasti\
+Copyright (c) 2023 Dolby Laboratories
 
 Redistribution and use in source and binary forms, with or without modification, are permitted 
 provided that the following conditions are met:
