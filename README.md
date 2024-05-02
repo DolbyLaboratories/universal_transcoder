@@ -78,8 +78,8 @@ A dictionary like the one below is passed as input to the function `optimize()` 
             "show_results": show_results,                           # Flag to show results **
             "save_results": save_results,                           # Flag to save results **
             "results_file_name": "ex3_50to301irr_USAT",             # Name of folder to save results 
-            "input_matrix_plots": input_matrix_plots,               # Auxiliary matrix that encodes in input format (QxM)
-            "cloud_plots": cloud_plots,                             # Auxiliary cloud of points sampling the sphere for plotting (Q)
+            "input_matrix_plots": input_matrix_plots,               # Auxiliary matrix that encodes in input format (L'xM)
+            "cloud_plots": cloud_plots,                             # Auxiliary cloud of points sampling the sphere for plotting (L')
             "T_initial": T_initial,                                 # Starting point of optimization 
         }
 ```
@@ -97,7 +97,7 @@ These variables are formatted as MyCoordinates (see `Extended Documentation` sec
 
 - The data saved in key `"cloud_optimization"` corresponds to the set of points (L points) sampling the sphere in which the optimization is desired. If the output format or speaker layout is 2D, the most appropiate cloud would be a 2D set of points, which can be generated using `get_equi_circumference_points()` (from `auxiliars.get_cloud_points`). On the other hand, if the output format or layout to which we aim to decode is 3D, it would be more appropiate to generate a 3D set of sampling points (`get_sphere_points()`, `get_equi_t_design_points()`, `get_equi_fibonacci_sphere_points()`, `get_all_sphere_points()` from `auxiliars.get_cloud_points`). It is possible to use any other function that generates points in the same format. For the opimization, it is recommended to have a set of points that are equally distributed in terms of energy across the sphere.
 
-- For the case of key `"cloud_plots"`, this set of points (Q points) corresponds to the sampling directions of the sphere to be shown in the plots if either `"save_results"` or `"show_results"` keys are active. If `"cloud_plots"` is not defined but `"save_results"` or `"show_results"` are active, the program will use `"cloud_optimization"` for the plots. Similarly to the case above, depending on the dimensions of the output layout, `"cloud_plots"` should be set accordingly.
+- For the case of key `"cloud_plots"`, this set of points (L' points) corresponds to the sampling directions of the sphere to be shown in the plots if either `"save_results"` or `"show_results"` keys are active. If `"cloud_plots"` is not defined but `"save_results"` or `"show_results"` are active, the program will use `"cloud_optimization"` for the plots. Similarly to the case above, depending on the dimensions of the output layout, `"cloud_plots"` should be set accordingly.
 
 
 ```
@@ -116,7 +116,7 @@ These variables are formatted as `numpy.Array`. They can be generated using the 
 
 - The data stored in key `"input_matrix_optimization"` corresponds to the encoding gains that encode the set of L directions in the cloud, into the input audio format of M channels. Array of size LxM.
 
-- The data stored in key `"input_matrix_plots"` corresponds to the encoding gains that encode the set of Q directions in the cloud, into the input audio format of M channels. Array of size QxM. This is only used for plotting. If `cloud_plots` is not defined but `save_results` or `show_results` are active, the program will use `cloud_optimization` and `input_matrix_optimization` for the plotting.
+- The data stored in key `"input_matrix_plots"` corresponds to the encoding gains that encode the set of L' directions in the cloud, into the input audio format of M channels. Array of size L'xM. This is only used for plotting. If `cloud_plots` is not defined but `save_results` or `show_results` are active, the program will use `cloud_optimization` and `input_matrix_optimization` for the plotting.
 
 NOTE: Both of these variables must be generated with the same encoder: different set of points but same encoder.
 
