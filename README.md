@@ -47,7 +47,7 @@ python -m pytest tests
 
 USAT is an algorithm capable of calculating, through an optimization based on some psychoacoustic effects, the optimised transcoding matrix `T_optimised` that transcodes a defined input format of `M` channels to an, also defined, output format of `N` channels.
 
-<img src="USAT-schema.png" width="80%"/>
+<img src="USAT-schema.png" width="100%"/>
 
 A dictionary like the one below is passed as input to the function `optimize()` from `calculations.optimization`, which generates as output the optimized transcoding matrix. 
 
