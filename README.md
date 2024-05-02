@@ -3,33 +3,8 @@ This code consists of a universal transcoder tool. It generates a
 psychoacoustically motivated transcoding matrix to transform from any input
 format to any other given format or speaker layout, maximizing the preservation of spatial information.
 
-## LICENSE
-
-Copyright (c) 2024 Dolby Laboratories, Amaia Sagasti\
-Copyright (c) 2023 Dolby Laboratories
-
-Redistribution and use in source and binary forms, with or without modification, are permitted 
-provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this list of conditions 
-and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
-and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or 
-promote products derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR IMPLIED 
-WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
-PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR 
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED 
-TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
-NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
-POSSIBILITY OF SUCH DAMAGE.
-
-
+## Paper
+See more details about the theoretical foundation and mathematical procedures behind this code in the paper `Universal Spatial Audio Transcoder` [link].
 
 ## Getting started
 
@@ -57,11 +32,11 @@ pip install -r requirements.txt
 ```
 
 ### Run Code
-To run this code, there are 4 files prepared with examples
-`ex1_5OAto704.py`, `ex2_704to5OA.py`, `ex3_502to301irr.py` and `ex4_ObjectTo50.py`.
+To run this code, there are 4 scripts prepared with examples
+`ex1_5OAto704.py`, `ex2_704to5OA.py`, `ex3_502to301irr.py` and `ex4_ObjectTo50.py` (found in `/paper/` folder). These 4 examples are the ones present in the paper `Universal Spatial Audio Transcoder`. 
 
 The rest of the files contain functions that are involved in the process of obtaining the adequate
-decoder matrix.
+transcoding matrix for each specific case.
 
 ### Run Tests
 ```
@@ -70,15 +45,11 @@ python -m pytest tests
 
 ## How it works
 
-USAT is an algorithm capable of calculating, through an optimization based on some psychoacoustic effects, the optimised transcoding matrix `T_optimised` that transcodes a defined input format of `M` channels to an, also defined, output format of `N` channels. See more details about the procedure in the paper `Universal Spatial Audio Transcoder` [link].
+USAT is an algorithm capable of calculating, through an optimization based on some psychoacoustic effects, the optimised transcoding matrix `T_optimised` that transcodes a defined input format of `M` channels to an, also defined, output format of `N` channels.
 
-The process described in this section is the one implemented in the example scripts mentioned above.
+<img src="USAT-schema.png" width="80%"/>
 
 A dictionary like the one below is passed as input to the function `optimize()` from `calculations.optimization`, which generates as output the optimized transcoding matrix. 
-
-
-
-<img src="images/USAT-schema.png" width="80%"/>
 
 
 ```
@@ -86,6 +57,7 @@ A dictionary like the one below is passed as input to the function `optimize()` 
             "input_matrix_optimization": input_matrix_optimization, # Input matrix that encodes in input format (LxM) **
             "cloud_optimization": cloud_optimization,               # Cloud of points sampling the sphere (L) **
             "output_layout": output_layout,                         # Output (real/virtual) layout of speakers to decode(P) **
+            "Dspk": Dspk,                                           # Decoding matrix from output format to layout of speakers (PxN) ***
             "coefficients": {                                       # List of coefficients to the cost function **
                 "energy": 5,
                 "radial_intensity": 2,
@@ -114,7 +86,9 @@ A dictionary like the one below is passed as input to the function `optimize()` 
 
 ** mandatory inputs
 
-The following sections will explain in more detail each input.
+*** mandatory only if output format is layout independent, like Ambisonics
+
+This dictionary is passed as input to the function `optimize()` from `universal_transcoder.calculations.optimization`. The following sections will explain in more detail each entry of the dictionary.
 
 ### The clouds - `cloud_optimization` and `cloud_plots`
 Variables containing set of points sampling the sphere.
@@ -196,3 +170,12 @@ If key `save_results` is active, the system will store all the resulting plots a
 
 ### Initial transcoding matrix - `T_initial`
 This variable is optional and defines the initial point of the optimization. Its size must be `NxM`. In case it is passed as input, the algorithm generates a random matrix of size `NxM`. 
+
+### Decoding-to-speakers matrix - `Dspk`
+This variable represents the decoding matrix of shape `PxN` needed to decode the output format to the defined `output_layout` of speakers. It is not needed when the output format already constitutes a set of N speakers (Dspk=1, N=P). However, it is mandatory when the desired output format is a speaker-independent format, like Ambisonics. 
+
+In the code, it is provided the function `get_ambisonics_decoder_matrix()` in `universal_transcoder.auxiliars.get_decoder_matrices`, as implemented in ex2_704to5OA.py, an example of transcoding to Ambisonics (output format = Ambisonics 5th Order)
+
+```
+Dspk = get_ambisonics_decoder_matrix(order, output_layout, "pseudo")
+```
