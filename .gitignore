@@ -1,7 +1,6 @@
 .idea*
 *.pyc
 *.pdf
-
 *.txt
 *.json
 *.r
