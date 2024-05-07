@@ -60,7 +60,9 @@ def plot_pv_2D(
 
     azimuth = cloud_points.sph_rad()[:, 0]
     elevation = cloud_points.sph_rad()[:, 1]
-    mask_horizon = (elevation < 0.01) * (elevation > -0.01)
+    mask_horizon = np.isclose(np.abs(elevation), np.min(np.abs(elevation))) & (
+        elevation >= 0.0
+    )
 
     # Calculations
     v = np.sqrt(radial_v**2 + transverse_v**2)
@@ -87,6 +89,10 @@ def plot_pv_2D(
     pressure = pressure[mask_horizon]
     radial_v = radial_v[mask_horizon]
     transverse_v = transverse_v[mask_horizon]
+
+    # az_order = np.argsort(azimuth)
+    # azimuth = azimuth[az_order]
+    # elevation = elevation[az_order]
 
     # Plot
     # XY
