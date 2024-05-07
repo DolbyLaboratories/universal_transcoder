@@ -3,6 +3,5 @@
 *.pdf
 *.txt
 *.json
-*.r
 venv*
 *npy
