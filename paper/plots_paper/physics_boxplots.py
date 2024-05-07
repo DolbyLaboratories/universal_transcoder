@@ -23,7 +23,7 @@ plt.rc("text", usetex=True)
 
 
 COLUMNS = ["azimuth", "elevation", "P", "V_r", "V_t", "E", "I_r", "I_t"]
-PLOTS_PATH = Path(__file__).resolve().parents[1] / "saved_results"
+PLOTS_PATH = Path(__file__).resolve().parents[2] / "saved_results"
 LATEX_NAMES = {
     "P": r"$P$",
     "V_r": r"$V^R$",
@@ -62,7 +62,6 @@ def filter_elevation(df, remove_negative_elevation=True):
     if remove_negative_elevation:
         mask[elevation < 0] = False
     return df[mask]
-
 
 
 def energy_to_db(energy):
@@ -164,7 +163,7 @@ def box_plot(
         figsize=(width, aspect_ratio * width),
         width_ratios=[len(sc) for sc in selected_columns],
     )
-    #plt.suptitle(title)
+    # plt.suptitle(title)
 
     for ax, df, unit in zip(axs, df_long_list, unitlabels):
         sns.boxplot(
@@ -207,29 +206,29 @@ def box_plot(
 
 if __name__ == "__main__":
     box_plot(
-        _get_path("5OAdecoding714_USAT"),
-        _get_path("5OAdecoding714_allrad_maxre"),
+        _get_path("ex1_50Ato704_USAT"),
+        _get_path("ex1_50Ato704_ALLRAD_maxre"),
         plot_type="ei",
         comp_name="AllRad",
         title="Decoding 5OA to 7.0.4",
     )
     box_plot(
-        _get_path("704transcoding5OA_USAT"),
-        _get_path("704transcoding5OA_direct"),
+        _get_path("ex2_704to5OA_USAT"),
+        _get_path("ex2_704to5OA_direct"),
         plot_type="pv",
         comp_name="HOA enc.",
         title="Transcoding 7.0.4 to 5OA",
     )
     box_plot(
-        _get_path("ex_decoding_301_irregular"),
-        _get_path("ex_decoding_301irregular_vbap.png"),
+        _get_path("ex3_50to301irr_USAT"),
+        _get_path("ex3_50to301irr_vbap"),
         plot_type="ei",
         comp_name="Remapping",
         title="Decoding 5.0.2 to 3.0.1 irregular",
     )
     box_plot(
-        _get_path("panning51_USAT"),
-        _get_path("panning51_direct"),
+        _get_path("ex4_ObjectTo50_USAT"),
+        _get_path("ex4_ObjectTo50_direct"),
         plot_type="ei",
         comp_name="Tangent law",
         title="Rendering to 5.1",
