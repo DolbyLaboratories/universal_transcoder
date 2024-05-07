@@ -1,0 +1,50 @@
+{
+  "Name": "All-Round Ambisonic decoder (AllRAD) and loudspeaker layout",
+  "Description": "This configuration file was created with the IEM AllRADecoder v0.9.4 plug-in. 12 Dec 2023 4:29:50pm",
+  "Decoder": {
+    "Name": "Decoder",
+    "Description": "A 1st order Ambisonics decoder using the AllRAD approach.",
+    "ExpectedInputNormalization": "n3d",
+    "Weights": "maxrE",
+    "WeightsAlreadyApplied": false,
+    "Matrix": [
+      [
+        0.398639053106308,
+        -0.2140196859836578,
+        -5.488759597938042e-7,
+        -0.1863429248332977
+      ],
+      [
+        0.2672039568424225,
+        -0.1596160382032394,
+        -0.0000173693842953071,
+        0.135953426361084
+      ],
+      [
+        0.1865792721509933,
+        -2.894687668231199e-6,
+        0.00002303599103470333,
+        0.1167110800743103
+      ],
+      [
+        0.2672149538993835,
+        0.1596193313598633,
+        -0.00001567145955050364,
+        0.1359520256519318
+      ],
+      [
+        0.398630678653717,
+        0.2140232622623444,
+        -3.350411134306341e-6,
+        -0.1863408833742142
+      ]
+    ],
+    "Routing": [
+      2,
+      5,
+      6,
+      7,
+      10
+    ]
+  }
+}
