@@ -105,5 +105,4 @@ def get_convention(conventions: str, n: int):
     else:
         raise ValueError(f"Unsupported convention '{conventions}'")
 
-
     return np.asarray(adapter)

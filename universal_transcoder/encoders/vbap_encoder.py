@@ -45,22 +45,24 @@ def vbap_2D_encoder(point: MyCoordinates, layout: MyCoordinates):
     """
 
     theta = point.sph_deg()[0][0]
-    layout_sph = layout.get_sph(convention="top_elev", unit="deg")[:, 0] # only thetas
-    layout_sph_sorted = np.sort(layout_sph) # Sort in ascending azimut order
-    sort_positions = np.argsort(layout_sph) # Save original positions
+    layout_sph = layout.get_sph(convention="top_elev", unit="deg")[:, 0]  # only thetas
+    layout_sph_sorted = np.sort(layout_sph)  # Sort in ascending azimut order
+    sort_positions = np.argsort(layout_sph)  # Save original positions
 
     # Pair selection
     pair = None
     # Check all pair of speakers in the array
     for i in range(len(layout_sph_sorted) - 1):
         if theta >= layout_sph_sorted[i] and theta <= layout_sph_sorted[i + 1]:
-            pair = (sort_positions[i], sort_positions[i + 1]) # Assign original positions
+            pair = (
+                sort_positions[i],
+                sort_positions[i + 1],
+            )  # Assign original positions
             break
 
     # If no pair was selected, then first and last speaker form a pair
     if pair is None:
-        pair = (sort_positions[0], sort_positions[-1]) # Assign original positions
-
+        pair = (sort_positions[0], sort_positions[-1])  # Assign original positions
 
     # Polar to cartesian coordinates for input position 'p' (theta)
     p = point.cart()[0][0:2]

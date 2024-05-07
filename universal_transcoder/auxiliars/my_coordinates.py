@@ -115,8 +115,8 @@ class MyCoordinates(pf.Coordinates):
 
     def discard_lower_hemisphere(self):
         """
-           Remove the lower hemisphere points from the cloud
-           Returns:
-               New cloudd of points with lower hemisphere removed
-           """
+        Remove the lower hemisphere points from the cloud
+        Returns:
+            New cloudd of points with lower hemisphere removed
+        """
         return self[self.cart()[:, 2] >= 0]
