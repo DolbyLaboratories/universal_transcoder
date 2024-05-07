@@ -37,7 +37,6 @@ from universal_transcoder.calculations.optimization import optimize
 
 
 # USAD #######################################################
-
 # Cloud of points to be encoded in input format (one-to-one panning)
 n = 72
 cloud_optimization = get_equi_circumference_points(n, False)
@@ -64,7 +63,6 @@ cloud_plots = cloud_optimization
 # Input matrix for plotting
 input_matrix_plots = input_matrix_optimization
 
-
 dictionary = {
     "input_matrix_optimization": input_matrix_optimization,
     "cloud_optimization": cloud_optimization,
@@ -84,15 +82,13 @@ dictionary = {
         "total_gains_quad": 0,
     },
     "directional_weights": 1,
-    "show_results": True,
-    "save_results": False,
+    "show_results": False,
+    "save_results": True,
     "input_matrix_plots": input_matrix_plots,
     "cloud_plots": cloud_plots,
     "results_file_name": "ex4_ObjectTo50_USAT",
 }
 optimize(dictionary)
-
-
 ##############################################################
 
 
@@ -101,8 +97,8 @@ decoder_matrix = get_input_channels_vbap(cloud_plots, output_layout).T
 
 speaker_signals = np.dot(input_matrix_plots, decoder_matrix.T)
 
-show_results = True
-save_results = False
+show_results = False
+save_results = True
 save_plot_name = "ex4_ObjectTo50_direct"
 plots_general(
     output_layout,
@@ -122,7 +118,7 @@ speaker_signals = np.dot(input_matrix_plots, decoder_matrix.T)
 
 show_results = False
 save_results = True
-save_plot_name = "panning51_vbip"
+save_plot_name = "ex4_ObjectTo50_vbip"
 plots_general(
     output_layout,
     speaker_signals,

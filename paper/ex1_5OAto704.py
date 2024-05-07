@@ -41,10 +41,10 @@ from universal_transcoder.calculations.optimization import optimize
 from universal_transcoder.plots_and_logs.all_plots import plots_general
 from universal_transcoder.plots_and_logs.import_allrad_dec import get_allrad_decoder
 
-basepath = Path(__file__).resolve().parents[0]
+basepath = Path(__file__).resolve().parents[1]
+
 
 # USAT #######################################################
-
 # Cloud of points to be encoded in input format (5OA)
 t_design = (
     basepath / "universal_transcoder" / "encoders" / "t-design" / "des.3.56.9.txt"
@@ -100,7 +100,7 @@ dictionary = {
         "total_gains_quad": 0,
     },
     "directional_weights": 1,
-    "show_results": True,
+    "show_results": False,
     "results_file_name": "ex1_50Ato704_USAT",
     "save_results": True,
     "input_matrix_plots": input_matrix_plots,
@@ -118,7 +118,7 @@ order = 5
 
 # Import AllRad file (N3D and ACN)
 decoding_matrix = get_allrad_decoder(
-    "allrad_decoders/" + file_name,
+    basepath / "paper" / "allrad_decoders" / file_name,
     type="maxre",  # basic / maxre / inphase
     order=order,
     convention="sn3d",

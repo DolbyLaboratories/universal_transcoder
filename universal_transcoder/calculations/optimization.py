@@ -27,6 +27,7 @@ POSSIBILITY OF SUCH DAMAGE.
 import os
 import time
 from typing import Dict, Any
+from pathlib import Path
 
 import jax
 import jax.numpy as jnp
@@ -116,7 +117,6 @@ def optimize(info: Dict[str, Any]) -> NpArray:
 
     # If show or save flags active
     if info["show_results"] or info["save_results"]:
-
         D = T_optimized
         # unless
         if "Dspk" in info.keys():
@@ -125,13 +125,9 @@ def optimize(info: Dict[str, Any]) -> NpArray:
 
         # Save T
         if info["save_results"]:
-            name = (
-                "saved_results/"
-                + info["results_file_name"]
-                + "/"
-                + info["results_file_name"]
-                + ".npy"
-            )
+            folder = Path("saved_results") / info["results_file_name"]
+            name = folder / (info["results_file_name"] + ".npy")
+            folder.mkdir(parents=True, exist_ok=True)
             np.save(name, T_optimized)
 
         if "cloud_plots" in info:

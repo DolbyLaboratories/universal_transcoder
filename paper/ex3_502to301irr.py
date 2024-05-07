@@ -27,7 +27,6 @@ import numpy as np
 from pathlib import Path
 from universal_transcoder.auxiliars.get_cloud_points import (
     get_all_sphere_points,
-    get_equi_t_design_points,
     get_equi_circumference_points,
     mix_clouds_of_points,
 )
@@ -39,8 +38,8 @@ from universal_transcoder.calculations.optimization import optimize
 from universal_transcoder.encoders.vbap_encoder import vbap_3D_encoder
 from universal_transcoder.plots_and_logs.all_plots import plots_general
 
-##  Input and output layouts definition
 
+#  Input and output layouts definition
 input_layout = MyCoordinates.mult_points(
     np.array(
         [
@@ -66,11 +65,10 @@ output_layout = MyCoordinates.mult_points(
     )
 )
 
-show_results = True
-save_results = False
+show_results = False
+save_results = True
 
-
-## Transcoding using vbap
+# Transcoding using vbap
 decoding_matrix_vbap = np.zeros((4, 7))
 for ci in range(7):
     vbap_gains = vbap_3D_encoder(input_layout[ci], output_layout)
@@ -78,7 +76,6 @@ for ci in range(7):
 
 
 # USAT #######################################################
-
 # Clouds of points
 basepath = Path(__file__).resolve().parents[0]
 t_design = (
@@ -149,7 +146,7 @@ print(decoding_matrix_vbap_dB)
 # Corresponding plots
 input_matrix_plots = get_input_channels_vbap(cloud_plots, input_layout)
 speaker_signals = np.dot(input_matrix_plots, decoding_matrix_vbap.T)
-save_plot_name = "ex3_50to301irr_vbap.png"
+save_plot_name = "ex3_50to301irr_vbap"
 plots_general(
     output_layout,
     speaker_signals,

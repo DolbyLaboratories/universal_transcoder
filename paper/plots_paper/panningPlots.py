@@ -25,10 +25,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 import warnings
 from pathlib import Path
-
 import numpy as np
-import sys
-import os
 
 from universal_transcoder.auxiliars.get_cloud_points import (
     get_equi_circumference_points,
@@ -39,7 +36,6 @@ from universal_transcoder.auxiliars.get_input_channels import (
 )
 from universal_transcoder.encoders.vbap_encoder import vbap_3D_encoder
 from universal_transcoder.plots_and_logs.import_allrad_dec import get_allrad_decoder
-from universal_transcoder.auxiliars.my_coordinates import MyCoordinates
 
 import matplotlib.pyplot as plt
 from matplotlib import rc
@@ -72,7 +68,6 @@ def panning_plots_2d(
     title,
     legend_tags=None,
 ):
-
     # Prepare data
     output_layout = output_layout.sph_deg()
     azimuth = cloud.sph_deg()[:, 0]
@@ -154,11 +149,11 @@ def panning_plots_2d(
     ax.set_position([left, bottom, width, height])
     # Save plots
     if type(path) is str:
-
         name = "speaker_gains-linear-" + Path(path).stem + ".png"
         save_plot(plt, path, name)
         name = "speaker_gains-linear-" + Path(path).stem + ".pdf"
         save_plot(plt, path, name)
+
     # Clear
     plt.clf()
 
@@ -217,20 +212,24 @@ output_layout = MyCoordinates.mult_points(
         ]
     )
 )
-## USAT
+
+# USAT
 # Decoding matrix
-folder_name = "panning51_USAT/"
-full_path = "saved_results/" + folder_name
-decoder_matrix = np.load(full_path + "panning51_USAT.npy")
+folder_name = "ex4_ObjectTo50_USAT"
+full_path = Path("saved_results") / folder_name
+
+decoder_matrix = np.load(full_path / "ex4_ObjectTo50_USAT.npy")
 title = "USAT"
 panning_plots_2d(input_matrix, decoder_matrix, output_layout, cloud, folder_name, title)
-## VBAP
-folder_name = "panning51_direct/"
+
+# VBAP
+folder_name = "ex4_ObjectTo50_direct"
 title = "Tangent law / VBAP"
 decoder_matrix = get_input_channels_vbap(cloud, output_layout).T
 panning_plots_2d(input_matrix, decoder_matrix, output_layout, cloud, folder_name, title)
-## VBIPP
-folder_name = "panning51_vbip/"
+
+# VBIP
+folder_name = "ex4_ObjectTo50_vbip"
 title = "VBIP"
 decoder_matrix = get_input_channels_vbap(cloud, output_layout, vbip=True).T
 panning_plots_2d(input_matrix, decoder_matrix, output_layout, cloud, folder_name, title)
@@ -261,19 +260,21 @@ output_layout = MyCoordinates.mult_points(
         ]
     )
 )
-## USAT
+
+# USAT
 # Decoding matrix
-folder_name = "5OAdecoding714_USAT/"
-full_path = "saved_results/" + folder_name
-decoder_matrix = np.load(full_path + "5OAdecoding714_USAT.npy")
+folder_name = "ex1_50Ato704_USAT"
+full_path = Path("saved_results") / folder_name
+decoder_matrix = np.load(full_path / "ex1_50Ato704_USAT.npy")
 title = "USAT"
 panning_plots_2d(input_matrix, decoder_matrix, output_layout, cloud, folder_name, title)
-## AllRad
-folder_name = "5OAdecoding714_allrad_maxre/"
+
+# AllRad
+folder_name = "ex1_50Ato704_ALLRAD_maxre/"
 title = "AllRad"
 file_name = "704ordered_decoder.json"
 decoder_matrix = get_allrad_decoder(
-    "allrad_decoders/" + file_name,
+    Path("paper") / "allrad_decoders" / file_name,
     type="maxre",  # basic / maxre / inphase
     order=order,
     convention="sn3d",
@@ -317,11 +318,12 @@ output_layout = MyCoordinates.mult_points(
 # Input matrix
 input_matrix = get_input_channels_vbap(cloud, input_layout)
 # Set of output speakers
-## USAT
+
+# USAT
 # Decoding matrix
-folder_name = "ex_decoding_301_irregular/"
-full_path = "saved_results/" + folder_name
-decoder_matrix = np.load(full_path + "ex_decoding_301_irregular.npy")
+folder_name = "ex3_50to301irr_USAT/"
+full_path = Path("saved_results") / folder_name
+decoder_matrix = np.load(full_path / "ex3_50to301irr_USAT.npy")
 title = "USAT"
 panning_plots_2d(
     input_matrix,
@@ -332,8 +334,8 @@ panning_plots_2d(
     title,
     legend_tags=["L", "R", "S", "T"],
 )
-## remapping
-folder_name = "ex_decoding_301_irregular_vbap"
+# remapping
+folder_name = "ex3_50to301irr_vbap"
 title = "Channel remapping (VBAP)"
 decoding_matrix_vbap = np.zeros((4, 7))
 for ci in range(7):

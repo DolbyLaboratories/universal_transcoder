@@ -42,12 +42,11 @@ from universal_transcoder.auxiliars.get_decoder_matrices import (
     get_ambisonics_decoder_matrix,
 )
 from universal_transcoder.plots_and_logs.all_plots import plots_general
-from universal_transcoder.plots_and_logs.import_allrad_dec import get_allrad_decoder
 
-basepath = Path(__file__).resolve().parents[0]
+basepath = Path(__file__).resolve().parents[1]
+
 
 # USAT #######################################################
-
 # Input Multichannel 7.0.4
 input_layout = MyCoordinates.mult_points(
     np.array(
@@ -130,8 +129,8 @@ dictionary = {
         "total_gains_quad": 0,
     },
     "directional_weights": weights,
-    "show_results": True,
-    "save_results": False,
+    "show_results": False,
+    "save_results": True,
     "results_file_name": "ex2_704to5OA_USAT",
     "input_matrix_plots": input_matrix_plots,
     "cloud_plots": cloud_plots,
@@ -149,8 +148,8 @@ decoder_matrix = np.dot(Dspk, transcoding_matrix.T)
 
 speaker_signals = np.dot(input_matrix, decoder_matrix.T)
 
-show_results = True
-save_results = False
+show_results = False
+save_results = True
 save_plot_name = "ex2_704to5OA_direct"
 plots_general(
     output_layout,
