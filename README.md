@@ -4,21 +4,21 @@ psychoacoustically motivated transcoding matrix to transform from any input
 format to any other given format or speaker layout, maximizing the preservation of spatial information.
 
 ## Paper
-See more details about the theoretical foundation and mathematical procedures behind this code in the paper *Universal Spatial Audio Transcoder* ([preprint](https://arxiv.org/abs/2405.04471)).
+See more details about the theoretical foundation and mathematical procedures behind this code in the paper "Universal Spatial Audio Transcoder" ([AES paper](https://aes2.org/publications/elibrary-page/?id=22517), [arXiv preprint](https://arxiv.org/abs/2405.04471)).
 
-> A. Sagasti, D. Scaini, and D. Arteaga, “Universal spatial audio transcoder,” 2024. Accepted for
-presentation at the *AES 156th Convention*, Madrid, Spain. https://arxiv.org/abs/2405.04471
+> A. Sagasti, D. Scaini, and D. Arteaga, “Universal spatial audio transcoder,” presented at the *AES 156th Convention*, Madrid (2024). https://aes2.org/publications/elibrary-page/?id=22517
 
 
 ```
-@misc{usat_2024,
+@inproceedings{usat_2024,
       title = {Universal Spatial Audio Transcoder}, 
       author = {Amaia Sagasti and Davide Scaini and Daniel Arteaga},
       year = {2024},
+      booktitle = {AES 156th Convention, Madrid},
       eprint = {2405.04471},
       archivePrefix = {arXiv},
       primaryClass = {cs.SD},
-      note = {Accepted for presentation at the AES 156th Convention, Madrid, Spain}
+      url = {https://aes2.org/publications/elibrary-page/?id=22517}
 }
 ```
 
