@@ -70,7 +70,7 @@ def get_left_right_pairs(points: MyCoordinates, tol: float = 2.0):
     phis = points_coord[:, 1]
     tol = tol * np.pi / 180
     pair_id = 1
-    pairs = np.zeros(len(thetas))
+    pairs = np.zeros(len(thetas), dtype=int)
     for i, theta in enumerate(thetas):
         if abs(pairs[i]) >= 1:
             continue

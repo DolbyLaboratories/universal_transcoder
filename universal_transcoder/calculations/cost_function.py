@@ -1,4 +1,5 @@
 """
+Copyright (c) 2025 Dolby Laboratories
 Copyright (c) 2024 Dolby Laboratories, Amaia Sagasti
 Copyright (c) 2023 Dolby Laboratories
 
@@ -256,14 +257,18 @@ class State:
         L = pairs_cloud.size
 
         # first I get the order for columns
-        gains_columns = np.zeros(P).astype(int)
+        gains_columns = np.zeros(P, dtype=int)
         for i in range(P):
             aux = pairs_layout[i]
             if aux == 0:
                 gains_columns[i] = i
             else:
-                my_pair = np.where(pairs_layout == -aux)[0][0]
-                gains_columns[i] = int(my_pair)
+                try:
+                    my_pair = np.where(pairs_layout == -aux)[0][0]
+                except IndexError:  # No pair found
+                    gains_columns[i] = i
+                else:
+                    gains_columns[i] = int(my_pair)
 
         # now I get the order for rows
         gains_rows = np.zeros(L).astype(int)
@@ -272,8 +277,12 @@ class State:
             if aux == 0:
                 gains_rows[i] = i
             else:
-                my_pair = np.where(pairs_cloud == -aux)[0][0]
-                gains_rows[i] = int(my_pair)
+                try:
+                    my_pair = np.where(pairs_cloud == -aux)[0][0]
+                except IndexError: # No pair found
+                    gains_rows[i] = i
+                else:
+                    gains_rows[i] = int(my_pair)
 
         # apply re-ordering
         aux_gains = jnp.zeros(gains.shape)
